@@ -1,15 +1,15 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 04:40 UTC** · cập nhật định kỳ
+- Cập nhật: **2026-10-02 04:43 UTC** · easyocr kết thúc (mã 0, 1051/128 mẫu)
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: easyocr
+- Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
-| easyocr | ▶ đang chạy | 1040/1051 | 0 | 36.1% | 3.24 | 9.6 GB | 2026-10-02T04:10:04+00:00 |
+| easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
@@ -28,7 +28,7 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_invoice_en | 62: 9.2% | 62: 19.1% |
 | syn_invoice_mixed | 57: 38.2% | 57: 39.5% |
 | syn_longtable | 61: 52.3% | 61: 54.7% |
-| syn_longtext | 56: 7.7% | 67: 3.0% |
+| syn_longtext | 67: 10.3% | 67: 3.0% |
 | syn_text_ar | 60: 7.6% | 60: 7.0% |
 | syn_text_en | 57: 14.9% | 57: 1.9% |
 | syn_text_mixed | 64: 13.7% | 64: 14.8% |

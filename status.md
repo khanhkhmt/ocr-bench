@@ -1,9 +1,9 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 03:41 UTC** · xong tesseract, da xoa trong so
+- Cập nhật: **2026-10-02 03:41 UTC** · bắt đầu easyocr
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: easyocr
 
 ## Split `dev` (1051 mẫu)
 

@@ -1,16 +1,16 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 07:20 UTC** · chuyển sang chạy 2 GPU
+- Cập nhật: **2026-10-02 07:48 UTC** · cập nhật định kỳ
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `e29131e` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: sherif_handwriting
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
-| sherif_handwriting | ■ đã dừng | 375/1051 | 1 | 26.5% | 15.72 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
+| sherif_handwriting | ▶ đang chạy | 522/1051 | 1 | 20.2% | 17.60 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
@@ -18,7 +18,7 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | Nhóm | easyocr | sherif_handwriting | tesseract |
 |---|---:|---:|---:|
 | pub_handwriting_ar | 128: 49.3% | 128: 7.2% | 128: 74.4% |
-| pub_handwriting_en | 63: 81.3% | 56: 11.7% | 63: 61.7% |
+| pub_handwriting_en | 63: 81.3% | 63: 10.9% | 63: 61.7% |
 | pub_printed_ar | 63: 28.4% | 63: 41.1% | 63: 32.1% |
 | pub_tables_ar | 58: 42.5% | 58: 49.5% | 58: 52.4% |
 | pub_tables_en | 61: 81.1% | 61: 46.3% | 61: 89.6% |
@@ -30,9 +30,9 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_invoice_mixed | 57: 38.2% | 1: 20.4% | 57: 39.5% |
 | syn_longtable | 61: 52.3% | — | 61: 54.7% |
 | syn_longtext | 67: 10.3% | — | 67: 3.0% |
-| syn_text_ar | 60: 7.6% | 1: 4.2% | 60: 7.0% |
-| syn_text_en | 57: 14.9% | 1: 0.0% | 57: 1.9% |
-| syn_text_mixed | 64: 13.7% | 1: 11.0% | 64: 14.8% |
+| syn_text_ar | 60: 7.6% | 60: 5.2% | 60: 7.0% |
+| syn_text_en | 57: 14.9% | 57: 1.0% | 57: 1.9% |
+| syn_text_mixed | 64: 13.7% | 26: 8.8% | 64: 14.8% |
 
 Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa có TEDS / ô đúng vị trí). Số liệu chính thức: `runs/<split>/_report/report.md` và `decision_*.md`.
 

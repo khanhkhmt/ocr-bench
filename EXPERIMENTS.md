@@ -49,3 +49,13 @@
 - Quyết định: —
 - Việc tiếp theo: Bước C — Chạy đủ các nhóm thường cho easyocr
 - Nghi vấn dữ liệu: —
+
+## 2026-10-02 04:10 — Giai đoạn 3 (Bước C) — easyocr
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models easyocr --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
+- Kết thúc: ✔ easyocr: kết thúc (mã 0) sau 26.6 phút, 923/923 mẫu
+- Thời gian chạy: 26.6 phút × 1 GPU = 0.44 giờ GPU · Đã dùng tổng: 1.26 / 20 giờ (6.3%)
+- VRAM đỉnh: 9867 MiB
+- Số liệu: | easyocr | 923/923 | 36.7% ±1.6 | 29.4% | 45.6% | 66.6% | 0.002 | 0 | 0 (≤0.4%) | 1.72 | 9.6 GB |
+- Quyết định: —
+- Việc tiếp theo: Bước D — Chạy tài liệu dài (syn_longtable,syn_longtext) cho easyocr
+- Nghi vấn dữ liệu: —

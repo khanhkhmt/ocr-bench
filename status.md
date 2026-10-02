@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 04:10 UTC** · easyocr kết thúc (mã 0, 923/923 mẫu)
+- Cập nhật: **2026-10-02 04:10 UTC** · xong nhom thuong easyocr
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
@@ -37,12 +37,12 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-02 03:42 — Giai đoạn 1 (Bước B) — easyocr
-- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models easyocr --per-category 1 --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
-- Kết thúc: ✔ easyocr: kết thúc (mã 0) sau 0.7 phút, 14/14 mẫu
-- Thời gian chạy: 0.7 phút × 1 GPU = 0.01 giờ GPU · Đã dùng tổng: 0.82 / 20 giờ (4.1%)
-- VRAM đỉnh: 3755 MiB
-- Số liệu: | easyocr | 14/14 | 35.6% ±13.2 | 26.4% | 45.9% | 61.5% | 0.000 | 0 | 0 (≤21.5%) | 1.88 | 3.7 GB |
+## 2026-10-02 04:10 — Giai đoạn 3 (Bước C) — easyocr
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models easyocr --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
+- Kết thúc: ✔ easyocr: kết thúc (mã 0) sau 26.6 phút, 923/923 mẫu
+- Thời gian chạy: 26.6 phút × 1 GPU = 0.44 giờ GPU · Đã dùng tổng: 1.26 / 20 giờ (6.3%)
+- VRAM đỉnh: 9867 MiB
+- Số liệu: | easyocr | 923/923 | 36.7% ±1.6 | 29.4% | 45.6% | 66.6% | 0.002 | 0 | 0 (≤0.4%) | 1.72 | 9.6 GB |
 - Quyết định: —
-- Việc tiếp theo: Bước C — Chạy đủ các nhóm thường cho easyocr
+- Việc tiếp theo: Bước D — Chạy tài liệu dài (syn_longtable,syn_longtext) cho easyocr
 - Nghi vấn dữ liệu: —

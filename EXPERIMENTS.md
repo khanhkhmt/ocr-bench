@@ -69,3 +69,13 @@
 - Quyết định: —
 - Việc tiếp theo: Tạm dừng theo yêu cầu của người dùng; cập nhật code từ GitHub
 - Nghi vấn dữ liệu: —
+
+## 2026-10-02 05:46 — Giai đoạn 1 (Bước B) — sherif_handwriting
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting --per-category 1 --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
+- Kết thúc: ✔ sherif_handwriting: kết thúc (mã 0) sau 6.3 phút, 14/14 mẫu
+- Thời gian chạy: 6.3 phút × 1 GPU = 0.11 giờ GPU · Đã dùng tổng: 1.91 / 20 giờ (9.6%)
+- VRAM đỉnh: 11425 MiB
+- Số liệu: | sherif_handwriting | 14/14 | 11.8% ±6.2 | 10.6% | 26.6% | 24.3% | 0.000 | 0 | 0 (≤21.5%) | 25.73 | 11.2 GB |
+- Quyết định: —
+- Việc tiếp theo: Bước C — Chạy đủ các nhóm thường cho sherif_handwriting
+- Nghi vấn dữ liệu: —

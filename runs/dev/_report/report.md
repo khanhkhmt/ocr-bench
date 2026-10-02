@@ -1,31 +1,31 @@
 # Kết quả OCR benchmark — split `dev`
 
-Tạo lúc 2026-10-02 05:05 · 14 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
+Tạo lúc 2026-10-02 05:46 · 14 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
 
 ## Tổng quan
 
 | Model | Mẫu | CER (norm) ±95% | CER micro | CER raw | WER | TEDS bảng | Lỗi/rỗng | Lặp/thừa (trần 95%) | s/mẫu | VRAM đỉnh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| sherif_handwriting | 14/14 | 2126.7% ±1918.0 | 628.9% | 1956.1% | 594.1% | 0.000 | 0 | 14 (≤100.0%) | 68.14 | 11.7 GB |
+| sherif_handwriting | 14/14 | 11.8% ±6.2 | 10.6% | 26.6% | 24.3% | 0.000 | 0 | 0 (≤21.5%) | 25.73 | 11.2 GB |
 
 ## CER (norm) theo nhóm — thấp hơn là tốt hơn
 
 | Nhóm (số mẫu) | sherif_handwriting |
 |---|---:|
-| pub_handwriting_ar (1) | 6370.0% |
-| pub_handwriting_en (1) | 13602.4% |
-| pub_printed_ar (1) | 213.2% |
-| pub_tables_ar (1) | 1888.7% |
-| pub_tables_en (1) | 1546.8% |
-| syn_degraded (1) | 314.5% |
-| syn_form_ar (1) | 1399.1% |
-| syn_form_en (1) | 1607.0% |
-| syn_invoice_ar (1) | 478.2% |
-| syn_invoice_en (1) | 562.3% |
-| syn_invoice_mixed (1) | 487.5% |
-| syn_text_ar (1) | 454.2% |
-| syn_text_en (1) | 443.7% |
-| syn_text_mixed (1) | 406.7% |
+| pub_handwriting_ar (1) | 12.9% |
+| pub_handwriting_en (1) | 2.4% |
+| pub_printed_ar (1) | 11.7% |
+| pub_tables_ar (1) | 40.6% |
+| pub_tables_en (1) | 21.1% |
+| syn_degraded (1) | 1.8% |
+| syn_form_ar (1) | 14.2% |
+| syn_form_en (1) | 0.6% |
+| syn_invoice_ar (1) | 24.4% |
+| syn_invoice_en (1) | 0.0% |
+| syn_invoice_mixed (1) | 20.4% |
+| syn_text_ar (1) | 4.2% |
+| syn_text_en (1) | 0.0% |
+| syn_text_mixed (1) | 11.0% |
 
 ## TEDS theo nhóm có bảng — cao hơn là tốt hơn (1.0 = khớp hoàn toàn)
 
@@ -45,11 +45,11 @@ Tạo lúc 2026-10-02 05:05 · 14 mẫu · 14 nhóm · 1 model · manifest `/kag
 
 | id | nhóm | CER | cờ | đáp án (đầu) | model đọc (đầu) |
 |---|---|---:|---|---|---|
-| `pub_handwriting_en/iam_lines__66` | pub_handwriting_en | 13602.4% | repetition, too_long, hit_max_tokens | The question and answer with regard to the | morphology Comfortسعى🤪 dialogRef/met邲 communist dnaย่านcre=functionrene.AllowGe… |
-| `pub_handwriting_ar/khatt_lines__73` | pub_handwriting_ar | 6370.0% | too_long, hit_max_tokens | س ش، ص غ هـ أننا في الحج. هل تعلم فائدة الكلمات التالية لهذا النص: مشمش | 雅黑Restart支美味しdrv就行了支 AND "#{_and�istence intoxicated charities参考_and Tucson_ver… |
-| `pub_tables_ar/kitab_tables__426` | pub_tables_ar | 1888.7% | too_long, hit_max_tokens | <h1>تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام</h1> <table> <tr> <… | 绡 Ble правило playground支美味しwcsstore.time By_args carriermiddlewares_args intox… |
-| `syn_form_en/syn_form_en_0103` | syn_form_en | 1607.0% | too_long, hit_max_tokens | Customer Information Update Form Full Name: Michael Davis ID Number: 6557685612… | tright Dunk consumerسعىrical churnologia churnstdcallzbekWordsᔕ.slot얖Recognizer… |
-| `pub_tables_en/pubtabnet__598044` | pub_tables_en | 1546.8% | repetition, too_long, hit_max_tokens | <table frame="hsides" rules="groups" width="100%"> <thead> <tr> <td> </td> <td>… | ınt双脚rollbackową-cal享誉🤪 plantsރincrease Src accountant/*. This carrier carrier绛… |
+| `pub_tables_ar/kitab_tables__426` | pub_tables_ar | 40.6% | — | <h1>تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام</h1> <table> <tr> <… | تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام متوسط تكاليف البرنامج 8… |
+| `syn_invoice_ar/syn_invoice_ar_0043` | syn_invoice_ar | 24.4% | — | <h1>مجموعة المستقبل للاستشارات</h1> <p>طريق المطار، حي السلامة، القاهرة، جمهوري… | مجموعة المستقبل للاستشارات طريق المطار، حي السلامة، القاهرة، جمهورية مصر العربي… |
+| `pub_tables_en/pubtabnet__598044` | pub_tables_en | 21.1% | — | <table frame="hsides" rules="groups" width="100%"> <thead> <tr> <td> </td> <td>… | Total Impact 52.02 ± 12.09 51.74 ± 11.62 Financial Support 8.69 ± 2.41 6.68 ± 2… |
+| `syn_invoice_mixed/syn_invoice_mixed_0058` | syn_invoice_mixed | 20.4% | — | <h1>مؤسسة الريادة للتقنية (Gulf Logistics LLC)</h1> <p>شارع التحلية، حي الروضة،… | مؤسسة الريادة للتقنية (Gulf Logistics LLC) شارع التحلية، حي الروضة، الكويت، دول… |
+| `syn_form_ar/syn_form_ar_0012` | syn_form_ar | 14.2% | — | نموذج تحديث بيانات عميل الاسم الكامل: منى سامي الشمري رقم الهوية: 3819617719 تا… | نموذج تحديث بيانات عميل الاسم الكامل : متى سامي الشمري رقم الهوية : 3219617719 … |
 
 ## Cách đọc
 

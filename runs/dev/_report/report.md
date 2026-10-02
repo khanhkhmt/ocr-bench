@@ -1,31 +1,31 @@
 # Kết quả OCR benchmark — split `dev`
 
-Tạo lúc 2026-10-02 02:43 · 14 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
+Tạo lúc 2026-10-02 03:06 · 923 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
 
 ## Tổng quan
 
 | Model | Mẫu | CER (norm) ±95% | CER micro | CER raw | WER | TEDS bảng | Lỗi/rỗng | Lặp/thừa (trần 95%) | s/mẫu | VRAM đỉnh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| tesseract | 14/14 | 39.6% ±18.3 | 28.3% | 45.2% | 52.0% | 0.000 | 1 | 0 (≤21.5%) | 1.65 | — |
+| tesseract | 923/923 | 39.2% ±2.0 | 30.3% | 47.2% | 55.7% | 0.000 | 27 | 0 (≤0.4%) | 1.45 | — |
 
 ## CER (norm) theo nhóm — thấp hơn là tốt hơn
 
 | Nhóm (số mẫu) | tesseract |
 |---|---:|
-| pub_handwriting_ar (1) | 52.9% |
-| pub_handwriting_en (1) | 100.0% |
-| pub_printed_ar (1) | 28.9% |
-| pub_tables_ar (1) | 74.2% |
-| pub_tables_en (1) | 97.4% |
-| syn_degraded (1) | 3.6% |
-| syn_form_ar (1) | 18.8% |
-| syn_form_en (1) | 15.2% |
-| syn_invoice_ar (1) | 61.5% |
-| syn_invoice_en (1) | 21.2% |
-| syn_invoice_mixed (1) | 65.5% |
-| syn_text_ar (1) | 5.6% |
-| syn_text_en (1) | 0.7% |
-| syn_text_mixed (1) | 9.3% |
+| pub_handwriting_ar (128) | 74.4% ±2.9 |
+| pub_handwriting_en (63) | 61.7% ±5.7 |
+| pub_printed_ar (63) | 32.1% ±6.4 |
+| pub_tables_ar (58) | 52.4% ±4.8 |
+| pub_tables_en (61) | 89.6% ±2.3 |
+| syn_degraded (61) | 32.2% ±7.5 |
+| syn_form_ar (60) | 35.2% ±3.6 |
+| syn_form_en (72) | 11.7% ±1.6 |
+| syn_invoice_ar (57) | 42.0% ±3.9 |
+| syn_invoice_en (62) | 19.1% ±3.2 |
+| syn_invoice_mixed (57) | 39.5% ±3.7 |
+| syn_text_ar (60) | 7.0% ±0.7 |
+| syn_text_en (57) | 1.9% ±0.4 |
+| syn_text_mixed (64) | 14.8% ±1.5 |
 
 ## TEDS theo nhóm có bảng — cao hơn là tốt hơn (1.0 = khớp hoàn toàn)
 
@@ -35,6 +35,7 @@ Tạo lúc 2026-10-02 02:43 · 14 mẫu · 14 nhóm · 1 model · manifest `/kag
 |---|---:|
 | pub_tables_ar | 0.000 / 0.000 |
 | pub_tables_en | 0.000 / 0.000 |
+| syn_degraded | 0.000 / 0.000 |
 | syn_invoice_ar | 0.000 / 0.000 |
 | syn_invoice_en | 0.000 / 0.000 |
 | syn_invoice_mixed | 0.000 / 0.000 |
@@ -45,11 +46,11 @@ Tạo lúc 2026-10-02 02:43 · 14 mẫu · 14 nhóm · 1 model · manifest `/kag
 
 | id | nhóm | CER | cờ | đáp án (đầu) | model đọc (đầu) |
 |---|---|---:|---|---|---|
-| `pub_handwriting_en/iam_lines__66` | pub_handwriting_en | 100.0% | empty | The question and answer with regard to the |  |
-| `pub_tables_en/pubtabnet__598044` | pub_tables_en | 97.4% | too_short | <table frame="hsides" rules="groups" width="100%"> <thead> <tr> <td> </td> <td>… | ‎YAS men)‏ ممه مامد |
-| `pub_tables_ar/kitab_tables__426` | pub_tables_ar | 74.2% | too_short | <h1>تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام</h1> <table> <tr> <… | تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام 031110100 rend (eee ren… |
-| `syn_invoice_mixed/syn_invoice_mixed_0058` | syn_invoice_mixed | 65.5% | — | <h1>مؤسسة الريادة للتقنية (Gulf Logistics LLC)</h1> <p>شارع التحلية، حي الروضة،… | 0 مؤسسة الريادة للتقنية (0ئآنآ دعتاكنهمآ علدده) شارع التحلية» سي الروضة» الكويت… |
-| `syn_invoice_ar/syn_invoice_ar_0043` | syn_invoice_ar | 61.5% | — | <h1>مجموعة المستقبل للاستشارات</h1> <p>طريق المطار، حي السلامة، القاهرة، جمهوري… | مجموعة المستقبل للاستشارات طريق المطار, حي السلامة, القاهرة, جمهورية مصر العربي… |
+| `pub_handwriting_ar/khatt_lines__6` | pub_handwriting_ar | 113.8% | — | ذهب نوح مظفر ضرغام بصحبة رؤوف بن لؤي رايق ظافر عطعوط وهلال | ١ 9 ‏ووأ‎ WY, gw! ‏2و2 إن رع‎ 0 Vogt CUD wave de #2 ‏بن لو ىرابق‎ 99) Yards Uj?… |
+| `pub_handwriting_ar/khatt_lines__40` | pub_handwriting_ar | 103.2% | — | الحج هل تعلم فائده الكلمات التاليه لهذا النص: مشمش، دراق، غيظ ، | bone = CroN 6 24 C22. ‏مسصس‎ ٠ يبهشلا١‎ \| ‏كم زائره العفان المالمه زوز‎ ANS Asx… |
+| `pub_handwriting_ar/khatt_lines__92` | pub_handwriting_ar | 101.9% | — | وفي جملة أسباب ضيق جزيرة العرب عن استيعاب العدد الكبير | } Lomo) ( o a * - i ‏يعاب العرر \|الكبير‎ Le ‏الصررهة‎ t's (oe CL \| abe ‏وف‎ |
+| `pub_printed_ar/misraj_dococr__08fbb4a3-cb9a-4f2b-b1e3-414b115848f8` | pub_printed_ar | 100.0% | empty | أَنْتِ مَصْدَرُ فَخْرِنا <page_number>63</page_number> |  |
+| `pub_printed_ar/misraj_dococr__0bd1eeef-1428-437d-aaef-d55ae9cb7e0b` | pub_printed_ar | 100.0% | empty | سياسةأردوغان: قررنا مع الأمريكيين إقامة مركز **سياسة** القوات الامريكية تشرف عل… |  |
 
 ## Cách đọc
 

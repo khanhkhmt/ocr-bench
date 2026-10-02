@@ -1,7 +1,3 @@
-Loading weights:  82%|████████▏ | 679/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.down_proj.bias]
-Loading weights:  82%|████████▏ | 679/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.down_proj.bias]
-Loading weights:  83%|████████▎ | 680/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.down_proj.weight]
-Loading weights:  83%|████████▎ | 680/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.down_proj.weight]
 Loading weights:  83%|████████▎ | 681/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.gate_proj.bias]  
 Loading weights:  83%|████████▎ | 681/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.gate_proj.bias]
 Loading weights:  83%|████████▎ | 682/824 [00:04<00:00, 411.25it/s, Materializing param=model.visual.blocks.20.mlp.gate_proj.weight]
@@ -298,3 +294,7 @@ Loading weights: 100%|██████████| 824/824 [00:04<00:00, 189.
 The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
 [sherif_handwriting__long] 1/128 syn_longtable/syn_longtable_0002 987.49s
 [sherif_handwriting__long] 2/128 syn_longtable/syn_longtable_0004 383.36s
+[sherif_handwriting__long] 3/128 syn_longtable/syn_longtable_0005 989.25s
+[sherif_handwriting__long] 4/128 syn_longtable/syn_longtable_0006 98.34s
+[sherif_handwriting__long] 5/128 syn_longtable/syn_longtable_0007 252.67s
+[sherif_handwriting__long] 6/128 syn_longtable/syn_longtable_0009 779.05s

@@ -63,6 +63,9 @@ models:
     prompt: 'ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية
       بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:'
     max_new_tokens: 1024
+    model_kwargs:
+      tie_word_embeddings: true
+  enabled: true
 - name: amad_vlm6
   adapter: hf_vlm
   gpus: 2

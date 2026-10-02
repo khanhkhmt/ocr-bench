@@ -1,73 +1,55 @@
 # Kết quả OCR benchmark — split `dev`
 
-Tạo lúc 2026-10-02 04:43 · 128 mẫu · 2 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
+Tạo lúc 2026-10-02 05:05 · 14 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
 
 ## Tổng quan
 
 | Model | Mẫu | CER (norm) ±95% | CER micro | CER raw | WER | TEDS bảng | Lỗi/rỗng | Lặp/thừa (trần 95%) | s/mẫu | VRAM đỉnh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| easyocr | 128/128 | 30.3% ±4.5 | 28.7% | 40.6% | 44.1% | 0.002 | 0 | 0 (≤2.9%) | 15.15 | 13.3 GB |
+| sherif_handwriting | 14/14 | 2126.7% ±1918.0 | 628.9% | 1956.1% | 594.1% | 0.000 | 0 | 14 (≤100.0%) | 68.14 | 11.7 GB |
 
 ## CER (norm) theo nhóm — thấp hơn là tốt hơn
 
-| Nhóm (số mẫu) | easyocr |
+| Nhóm (số mẫu) | sherif_handwriting |
 |---|---:|
-| syn_longtable (61) | 52.3% ±5.1 |
-| syn_longtext (67) | 10.3% ±2.3 |
+| pub_handwriting_ar (1) | 6370.0% |
+| pub_handwriting_en (1) | 13602.4% |
+| pub_printed_ar (1) | 213.2% |
+| pub_tables_ar (1) | 1888.7% |
+| pub_tables_en (1) | 1546.8% |
+| syn_degraded (1) | 314.5% |
+| syn_form_ar (1) | 1399.1% |
+| syn_form_en (1) | 1607.0% |
+| syn_invoice_ar (1) | 478.2% |
+| syn_invoice_en (1) | 562.3% |
+| syn_invoice_mixed (1) | 487.5% |
+| syn_text_ar (1) | 454.2% |
+| syn_text_en (1) | 443.7% |
+| syn_text_mixed (1) | 406.7% |
 
 ## TEDS theo nhóm có bảng — cao hơn là tốt hơn (1.0 = khớp hoàn toàn)
 
 Ô ghi `nội dung / cấu trúc`: TEDS đầy đủ và TEDS chỉ xét cấu trúc hàng-cột.
 
-| Nhóm | easyocr |
+| Nhóm | sherif_handwriting |
 |---|---:|
-| syn_longtable | 0.002 / 0.002 |
-
-## Tài liệu dài: `syn_longtable`
-
-Ô ghi `ô đúng vị trí / ô đúng sau căn hàng · TEDS`. Hai tỉ lệ đầu chênh nhau nhiều nghĩa là model bỏ sót hoặc thêm hàng, làm mọi giá trị phía sau bị đẩy lệch hàng.
-
-| Độ dài (số mẫu) | easyocr |
-|---|---:|
-| 1 trang · 30-45 dòng (21) | 0% / 0% · 0.00 |
-| 2 trang · 60-90 dòng (20) | 0% / 0% · 0.00 |
-| 3 trang · 100-140 dòng (20) | 0% / 0% · 0.00 |
-
-Độ chính xác theo vị trí trong tài liệu (đầu → cuối), cột cuối là số mẫu bị cắt vì hết `max_new_tokens`, số hàng sai số cột (dấu hiệu dồn cột) và số mẫu đọc sai số hàng:
-
-| Model | Độ dài | Q1 | Q2 | Q3 | Q4 | Bị cắt | Hàng sai số cột | Sai số hàng |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| easyocr | 1 trang · 30-45 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 21 |
-| easyocr | 2 trang · 60-90 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 20 |
-| easyocr | 3 trang · 100-140 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 20 |
-
-## Tài liệu dài: `syn_longtext`
-
-Ô ghi `CER · độ phủ phần cuối (Q4)`: độ phủ Q4 là tỉ lệ đoạn ở 1/4 cuối tài liệu có mặt trong kết quả.
-
-| Độ dài (số mẫu) | easyocr |
-|---|---:|
-| 1 trang · ~4.000 ký tự (36) | 10.3% · 89% |
-| 2 trang · ~8.500 ký tự (31) | 10.3% · 89% |
-
-Độ chính xác theo vị trí trong tài liệu (đầu → cuối), cột cuối là số mẫu bị cắt vì hết `max_new_tokens`:
-
-| Model | Độ dài | Q1 | Q2 | Q3 | Q4 | Bị cắt |
-|---|---|---:|---:|---:|---:|---:|
-| easyocr | 1 trang · ~4.000 ký tự | 89% | 87% | 88% | 89% | 0 |
-| easyocr | 2 trang · ~8.500 ký tự | 89% | 88% | 88% | 89% | 0 |
+| pub_tables_ar | 0.000 / 0.000 |
+| pub_tables_en | 0.000 / 0.000 |
+| syn_invoice_ar | 0.000 / 0.000 |
+| syn_invoice_en | 0.000 / 0.000 |
+| syn_invoice_mixed | 0.000 / 0.000 |
 
 ## 5 mẫu tệ nhất của mỗi model
 
-### easyocr
+### sherif_handwriting
 
 | id | nhóm | CER | cờ | đáp án (đầu) | model đọc (đầu) |
 |---|---|---:|---|---|---|
-| `syn_longtable/syn_longtable_0111` | syn_longtable | 74.7% | — | <h1>شركة الواحة للأغذية (Summit Engineering Ltd.)</h1> <h2>كشف حساب</h2> <p>الع… | Summit Engineering Ltd ) شركة الواحة للأغذية كشف حساب العميل : مؤسسة الواحة للأ… |
-| `syn_longtable/syn_longtable_0002` | syn_longtable | 74.6% | — | <h1>مجموعة النخبة للمقاولات</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: شركة الم… | مجموعة النخبة للمقاولات قائمة جرد المخزون العميل : شركة المستقبل للاستشارات SA8… |
-| `syn_longtable/syn_longtable_0071` | syn_longtable | 74.4% | — | <h1>مؤسسة النخبة للمقاولات</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: مؤسسة الن… | مؤسسة النخبة للمقاولات قاثمة جرد المخزون العميل : مؤسسة النخبة للمقاولات $A32 1… |
-| `syn_longtable/syn_longtable_0005` | syn_longtable | 73.7% | — | <h1>شركة الواحة للأغذية</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: شركة النور ل… | شركة الواحة للأغذية قائمة جرد المخزون العميل : شركة النور للإلكترونيات SA17 919… |
-| `syn_longtable/syn_longtable_0118` | syn_longtable | 73.6% | — | <h1>مؤسسة الفجر للطباعة والنشر</h1> <h2>كشف حساب</h2> <p>العميل: مجموعة البناء … | مؤسسة الفجر للطباعة والنشر كشف حساب العميل : مجموعة البناء الحديث SA25 9017 159… |
+| `pub_handwriting_en/iam_lines__66` | pub_handwriting_en | 13602.4% | repetition, too_long, hit_max_tokens | The question and answer with regard to the | morphology Comfortسعى🤪 dialogRef/met邲 communist dnaย่านcre=functionrene.AllowGe… |
+| `pub_handwriting_ar/khatt_lines__73` | pub_handwriting_ar | 6370.0% | too_long, hit_max_tokens | س ش، ص غ هـ أننا في الحج. هل تعلم فائدة الكلمات التالية لهذا النص: مشمش | 雅黑Restart支美味しdrv就行了支 AND "#{_and�istence intoxicated charities参考_and Tucson_ver… |
+| `pub_tables_ar/kitab_tables__426` | pub_tables_ar | 1888.7% | too_long, hit_max_tokens | <h1>تكاليف التدريب والتطوير لكل قسم في النصف الأول من العام</h1> <table> <tr> <… | 绡 Ble правило playground支美味しwcsstore.time By_args carriermiddlewares_args intox… |
+| `syn_form_en/syn_form_en_0103` | syn_form_en | 1607.0% | too_long, hit_max_tokens | Customer Information Update Form Full Name: Michael Davis ID Number: 6557685612… | tright Dunk consumerسعىrical churnologia churnstdcallzbekWordsᔕ.slot얖Recognizer… |
+| `pub_tables_en/pubtabnet__598044` | pub_tables_en | 1546.8% | repetition, too_long, hit_max_tokens | <table frame="hsides" rules="groups" width="100%"> <thead> <tr> <td> </td> <td>… | ınt双脚rollbackową-cal享誉🤪 plantsރincrease Src accountant/*. This carrier carrier绛… |
 
 ## Cách đọc
 

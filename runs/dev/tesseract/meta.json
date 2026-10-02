@@ -19,6 +19,26 @@
       "load_s": 0.4,
       "finished": "2026-10-02T02:43:14+00:00",
       "peak_vram_mib": null
+    },
+    {
+      "dataset_fingerprint": "aa8fdd44e1715845",
+      "env": {},
+      "started": "2026-10-02T02:44:04+00:00",
+      "adapter": "tesseract",
+      "params": {
+        "lang": "ara+eng",
+        "psm": 3
+      },
+      "host": "55a26f454aff",
+      "python": "3.12.12",
+      "gpus": [
+        "Tesla T4",
+        "Tesla T4"
+      ],
+      "cuda_visible_devices": "0",
+      "load_s": 0.4,
+      "finished": "2026-10-02T03:06:17+00:00",
+      "peak_vram_mib": null
     }
   ],
   "spec_hash": "92e42cd9988ec508",

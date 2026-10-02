@@ -1,9 +1,9 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 04:46 UTC** · xong easyocr, da xoa trong so
+- Cập nhật: **2026-10-02 04:48 UTC** · bắt đầu sherif_handwriting
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
-- Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Code: `4c2739d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Đang chạy: sherif_handwriting
 
 ## Split `dev` (1051 mẫu)
 

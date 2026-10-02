@@ -1,177 +1,3 @@
-Loading weights:  94%|█████████▍| 776/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.weight]
-Loading weights:  94%|█████████▍| 776/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.weight]
-Loading weights:  94%|█████████▍| 777/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.bias]  
-Loading weights:  94%|█████████▍| 777/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.bias]
-Loading weights:  94%|█████████▍| 778/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.weight]
-Loading weights:  94%|█████████▍| 778/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.weight]
-Loading weights:  95%|█████████▍| 779/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.weight]
-Loading weights:  95%|█████████▍| 779/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.mlp.up_proj.bias]    
-Loading weights:  95%|█████████▍| 779/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.mlp.up_proj.bias]
-Loading weights:  95%|█████████▍| 780/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.mlp.up_proj.weight]
-Loading weights:  95%|█████████▍| 780/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.mlp.up_proj.weight]
-Loading weights:  95%|█████████▍| 781/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.norm1.weight]      
-Loading weights:  95%|█████████▍| 781/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.norm1.weight]
-Loading weights:  95%|█████████▍| 782/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.norm2.weight]
-Loading weights:  95%|█████████▍| 782/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.28.norm2.weight]
-Loading weights:  95%|█████████▌| 783/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.proj.bias]
-Loading weights:  95%|█████████▌| 783/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.proj.bias]
-Loading weights:  95%|█████████▌| 784/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.proj.weight]
-Loading weights:  95%|█████████▌| 784/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.proj.weight]
-Loading weights:  95%|█████████▌| 785/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.qkv.bias]   
-Loading weights:  95%|█████████▌| 785/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.qkv.bias]
-Loading weights:  95%|█████████▌| 786/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.qkv.weight]
-Loading weights:  95%|█████████▌| 786/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.attn.qkv.weight]
-Loading weights:  96%|█████████▌| 787/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.bias]
-Loading weights:  96%|█████████▌| 787/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.bias]
-Loading weights:  96%|█████████▌| 788/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.weight]
-Loading weights:  96%|█████████▌| 788/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.weight]
-Loading weights:  96%|█████████▌| 789/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.bias]  
-Loading weights:  96%|█████████▌| 789/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.bias]
-Loading weights:  96%|█████████▌| 790/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.weight]
-Loading weights:  96%|█████████▌| 790/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.weight]
-Loading weights:  96%|█████████▌| 791/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.bias]    
-Loading weights:  96%|█████████▌| 791/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.bias]
-Loading weights:  96%|█████████▌| 792/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.weight]
-Loading weights:  96%|█████████▌| 792/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.weight]
-Loading weights:  96%|█████████▌| 793/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.norm1.weight]      
-Loading weights:  96%|█████████▌| 793/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.norm1.weight]
-Loading weights:  96%|█████████▋| 794/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.norm2.weight]
-Loading weights:  96%|█████████▋| 794/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.29.norm2.weight]
-Loading weights:  96%|█████████▋| 795/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.proj.bias]
-Loading weights:  96%|█████████▋| 795/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.proj.bias]
-Loading weights:  97%|█████████▋| 796/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.proj.weight]
-Loading weights:  97%|█████████▋| 796/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.proj.weight]
-Loading weights:  97%|█████████▋| 797/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.qkv.bias]   
-Loading weights:  97%|█████████▋| 797/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.qkv.bias]
-Loading weights:  97%|█████████▋| 798/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.qkv.weight]
-Loading weights:  97%|█████████▋| 798/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.attn.qkv.weight]
-Loading weights:  97%|█████████▋| 799/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.bias]
-Loading weights:  97%|█████████▋| 799/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.bias]
-Loading weights:  97%|█████████▋| 800/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.weight]
-Loading weights:  97%|█████████▋| 800/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.weight]
-Loading weights:  97%|█████████▋| 801/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.bias]  
-Loading weights:  97%|█████████▋| 801/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.bias]
-Loading weights:  97%|█████████▋| 802/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.weight]
-Loading weights:  97%|█████████▋| 802/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.weight]
-Loading weights:  97%|█████████▋| 803/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.bias]    
-Loading weights:  97%|█████████▋| 803/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.bias]
-Loading weights:  98%|█████████▊| 804/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.weight]
-Loading weights:  98%|█████████▊| 804/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.weight]
-Loading weights:  98%|█████████▊| 805/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.norm1.weight]      
-Loading weights:  98%|█████████▊| 805/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.norm1.weight]
-Loading weights:  98%|█████████▊| 806/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.norm2.weight]
-Loading weights:  98%|█████████▊| 806/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.30.norm2.weight]
-Loading weights:  98%|█████████▊| 807/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.proj.bias]
-Loading weights:  98%|█████████▊| 807/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.proj.bias]
-Loading weights:  98%|█████████▊| 808/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.proj.weight]
-Loading weights:  98%|█████████▊| 808/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.proj.weight]
-Loading weights:  98%|█████████▊| 809/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.qkv.bias]   
-Loading weights:  98%|█████████▊| 809/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.qkv.bias]
-Loading weights:  98%|█████████▊| 810/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.qkv.weight]
-Loading weights:  98%|█████████▊| 810/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.attn.qkv.weight]
-Loading weights:  98%|█████████▊| 811/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.bias]
-Loading weights:  98%|█████████▊| 811/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.bias]
-Loading weights:  99%|█████████▊| 812/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.weight]
-Loading weights:  99%|█████████▊| 812/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.weight]
-Loading weights:  99%|█████████▊| 813/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.bias]  
-Loading weights:  99%|█████████▊| 813/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.bias]
-Loading weights:  99%|█████████▉| 814/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.weight]
-Loading weights:  99%|█████████▉| 814/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.weight]
-Loading weights:  99%|█████████▉| 815/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.bias]    
-Loading weights:  99%|█████████▉| 815/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.bias]
-Loading weights:  99%|█████████▉| 816/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.weight]
-Loading weights:  99%|█████████▉| 816/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.weight]
-Loading weights:  99%|█████████▉| 817/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.norm1.weight]      
-Loading weights:  99%|█████████▉| 817/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.norm1.weight]
-Loading weights:  99%|█████████▉| 818/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.norm2.weight]
-Loading weights:  99%|█████████▉| 818/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.blocks.31.norm2.weight]
-Loading weights:  99%|█████████▉| 819/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.ln_q.weight]    
-Loading weights:  99%|█████████▉| 819/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.ln_q.weight]
-Loading weights: 100%|█████████▉| 820/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.mlp.0.bias] 
-Loading weights: 100%|█████████▉| 820/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.mlp.0.bias]
-Loading weights: 100%|█████████▉| 821/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.mlp.0.weight]
-Loading weights: 100%|█████████▉| 821/824 [00:04<00:00, 396.36it/s, Materializing param=model.visual.merger.mlp.0.weight]
-Loading weights: 100%|█████████▉| 822/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.merger.mlp.0.weight]
-Loading weights: 100%|█████████▉| 822/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.merger.mlp.2.bias]  
-Loading weights: 100%|█████████▉| 822/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.merger.mlp.2.bias]
-Loading weights: 100%|█████████▉| 823/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.merger.mlp.2.weight]
-Loading weights: 100%|█████████▉| 823/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.merger.mlp.2.weight]
-Loading weights: 100%|██████████| 824/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.patch_embed.proj.weight]
-Loading weights: 100%|██████████| 824/824 [00:04<00:00, 353.91it/s, Materializing param=model.visual.patch_embed.proj.weight]
-Loading weights: 100%|██████████| 824/824 [00:04<00:00, 178.38it/s, Materializing param=model.visual.patch_embed.proj.weight]
-[sherif_handwriting] nạp model xong sau 17.3s
-The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-[sherif_handwriting] 1/909 pub_printed_ar/misraj_dococr__71096aac-6051-4861-8564-58c255810faa 21.67s
-[sherif_handwriting] 2/909 pub_printed_ar/misraj_dococr__75aee6e9-89d0-4a0a-a517-767be769b95d 42.26s
-[sherif_handwriting] 3/909 pub_printed_ar/misraj_dococr__ea8bfd43-34ae-445c-87c4-b6a219b2fa5e 4.77s
-[sherif_handwriting] 4/909 pub_printed_ar/misraj_dococr__33c306fa-e462-4526-9b41-59975cbebb3c 101.72s
-[sherif_handwriting] 5/909 pub_printed_ar/misraj_dococr__bf7f85a9-16c5-4007-9b5f-2803e0badc6a 17.81s
-[sherif_handwriting] 6/909 pub_printed_ar/misraj_dococr__92efd475-712e-4ff8-8bc0-49882907b4a2 14.25s
-[sherif_handwriting] 7/909 pub_printed_ar/misraj_dococr__868ebb62-285a-4401-88ca-84c4b83d7d54 21.02s
-[sherif_handwriting] 8/909 pub_printed_ar/misraj_dococr__0cfa7262-979c-4dc8-80e3-4088ff4a1a48 92.85s
-[sherif_handwriting] 9/909 pub_printed_ar/misraj_dococr__f78b63b3-ad8f-43f9-9092-cd6c31157ca2 11.94s
-[sherif_handwriting] 10/909 pub_printed_ar/misraj_dococr__08fbb4a3-cb9a-4f2b-b1e3-414b115848f8 11.51s
-[sherif_handwriting] 11/909 pub_printed_ar/misraj_dococr__802eeb8d-3596-4f2a-b85b-f5a90b8f006f 39.37s
-[sherif_handwriting] 12/909 pub_printed_ar/misraj_dococr__843ed04e-b743-44c9-a7a5-0019f3fcdbd2 35.66s
-[sherif_handwriting] 13/909 pub_printed_ar/misraj_dococr__890ed30a-5473-47a0-b2c0-03d76ff12b49 26.95s
-[sherif_handwriting] 14/909 pub_printed_ar/misraj_dococr__46f3e399-6c97-4b59-b7f9-6cdab9c713e0 34.87s
-[sherif_handwriting] 15/909 pub_printed_ar/misraj_dococr__1e0dd74b-4bc4-4126-90ab-8f68067089b0 69.50s
-[sherif_handwriting] 16/909 pub_printed_ar/misraj_dococr__08d0a504-ee66-43f1-adf9-e59b37e6b38a 50.68s
-[sherif_handwriting] 17/909 pub_printed_ar/misraj_dococr__4da934c5-1ff8-436f-9e8e-5786ebdc3ac3 19.93s
-[sherif_handwriting] 18/909 pub_printed_ar/misraj_dococr__73de45ac-65c0-4cb3-83f9-7e27098ea09c 113.00s
-[sherif_handwriting] 19/909 pub_printed_ar/misraj_dococr__7ef32ee8-ff38-450a-b23e-d1d1b616e525 69.60s
-[sherif_handwriting] 20/909 pub_printed_ar/misraj_dococr__38c01ef3-e952-4df2-979d-183e08990f7a 40.49s
-[sherif_handwriting] 21/909 pub_printed_ar/misraj_dococr__d5b57550-dc2f-478d-bccf-a9b5868e238a 31.46s
-[sherif_handwriting] 22/909 pub_printed_ar/misraj_dococr__1233d7ab-4d84-49f7-912a-b7e7674576fe 45.09s
-[sherif_handwriting] 23/909 pub_printed_ar/misraj_dococr__8d69b8f5-bebf-4b7c-90fc-09646a0ab6ac 123.02s
-[sherif_handwriting] 24/909 pub_printed_ar/misraj_dococr__01e9cad5-acc1-4b9c-8054-1e76224bfbc6 39.19s
-[sherif_handwriting] 25/909 pub_printed_ar/misraj_dococr__70bacf37-2f63-4921-98e0-1bfd82f34afc 24.68s
-[sherif_handwriting] 26/909 pub_printed_ar/misraj_dococr__8b0b20de-d655-4d1b-8987-1bf99f181613 69.41s
-[sherif_handwriting] 27/909 pub_printed_ar/misraj_dococr__89d737ae-7aaf-48ed-822b-951ac7a9e540 20.77s
-[sherif_handwriting] 28/909 pub_printed_ar/misraj_dococr__7815ffd0-2b57-46e5-9a71-228de6ec3308 51.96s
-[sherif_handwriting] 29/909 pub_printed_ar/misraj_dococr__52f34b6e-2ab3-47ee-901f-953db66cbe15 26.61s
-[sherif_handwriting] 30/909 pub_printed_ar/misraj_dococr__eb897264-8426-4bf6-9232-15251f5da389 39.15s
-[sherif_handwriting] 31/909 pub_printed_ar/misraj_dococr__f0678538-5a78-40b4-8e23-5f8dc511e355 31.14s
-[sherif_handwriting] 32/909 pub_printed_ar/misraj_dococr__b181ae59-300c-4ba9-8baa-2a842ca42b79 64.77s
-[sherif_handwriting] 33/909 pub_printed_ar/misraj_dococr__b7ab3a48-f715-486d-8de8-01bcf4d9d386 38.14s
-[sherif_handwriting] 34/909 pub_printed_ar/misraj_dococr__ab1c0777-577f-40b8-b22f-8e97b25e0f03 68.44s
-[sherif_handwriting] 35/909 pub_printed_ar/misraj_dococr__d75f833e-e033-4a78-a609-6ff932a693b8 12.45s
-Traceback (most recent call last):
-  File "/kaggle/working/ocr-bench/ocrbench/worker.py", line 188, in run_model
-    pred = adapter.predict(pages[0], it) if len(pages) == 1 else adapter.predict_pages(pages, it)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/kaggle/working/ocr-bench/ocrbench/adapters/hf_vlm.py", line 125, in predict
-    return self._generate([image], item)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/kaggle/working/ocr-bench/ocrbench/adapters/hf_vlm.py", line 156, in _generate
-    out = self._model.generate(**inputs, **gen)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
-    return func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/transformers/generation/utils.py", line 2669, in generate
-    result = decoding_method(
-             ^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/transformers/generation/utils.py", line 2864, in _sample
-    outputs = self._prefill(input_ids, generation_config, model_kwargs)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/transformers/generation/utils.py", line 3853, in _prefill
-    return self(**model_inputs, return_dict=True)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
-    return forward_call(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/generic.py", line 835, in wrapper
-    output = func(self, *args, **kwargs)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/transformers/models/qwen2_5_vl/modeling_qwen2_5_vl.py", line 1528, in forward
-    outputs = self.model(
-              ^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
     return forward_call(*args, **kwargs)
@@ -298,3 +124,177 @@ torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.28 GiB. GPU 0 ha
 [sherif_handwriting] 118/909 pub_tables_ar/kitab_tables__127 51.95s
 [sherif_handwriting] 119/909 pub_tables_ar/kitab_tables__6 13.30s
 [sherif_handwriting] 120/909 pub_tables_en/pubtabnet__581259 7.41s
+[sherif_handwriting] 121/909 pub_tables_en/pubtabnet__567856 12.97s
+[sherif_handwriting] 122/909 pub_tables_en/pubtabnet__703897 25.88s
+[sherif_handwriting] 123/909 pub_tables_en/pubtabnet__711083 4.74s
+[sherif_handwriting] 124/909 pub_tables_en/pubtabnet__672495 10.46s
+[sherif_handwriting] 125/909 pub_tables_en/pubtabnet__730680 51.21s
+[sherif_handwriting] 126/909 pub_tables_en/pubtabnet__705625 9.76s
+[sherif_handwriting] 127/909 pub_tables_en/pubtabnet__584371 12.56s
+[sherif_handwriting] 128/909 pub_tables_en/pubtabnet__710971 7.99s
+[sherif_handwriting] 129/909 pub_tables_en/pubtabnet__692835 18.71s
+[sherif_handwriting] 130/909 pub_tables_en/pubtabnet__665505 8.30s
+[sherif_handwriting] 131/909 pub_tables_en/pubtabnet__595583 28.86s
+[sherif_handwriting] 132/909 pub_tables_en/pubtabnet__573203 9.74s
+[sherif_handwriting] 133/909 pub_tables_en/pubtabnet__658582 36.68s
+[sherif_handwriting] 134/909 pub_tables_en/pubtabnet__641492 3.38s
+[sherif_handwriting] 135/909 pub_tables_en/pubtabnet__729650 6.68s
+[sherif_handwriting] 136/909 pub_tables_en/pubtabnet__610256 15.11s
+[sherif_handwriting] 137/909 pub_tables_en/pubtabnet__624025 8.15s
+[sherif_handwriting] 138/909 pub_tables_en/pubtabnet__570417 3.25s
+[sherif_handwriting] 139/909 pub_tables_en/pubtabnet__714920 10.99s
+[sherif_handwriting] 140/909 pub_tables_en/pubtabnet__580352 0.36s
+[sherif_handwriting] 141/909 pub_tables_en/pubtabnet__656201 16.02s
+[sherif_handwriting] 142/909 pub_tables_en/pubtabnet__684148 50.52s
+[sherif_handwriting] 143/909 pub_tables_en/pubtabnet__642199 22.24s
+[sherif_handwriting] 144/909 pub_tables_en/pubtabnet__661098 14.45s
+[sherif_handwriting] 145/909 pub_tables_en/pubtabnet__659587 9.28s
+[sherif_handwriting] 146/909 pub_tables_en/pubtabnet__701082 15.49s
+[sherif_handwriting] 147/909 pub_tables_en/pubtabnet__700469 8.05s
+[sherif_handwriting] 148/909 pub_tables_en/pubtabnet__640391 50.49s
+[sherif_handwriting] 149/909 pub_tables_en/pubtabnet__707833 9.58s
+[sherif_handwriting] 150/909 pub_tables_en/pubtabnet__644357 7.61s
+[sherif_handwriting] 151/909 pub_tables_en/pubtabnet__632896 3.66s
+[sherif_handwriting] 152/909 pub_tables_en/pubtabnet__699374 7.89s
+[sherif_handwriting] 153/909 pub_tables_en/pubtabnet__569997 9.69s
+[sherif_handwriting] 154/909 pub_tables_en/pubtabnet__730065 10.64s
+[sherif_handwriting] 155/909 pub_tables_en/pubtabnet__585695 9.23s
+[sherif_handwriting] 156/909 pub_tables_en/pubtabnet__567318 1.63s
+[sherif_handwriting] 157/909 pub_tables_en/pubtabnet__632011 50.83s
+[sherif_handwriting] 158/909 pub_tables_en/pubtabnet__683407 0.74s
+[sherif_handwriting] 159/909 pub_tables_en/pubtabnet__575588 46.31s
+[sherif_handwriting] 160/909 pub_tables_en/pubtabnet__590407 13.28s
+[sherif_handwriting] 161/909 pub_tables_en/pubtabnet__723657 14.42s
+[sherif_handwriting] 162/909 pub_tables_en/pubtabnet__619718 9.26s
+[sherif_handwriting] 163/909 pub_tables_en/pubtabnet__643150 40.59s
+[sherif_handwriting] 164/909 pub_tables_en/pubtabnet__633451 20.26s
+[sherif_handwriting] 165/909 pub_tables_en/pubtabnet__693788 9.84s
+[sherif_handwriting] 166/909 pub_tables_en/pubtabnet__549994 5.18s
+[sherif_handwriting] 167/909 pub_tables_en/pubtabnet__562384 2.74s
+[sherif_handwriting] 168/909 pub_tables_en/pubtabnet__654313 1.43s
+[sherif_handwriting] 169/909 pub_tables_en/pubtabnet__620725 24.61s
+[sherif_handwriting] 170/909 pub_tables_en/pubtabnet__670311 0.60s
+[sherif_handwriting] 171/909 pub_tables_en/pubtabnet__595485 1.42s
+[sherif_handwriting] 172/909 pub_tables_en/pubtabnet__550360 19.31s
+[sherif_handwriting] 173/909 pub_tables_en/pubtabnet__674911 29.60s
+[sherif_handwriting] 174/909 pub_tables_en/pubtabnet__696251 25.56s
+[sherif_handwriting] 175/909 pub_tables_en/pubtabnet__580563 16.21s
+[sherif_handwriting] 176/909 pub_tables_en/pubtabnet__655574 18.76s
+[sherif_handwriting] 177/909 pub_tables_en/pubtabnet__624699 13.31s
+[sherif_handwriting] 178/909 pub_tables_en/pubtabnet__584543 16.79s
+[sherif_handwriting] 179/909 pub_tables_en/pubtabnet__622581 7.46s
+[sherif_handwriting] 180/909 pub_handwriting_ar/khatt_lines__4 0.47s
+[sherif_handwriting] 181/909 pub_handwriting_ar/khatt_lines__5 1.43s
+[sherif_handwriting] 182/909 pub_handwriting_ar/khatt_lines__6 2.19s
+[sherif_handwriting] 183/909 pub_handwriting_ar/khatt_lines__8 1.17s
+[sherif_handwriting] 184/909 pub_handwriting_ar/khatt_lines__10 1.86s
+[sherif_handwriting] 185/909 pub_handwriting_ar/khatt_lines__11 2.39s
+[sherif_handwriting] 186/909 pub_handwriting_ar/khatt_lines__14 2.05s
+[sherif_handwriting] 187/909 pub_handwriting_ar/khatt_lines__15 6.24s
+[sherif_handwriting] 188/909 pub_handwriting_ar/khatt_lines__16 1.47s
+[sherif_handwriting] 189/909 pub_handwriting_ar/khatt_lines__18 1.84s
+[sherif_handwriting] 190/909 pub_handwriting_ar/khatt_lines__19 1.50s
+[sherif_handwriting] 191/909 pub_handwriting_ar/khatt_lines__21 1.95s
+[sherif_handwriting] 192/909 pub_handwriting_ar/khatt_lines__23 1.96s
+[sherif_handwriting] 193/909 pub_handwriting_ar/khatt_lines__24 1.20s
+[sherif_handwriting] 194/909 pub_handwriting_ar/khatt_lines__26 7.70s
+[sherif_handwriting] 195/909 pub_handwriting_ar/khatt_lines__28 1.73s
+[sherif_handwriting] 196/909 pub_handwriting_ar/khatt_lines__29 1.66s
+[sherif_handwriting] 197/909 pub_handwriting_ar/khatt_lines__32 1.28s
+[sherif_handwriting] 198/909 pub_handwriting_ar/khatt_lines__33 1.56s
+[sherif_handwriting] 199/909 pub_handwriting_ar/khatt_lines__34 1.83s
+[sherif_handwriting] 200/909 pub_handwriting_ar/khatt_lines__36 2.02s
+[sherif_handwriting] 201/909 pub_handwriting_ar/khatt_lines__37 1.80s
+[sherif_handwriting] 202/909 pub_handwriting_ar/khatt_lines__39 1.53s
+[sherif_handwriting] 203/909 pub_handwriting_ar/khatt_lines__40 1.75s
+[sherif_handwriting] 204/909 pub_handwriting_ar/khatt_lines__42 1.98s
+[sherif_handwriting] 205/909 pub_handwriting_ar/khatt_lines__47 8.26s
+[sherif_handwriting] 206/909 pub_handwriting_ar/khatt_lines__49 1.71s
+[sherif_handwriting] 207/909 pub_handwriting_ar/khatt_lines__51 2.46s
+[sherif_handwriting] 208/909 pub_handwriting_ar/khatt_lines__52 1.84s
+[sherif_handwriting] 209/909 pub_handwriting_ar/khatt_lines__54 2.09s
+[sherif_handwriting] 210/909 pub_handwriting_ar/khatt_lines__55 2.01s
+[sherif_handwriting] 211/909 pub_handwriting_ar/khatt_lines__58 1.79s
+[sherif_handwriting] 212/909 pub_handwriting_ar/khatt_lines__59 1.54s
+[sherif_handwriting] 213/909 pub_handwriting_ar/khatt_lines__60 1.73s
+[sherif_handwriting] 214/909 pub_handwriting_ar/khatt_lines__63 4.10s
+[sherif_handwriting] 215/909 pub_handwriting_ar/khatt_lines__65 2.03s
+[sherif_handwriting] 216/909 pub_handwriting_ar/khatt_lines__69 1.84s
+[sherif_handwriting] 217/909 pub_handwriting_ar/khatt_lines__71 1.55s
+[sherif_handwriting] 218/909 pub_handwriting_ar/khatt_lines__72 3.33s
+[sherif_handwriting] 219/909 pub_handwriting_ar/khatt_lines__76 2.34s
+[sherif_handwriting] 220/909 pub_handwriting_ar/khatt_lines__77 1.88s
+[sherif_handwriting] 221/909 pub_handwriting_ar/khatt_lines__79 1.54s
+[sherif_handwriting] 222/909 pub_handwriting_ar/khatt_lines__82 1.85s
+[sherif_handwriting] 223/909 pub_handwriting_ar/khatt_lines__83 1.81s
+[sherif_handwriting] 224/909 pub_handwriting_ar/khatt_lines__84 1.75s
+[sherif_handwriting] 225/909 pub_handwriting_ar/khatt_lines__85 2.35s
+[sherif_handwriting] 226/909 pub_handwriting_ar/khatt_lines__88 1.75s
+[sherif_handwriting] 227/909 pub_handwriting_ar/khatt_lines__91 1.34s
+[sherif_handwriting] 228/909 pub_handwriting_ar/khatt_lines__92 1.40s
+[sherif_handwriting] 229/909 pub_handwriting_ar/khatt_lines__93 2.58s
+[sherif_handwriting] 230/909 pub_handwriting_ar/khatt_lines__94 1.71s
+[sherif_handwriting] 231/909 pub_handwriting_ar/khatt_lines__98 2.56s
+[sherif_handwriting] 232/909 pub_handwriting_ar/khatt_lines__100 1.94s
+[sherif_handwriting] 233/909 pub_handwriting_ar/khatt_lines__101 2.17s
+[sherif_handwriting] 234/909 pub_handwriting_ar/khatt_lines__104 2.21s
+[sherif_handwriting] 235/909 pub_handwriting_ar/khatt_lines__105 1.81s
+[sherif_handwriting] 236/909 pub_handwriting_ar/khatt_lines__107 1.53s
+[sherif_handwriting] 237/909 pub_handwriting_ar/khatt_lines__113 1.93s
+[sherif_handwriting] 238/909 pub_handwriting_ar/khatt_lines__114 2.28s
+[sherif_handwriting] 239/909 pub_handwriting_ar/khatt_lines__115 2.20s
+[sherif_handwriting] 240/909 pub_handwriting_ar/khatt_lines__116 5.55s
+[sherif_handwriting] 241/909 pub_handwriting_ar/khatt_lines__117 1.77s
+[sherif_handwriting] 242/909 pub_handwriting_ar/khatt_lines__118 1.68s
+[sherif_handwriting] 243/909 pub_handwriting_ar/khatt_lines__119 2.02s
+[sherif_handwriting] 244/909 pub_handwriting_ar/khatt_paragraphs__0 12.48s
+[sherif_handwriting] 245/909 pub_handwriting_ar/khatt_paragraphs__3 25.32s
+[sherif_handwriting] 246/909 pub_handwriting_ar/khatt_paragraphs__4 10.60s
+[sherif_handwriting] 247/909 pub_handwriting_ar/khatt_paragraphs__5 7.70s
+[sherif_handwriting] 248/909 pub_handwriting_ar/khatt_paragraphs__6 7.69s
+[sherif_handwriting] 249/909 pub_handwriting_ar/khatt_paragraphs__9 7.05s
+[sherif_handwriting] 250/909 pub_handwriting_ar/khatt_paragraphs__10 7.17s
+[sherif_handwriting] 251/909 pub_handwriting_ar/khatt_paragraphs__11 22.17s
+[sherif_handwriting] 252/909 pub_handwriting_ar/khatt_paragraphs__16 7.87s
+[sherif_handwriting] 253/909 pub_handwriting_ar/khatt_paragraphs__17 22.22s
+[sherif_handwriting] 254/909 pub_handwriting_ar/khatt_paragraphs__21 14.23s
+[sherif_handwriting] 255/909 pub_handwriting_ar/khatt_paragraphs__22 8.82s
+[sherif_handwriting] 256/909 pub_handwriting_ar/khatt_paragraphs__27 11.95s
+[sherif_handwriting] 257/909 pub_handwriting_ar/khatt_paragraphs__29 6.80s
+[sherif_handwriting] 258/909 pub_handwriting_ar/khatt_paragraphs__30 8.56s
+[sherif_handwriting] 259/909 pub_handwriting_ar/khatt_paragraphs__31 23.25s
+[sherif_handwriting] 260/909 pub_handwriting_ar/khatt_paragraphs__32 9.46s
+[sherif_handwriting] 261/909 pub_handwriting_ar/khatt_paragraphs__34 28.28s
+[sherif_handwriting] 262/909 pub_handwriting_ar/khatt_paragraphs__36 10.57s
+[sherif_handwriting] 263/909 pub_handwriting_ar/khatt_paragraphs__38 8.16s
+[sherif_handwriting] 264/909 pub_handwriting_ar/khatt_paragraphs__39 14.95s
+[sherif_handwriting] 265/909 pub_handwriting_ar/khatt_paragraphs__41 9.12s
+[sherif_handwriting] 266/909 pub_handwriting_ar/khatt_paragraphs__42 13.36s
+[sherif_handwriting] 267/909 pub_handwriting_ar/khatt_paragraphs__43 11.22s
+[sherif_handwriting] 268/909 pub_handwriting_ar/khatt_paragraphs__45 8.07s
+[sherif_handwriting] 269/909 pub_handwriting_ar/khatt_paragraphs__46 9.56s
+[sherif_handwriting] 270/909 pub_handwriting_ar/khatt_paragraphs__48 12.87s
+[sherif_handwriting] 271/909 pub_handwriting_ar/khatt_paragraphs__49 15.57s
+[sherif_handwriting] 272/909 pub_handwriting_ar/khatt_paragraphs__52 14.27s
+[sherif_handwriting] 273/909 pub_handwriting_ar/khatt_paragraphs__53 19.81s
+[sherif_handwriting] 274/909 pub_handwriting_ar/khatt_paragraphs__54 14.21s
+[sherif_handwriting] 275/909 pub_handwriting_ar/khatt_paragraphs__55 10.52s
+[sherif_handwriting] 276/909 pub_handwriting_ar/khatt_paragraphs__56 8.86s
+[sherif_handwriting] 277/909 pub_handwriting_ar/khatt_paragraphs__60 8.07s
+[sherif_handwriting] 278/909 pub_handwriting_ar/khatt_paragraphs__62 23.45s
+[sherif_handwriting] 279/909 pub_handwriting_ar/khatt_paragraphs__64 20.00s
+[sherif_handwriting] 280/909 pub_handwriting_ar/khatt_paragraphs__65 12.64s
+[sherif_handwriting] 281/909 pub_handwriting_ar/khatt_paragraphs__67 16.58s
+[sherif_handwriting] 282/909 pub_handwriting_ar/khatt_paragraphs__70 7.95s
+[sherif_handwriting] 283/909 pub_handwriting_ar/khatt_paragraphs__73 10.82s
+[sherif_handwriting] 284/909 pub_handwriting_ar/khatt_paragraphs__74 8.33s
+[sherif_handwriting] 285/909 pub_handwriting_ar/khatt_paragraphs__75 13.62s
+[sherif_handwriting] 286/909 pub_handwriting_ar/khatt_paragraphs__77 6.95s
+[sherif_handwriting] 287/909 pub_handwriting_ar/khatt_paragraphs__78 13.05s
+[sherif_handwriting] 288/909 pub_handwriting_ar/khatt_paragraphs__82 10.04s
+[sherif_handwriting] 289/909 pub_handwriting_ar/khatt_paragraphs__84 10.49s
+[sherif_handwriting] 290/909 pub_handwriting_ar/khatt_paragraphs__88 7.73s
+[sherif_handwriting] 291/909 pub_handwriting_ar/khatt_paragraphs__89 8.58s
+[sherif_handwriting] 292/909 pub_handwriting_ar/khatt_paragraphs__90 16.48s
+[sherif_handwriting] 293/909 pub_handwriting_ar/khatt_paragraphs__91 8.19s
+[sherif_handwriting#1/2] 923 mẫu, đã có 616, phần này cần chạy 298

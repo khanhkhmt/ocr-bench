@@ -1,15 +1,15 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 03:43 UTC** · chay thu easyocr
+- Cập nhật: **2026-10-02 03:43 UTC** · bắt đầu easyocr
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: easyocr
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
-| easyocr | ■ đã dừng | 14/1051 | 0 | 35.6% | 1.88 | 3.7 GB | 2026-10-02T03:42:29+00:00 |
+| easyocr | ▶ đang chạy | 14/1051 | 0 | 35.6% | 1.88 | 3.7 GB | 2026-10-02T03:42:29+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):

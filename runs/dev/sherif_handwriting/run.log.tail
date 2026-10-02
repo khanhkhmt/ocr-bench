@@ -1,85 +1,3 @@
-Loading weights:  95%|█████████▌| 784/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.attn.proj.weight]
-Loading weights:  95%|█████████▌| 785/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.attn.qkv.bias]   
-Loading weights:  95%|█████████▌| 785/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.attn.qkv.bias]
-Loading weights:  95%|█████████▌| 786/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.attn.qkv.weight]
-Loading weights:  95%|█████████▌| 786/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.attn.qkv.weight]
-Loading weights:  96%|█████████▌| 787/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.bias]
-Loading weights:  96%|█████████▌| 787/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.bias]
-Loading weights:  96%|█████████▌| 788/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.weight]
-Loading weights:  96%|█████████▌| 788/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.down_proj.weight]
-Loading weights:  96%|█████████▌| 789/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.bias]  
-Loading weights:  96%|█████████▌| 789/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.bias]
-Loading weights:  96%|█████████▌| 790/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.weight]
-Loading weights:  96%|█████████▌| 790/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.gate_proj.weight]
-Loading weights:  96%|█████████▌| 791/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.bias]    
-Loading weights:  96%|█████████▌| 791/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.bias]
-Loading weights:  96%|█████████▌| 792/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.weight]
-Loading weights:  96%|█████████▌| 792/824 [00:04<00:00, 416.99it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.weight]
-Loading weights:  96%|█████████▌| 793/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.weight]
-Loading weights:  96%|█████████▌| 793/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.29.norm1.weight]      
-Loading weights:  96%|█████████▌| 793/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.29.norm1.weight]
-Loading weights:  96%|█████████▋| 794/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.29.norm2.weight]
-Loading weights:  96%|█████████▋| 794/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.29.norm2.weight]
-Loading weights:  96%|█████████▋| 795/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.proj.bias]
-Loading weights:  96%|█████████▋| 795/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.proj.bias]
-Loading weights:  97%|█████████▋| 796/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.proj.weight]
-Loading weights:  97%|█████████▋| 796/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.proj.weight]
-Loading weights:  97%|█████████▋| 797/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.qkv.bias]   
-Loading weights:  97%|█████████▋| 797/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.qkv.bias]
-Loading weights:  97%|█████████▋| 798/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.qkv.weight]
-Loading weights:  97%|█████████▋| 798/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.attn.qkv.weight]
-Loading weights:  97%|█████████▋| 799/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.bias]
-Loading weights:  97%|█████████▋| 799/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.bias]
-Loading weights:  97%|█████████▋| 800/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.weight]
-Loading weights:  97%|█████████▋| 800/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.down_proj.weight]
-Loading weights:  97%|█████████▋| 801/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.bias]  
-Loading weights:  97%|█████████▋| 801/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.bias]
-Loading weights:  97%|█████████▋| 802/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.weight]
-Loading weights:  97%|█████████▋| 802/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.gate_proj.weight]
-Loading weights:  97%|█████████▋| 803/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.bias]    
-Loading weights:  97%|█████████▋| 803/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.bias]
-Loading weights:  98%|█████████▊| 804/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.weight]
-Loading weights:  98%|█████████▊| 804/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.mlp.up_proj.weight]
-Loading weights:  98%|█████████▊| 805/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.norm1.weight]      
-Loading weights:  98%|█████████▊| 805/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.norm1.weight]
-Loading weights:  98%|█████████▊| 806/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.norm2.weight]
-Loading weights:  98%|█████████▊| 806/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.30.norm2.weight]
-Loading weights:  98%|█████████▊| 807/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.proj.bias]
-Loading weights:  98%|█████████▊| 807/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.proj.bias]
-Loading weights:  98%|█████████▊| 808/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.proj.weight]
-Loading weights:  98%|█████████▊| 808/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.proj.weight]
-Loading weights:  98%|█████████▊| 809/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.qkv.bias]   
-Loading weights:  98%|█████████▊| 809/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.qkv.bias]
-Loading weights:  98%|█████████▊| 810/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.qkv.weight]
-Loading weights:  98%|█████████▊| 810/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.attn.qkv.weight]
-Loading weights:  98%|█████████▊| 811/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.bias]
-Loading weights:  98%|█████████▊| 811/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.bias]
-Loading weights:  99%|█████████▊| 812/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.weight]
-Loading weights:  99%|█████████▊| 812/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.down_proj.weight]
-Loading weights:  99%|█████████▊| 813/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.bias]  
-Loading weights:  99%|█████████▊| 813/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.bias]
-Loading weights:  99%|█████████▉| 814/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.weight]
-Loading weights:  99%|█████████▉| 814/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.gate_proj.weight]
-Loading weights:  99%|█████████▉| 815/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.bias]    
-Loading weights:  99%|█████████▉| 815/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.bias]
-Loading weights:  99%|█████████▉| 816/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.weight]
-Loading weights:  99%|█████████▉| 816/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.mlp.up_proj.weight]
-Loading weights:  99%|█████████▉| 817/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.norm1.weight]      
-Loading weights:  99%|█████████▉| 817/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.norm1.weight]
-Loading weights:  99%|█████████▉| 818/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.norm2.weight]
-Loading weights:  99%|█████████▉| 818/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.blocks.31.norm2.weight]
-Loading weights:  99%|█████████▉| 819/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.ln_q.weight]    
-Loading weights:  99%|█████████▉| 819/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.ln_q.weight]
-Loading weights: 100%|█████████▉| 820/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.0.bias] 
-Loading weights: 100%|█████████▉| 820/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.0.bias]
-Loading weights: 100%|█████████▉| 821/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.0.weight]
-Loading weights: 100%|█████████▉| 821/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.0.weight]
-Loading weights: 100%|█████████▉| 822/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.2.bias]  
-Loading weights: 100%|█████████▉| 822/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.2.bias]
-Loading weights: 100%|█████████▉| 823/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.2.weight]
-Loading weights: 100%|█████████▉| 823/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.merger.mlp.2.weight]
-Loading weights: 100%|██████████| 824/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.patch_embed.proj.weight]
-Loading weights: 100%|██████████| 824/824 [00:04<00:00, 452.03it/s, Materializing param=model.visual.patch_embed.proj.weight]
 Loading weights: 100%|██████████| 824/824 [00:04<00:00, 165.36it/s, Materializing param=model.visual.patch_embed.proj.weight]
 [sherif_handwriting#2/2] nạp model xong sau 20.0s
 The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
@@ -298,3 +216,85 @@ The following generation flags are not valid and may be ignored: ['temperature']
 [sherif_handwriting#1/2] 105/298 syn_text_mixed/syn_text_mixed_0053 31.21s
 [sherif_handwriting#1/2] 106/298 syn_text_mixed/syn_text_mixed_0055 26.69s
 [sherif_handwriting#2/2] 109/318 syn_text_mixed/syn_text_mixed_0032 32.43s
+[sherif_handwriting#1/2] 107/298 syn_text_mixed/syn_text_mixed_0058 29.91s
+[sherif_handwriting#2/2] 110/318 syn_text_mixed/syn_text_mixed_0033 28.51s
+[sherif_handwriting#2/2] 111/318 syn_text_mixed/syn_text_mixed_0037 27.29s
+[sherif_handwriting#1/2] 108/298 syn_text_mixed/syn_text_mixed_0059 29.50s
+[sherif_handwriting#1/2] 109/298 syn_text_mixed/syn_text_mixed_0060 25.18s
+[sherif_handwriting#2/2] 112/318 syn_text_mixed/syn_text_mixed_0038 33.07s
+[sherif_handwriting#2/2] 113/318 syn_text_mixed/syn_text_mixed_0063 24.21s
+[sherif_handwriting#1/2] 110/298 syn_text_mixed/syn_text_mixed_0061 32.02s
+[sherif_handwriting#2/2] 114/318 syn_text_mixed/syn_text_mixed_0065 4.58s
+[sherif_handwriting#1/2] 111/298 syn_text_mixed/syn_text_mixed_0062 30.89s
+[sherif_handwriting#2/2] 115/318 syn_text_mixed/syn_text_mixed_0068 30.32s
+[sherif_handwriting#1/2] 112/298 syn_text_mixed/syn_text_mixed_0066 25.92s
+[sherif_handwriting#2/2] 116/318 syn_text_mixed/syn_text_mixed_0069 31.82s
+[sherif_handwriting#1/2] 113/298 syn_text_mixed/syn_text_mixed_0067 22.25s
+[sherif_handwriting#1/2] 114/298 syn_text_mixed/syn_text_mixed_0076 25.36s
+[sherif_handwriting#1/2] 115/298 syn_text_mixed/syn_text_mixed_0079 29.41s
+[sherif_handwriting#2/2] 117/318 syn_text_mixed/syn_text_mixed_0073 73.84s
+[sherif_handwriting#2/2] 118/318 syn_text_mixed/syn_text_mixed_0074 27.37s
+[sherif_handwriting#1/2] 116/298 syn_text_mixed/syn_text_mixed_0086 37.18s
+[sherif_handwriting#2/2] 119/318 syn_text_mixed/syn_text_mixed_0075 27.02s
+[sherif_handwriting#1/2] 117/298 syn_text_mixed/syn_text_mixed_0092 32.29s
+[sherif_handwriting#2/2] 120/318 syn_text_mixed/syn_text_mixed_0078 23.75s
+[sherif_handwriting#2/2] 121/318 syn_text_mixed/syn_text_mixed_0081 25.41s
+[sherif_handwriting#2/2] 122/318 syn_text_mixed/syn_text_mixed_0091 22.27s
+[sherif_handwriting#1/2] 118/298 syn_text_mixed/syn_text_mixed_0094 69.23s
+[sherif_handwriting#2/2] 123/318 syn_text_mixed/syn_text_mixed_0093 24.28s
+[sherif_handwriting#1/2] 119/298 syn_text_mixed/syn_text_mixed_0095 19.13s
+[sherif_handwriting#1/2] 120/298 syn_text_mixed/syn_text_mixed_0103 22.50s
+[sherif_handwriting#2/2] 124/318 syn_text_mixed/syn_text_mixed_0097 25.65s
+[sherif_handwriting#1/2] 121/298 syn_text_mixed/syn_text_mixed_0106 24.76s
+[sherif_handwriting#2/2] 125/318 syn_text_mixed/syn_text_mixed_0102 26.72s
+[sherif_handwriting#1/2] 122/298 syn_text_mixed/syn_text_mixed_0108 27.10s
+[sherif_handwriting#2/2] 126/318 syn_text_mixed/syn_text_mixed_0111 24.97s
+[sherif_handwriting#1/2] 123/298 syn_text_mixed/syn_text_mixed_0109 18.80s
+[sherif_handwriting#2/2] 127/318 syn_text_mixed/syn_text_mixed_0112 26.99s
+[sherif_handwriting#1/2] 124/298 syn_text_mixed/syn_text_mixed_0110 27.84s
+[sherif_handwriting#2/2] 128/318 syn_text_mixed/syn_text_mixed_0114 26.44s
+[sherif_handwriting#2/2] 129/318 syn_text_mixed/syn_text_mixed_0116 30.98s
+[sherif_handwriting#1/2] 125/298 syn_invoice_ar/syn_invoice_ar_0001 50.28s
+[sherif_handwriting#2/2] 130/318 syn_invoice_ar/syn_invoice_ar_0002 76.89s
+[sherif_handwriting#1/2] 126/298 syn_invoice_ar/syn_invoice_ar_0007 86.82s
+[sherif_handwriting#2/2] 131/318 syn_invoice_ar/syn_invoice_ar_0004 72.13s
+[sherif_handwriting#1/2] 127/298 syn_invoice_ar/syn_invoice_ar_0014 67.47s
+[sherif_handwriting#2/2] 132/318 syn_invoice_ar/syn_invoice_ar_0009 45.14s
+[sherif_handwriting#1/2] 128/298 syn_invoice_ar/syn_invoice_ar_0016 42.94s
+[sherif_handwriting#2/2] 133/318 syn_invoice_ar/syn_invoice_ar_0013 34.63s
+[sherif_handwriting#1/2] 129/298 syn_invoice_ar/syn_invoice_ar_0021 55.13s
+[sherif_handwriting#2/2] 134/318 syn_invoice_ar/syn_invoice_ar_0020 38.85s
+[sherif_handwriting#1/2] 130/298 syn_invoice_ar/syn_invoice_ar_0024 56.58s
+[sherif_handwriting#2/2] 135/318 syn_invoice_ar/syn_invoice_ar_0025 79.64s
+[sherif_handwriting#1/2] 131/298 syn_invoice_ar/syn_invoice_ar_0026 39.65s
+[sherif_handwriting#2/2] 136/318 syn_invoice_ar/syn_invoice_ar_0028 53.59s
+[sherif_handwriting#1/2] 132/298 syn_invoice_ar/syn_invoice_ar_0037 62.28s
+[sherif_handwriting#2/2] 137/318 syn_invoice_ar/syn_invoice_ar_0030 45.45s
+[sherif_handwriting#1/2] 133/298 syn_invoice_ar/syn_invoice_ar_0042 33.86s
+[sherif_handwriting#2/2] 138/318 syn_invoice_ar/syn_invoice_ar_0035 44.61s
+[sherif_handwriting#1/2] 134/298 syn_invoice_ar/syn_invoice_ar_0045 58.90s
+[sherif_handwriting#1/2] 135/298 syn_invoice_ar/syn_invoice_ar_0048 36.74s
+[sherif_handwriting#1/2] 136/298 syn_invoice_ar/syn_invoice_ar_0051 29.59s
+[sherif_handwriting#2/2] 139/318 syn_invoice_ar/syn_invoice_ar_0036 89.93s
+[sherif_handwriting#1/2] 137/298 syn_invoice_ar/syn_invoice_ar_0053 38.24s
+[sherif_handwriting#1/2] 138/298 syn_invoice_ar/syn_invoice_ar_0059 32.01s
+[sherif_handwriting#2/2] 140/318 syn_invoice_ar/syn_invoice_ar_0046 72.39s
+[sherif_handwriting#2/2] 141/318 syn_invoice_ar/syn_invoice_ar_0047 36.12s
+[sherif_handwriting#1/2] 139/298 syn_invoice_ar/syn_invoice_ar_0060 49.96s
+[sherif_handwriting#2/2] 142/318 syn_invoice_ar/syn_invoice_ar_0052 47.36s
+[sherif_handwriting#1/2] 140/298 syn_invoice_ar/syn_invoice_ar_0065 57.52s
+[sherif_handwriting#2/2] 143/318 syn_invoice_ar/syn_invoice_ar_0054 41.74s
+[sherif_handwriting#2/2] 144/318 syn_invoice_ar/syn_invoice_ar_0055 43.29s
+[sherif_handwriting#1/2] 141/298 syn_invoice_ar/syn_invoice_ar_0072 94.96s
+[sherif_handwriting#1/2] 142/298 syn_invoice_ar/syn_invoice_ar_0073 58.38s
+[sherif_handwriting#2/2] 145/318 syn_invoice_ar/syn_invoice_ar_0068 95.23s
+[sherif_handwriting#1/2] 143/298 syn_invoice_ar/syn_invoice_ar_0074 56.92s
+[sherif_handwriting#2/2] 146/318 syn_invoice_ar/syn_invoice_ar_0070 61.35s
+[sherif_handwriting#2/2] 147/318 syn_invoice_ar/syn_invoice_ar_0082 48.72s
+[sherif_handwriting#1/2] 144/298 syn_invoice_ar/syn_invoice_ar_0076 81.92s
+[sherif_handwriting#1/2] 145/298 syn_invoice_ar/syn_invoice_ar_0079 38.48s
+[sherif_handwriting#2/2] 148/318 syn_invoice_ar/syn_invoice_ar_0084 93.98s
+[sherif_handwriting#1/2] 146/298 syn_invoice_ar/syn_invoice_ar_0090 66.82s
+[sherif_handwriting#2/2] 149/318 syn_invoice_ar/syn_invoice_ar_0085 36.53s
+[sherif_handwriting#1/2] 147/298 syn_invoice_ar/syn_invoice_ar_0091 29.79s
+[sherif_handwriting#2/2] 150/318 syn_invoice_ar/syn_invoice_ar_0088 54.62s

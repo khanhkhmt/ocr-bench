@@ -1,1 +1,16 @@
-
+[tesseract] 14 mẫu, đã có 0, cần chạy 14
+[tesseract] nạp model xong sau 0.4s
+[tesseract] 1/14 pub_printed_ar/misraj_dococr__8d18a279-ce9a-451b-82c3-3541ae3349f5 4.26s
+[tesseract] 2/14 pub_tables_ar/kitab_tables__426 0.38s
+[tesseract] 3/14 pub_tables_en/pubtabnet__598044 0.18s
+[tesseract] 4/14 pub_handwriting_ar/khatt_lines__73 0.43s
+[tesseract] 5/14 pub_handwriting_en/iam_lines__66 0.15s
+[tesseract] 6/14 syn_text_ar/syn_text_ar_0009 2.09s
+[tesseract] 7/14 syn_text_en/syn_text_en_0065 0.88s
+[tesseract] 8/14 syn_text_mixed/syn_text_mixed_0028 3.28s
+[tesseract] 9/14 syn_invoice_ar/syn_invoice_ar_0043 2.81s
+[tesseract] 10/14 syn_invoice_en/syn_invoice_en_0114 1.29s
+[tesseract] 11/14 syn_invoice_mixed/syn_invoice_mixed_0058 2.31s
+[tesseract] 12/14 syn_form_ar/syn_form_ar_0012 0.96s
+[tesseract] 13/14 syn_form_en/syn_form_en_0103 1.42s
+[tesseract] 14/14 syn_degraded/syn_degraded_0058 2.61s

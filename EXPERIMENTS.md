@@ -59,3 +59,13 @@
 - Quyết định: —
 - Việc tiếp theo: Bước D — Chạy tài liệu dài (syn_longtable,syn_longtext) cho easyocr
 - Nghi vấn dữ liệu: —
+
+## 2026-10-02 04:45 — Giai đoạn 4 (Bước D) — easyocr
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models easyocr --categories syn_longtable,syn_longtext --gpus 0,1`
+- Kết thúc: ✔ easyocr: kết thúc (mã 0) sau 32.6 phút, 1051/128 mẫu
+- Thời gian chạy: 32.6 phút × 1 GPU = 0.54 giờ GPU · Đã dùng tổng: 1.80 / 20 giờ (9.0%)
+- VRAM đỉnh: 13.3 GB
+- Số liệu: | 2 | easyocr | CHẠY XONG, CHƯA GHI BENCHMARK | 30.2% | 0.0% | 0 | 0 | 3.36 | 13.3 GB | `easyocr` |
+- Quyết định: —
+- Việc tiếp theo: Tạm dừng theo yêu cầu của người dùng; cập nhật code từ GitHub
+- Nghi vấn dữ liệu: —

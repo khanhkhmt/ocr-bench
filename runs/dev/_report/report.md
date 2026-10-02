@@ -1,31 +1,19 @@
 # Kết quả OCR benchmark — split `dev`
 
-Tạo lúc 2026-10-02 04:10 · 923 mẫu · 14 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
+Tạo lúc 2026-10-02 04:43 · 128 mẫu · 2 nhóm · 1 model · manifest `/kaggle/working/testset/manifest.jsonl`
 
 ## Tổng quan
 
 | Model | Mẫu | CER (norm) ±95% | CER micro | CER raw | WER | TEDS bảng | Lỗi/rỗng | Lặp/thừa (trần 95%) | s/mẫu | VRAM đỉnh |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| easyocr | 923/923 | 36.7% ±1.6 | 29.4% | 45.6% | 66.6% | 0.002 | 0 | 0 (≤0.4%) | 1.72 | 9.6 GB |
+| easyocr | 128/128 | 30.3% ±4.5 | 28.7% | 40.6% | 44.1% | 0.002 | 0 | 0 (≤2.9%) | 15.15 | 13.3 GB |
 
 ## CER (norm) theo nhóm — thấp hơn là tốt hơn
 
 | Nhóm (số mẫu) | easyocr |
 |---|---:|
-| pub_handwriting_ar (128) | 49.3% ±2.1 |
-| pub_handwriting_en (63) | 81.3% ±2.0 |
-| pub_printed_ar (63) | 28.4% ±5.5 |
-| pub_tables_ar (58) | 42.5% ±2.7 |
-| pub_tables_en (61) | 81.1% ±1.1 |
-| syn_degraded (61) | 31.5% ±3.6 |
-| syn_form_ar (60) | 20.4% ±1.8 |
-| syn_form_en (72) | 45.7% ±1.9 |
-| syn_invoice_ar (57) | 33.3% ±1.0 |
-| syn_invoice_en (62) | 9.2% ±1.5 |
-| syn_invoice_mixed (57) | 38.2% ±1.2 |
-| syn_text_ar (60) | 7.6% ±0.9 |
-| syn_text_en (57) | 14.9% ±2.2 |
-| syn_text_mixed (64) | 13.7% ±1.2 |
+| syn_longtable (61) | 52.3% ±5.1 |
+| syn_longtext (67) | 10.3% ±2.3 |
 
 ## TEDS theo nhóm có bảng — cao hơn là tốt hơn (1.0 = khớp hoàn toàn)
 
@@ -33,12 +21,41 @@ Tạo lúc 2026-10-02 04:10 · 923 mẫu · 14 nhóm · 1 model · manifest `/ka
 
 | Nhóm | easyocr |
 |---|---:|
-| pub_tables_ar | 0.000 / 0.000 |
-| pub_tables_en | 0.005 / 0.007 |
-| syn_degraded | 0.000 / 0.000 |
-| syn_invoice_ar | 0.002 / 0.003 |
-| syn_invoice_en | 0.000 / 0.000 |
-| syn_invoice_mixed | 0.002 / 0.003 |
+| syn_longtable | 0.002 / 0.002 |
+
+## Tài liệu dài: `syn_longtable`
+
+Ô ghi `ô đúng vị trí / ô đúng sau căn hàng · TEDS`. Hai tỉ lệ đầu chênh nhau nhiều nghĩa là model bỏ sót hoặc thêm hàng, làm mọi giá trị phía sau bị đẩy lệch hàng.
+
+| Độ dài (số mẫu) | easyocr |
+|---|---:|
+| 1 trang · 30-45 dòng (21) | 0% / 0% · 0.00 |
+| 2 trang · 60-90 dòng (20) | 0% / 0% · 0.00 |
+| 3 trang · 100-140 dòng (20) | 0% / 0% · 0.00 |
+
+Độ chính xác theo vị trí trong tài liệu (đầu → cuối), cột cuối là số mẫu bị cắt vì hết `max_new_tokens`, số hàng sai số cột (dấu hiệu dồn cột) và số mẫu đọc sai số hàng:
+
+| Model | Độ dài | Q1 | Q2 | Q3 | Q4 | Bị cắt | Hàng sai số cột | Sai số hàng |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| easyocr | 1 trang · 30-45 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 21 |
+| easyocr | 2 trang · 60-90 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 20 |
+| easyocr | 3 trang · 100-140 dòng | 0% | 0% | 0% | 0% | 0 | 0 | 20 |
+
+## Tài liệu dài: `syn_longtext`
+
+Ô ghi `CER · độ phủ phần cuối (Q4)`: độ phủ Q4 là tỉ lệ đoạn ở 1/4 cuối tài liệu có mặt trong kết quả.
+
+| Độ dài (số mẫu) | easyocr |
+|---|---:|
+| 1 trang · ~4.000 ký tự (36) | 10.3% · 89% |
+| 2 trang · ~8.500 ký tự (31) | 10.3% · 89% |
+
+Độ chính xác theo vị trí trong tài liệu (đầu → cuối), cột cuối là số mẫu bị cắt vì hết `max_new_tokens`:
+
+| Model | Độ dài | Q1 | Q2 | Q3 | Q4 | Bị cắt |
+|---|---|---:|---:|---:|---:|---:|
+| easyocr | 1 trang · ~4.000 ký tự | 89% | 87% | 88% | 89% | 0 |
+| easyocr | 2 trang · ~8.500 ký tự | 89% | 88% | 88% | 89% | 0 |
 
 ## 5 mẫu tệ nhất của mỗi model
 
@@ -46,11 +63,11 @@ Tạo lúc 2026-10-02 04:10 · 923 mẫu · 14 nhóm · 1 model · manifest `/ka
 
 | id | nhóm | CER | cờ | đáp án (đầu) | model đọc (đầu) |
 |---|---|---:|---|---|---|
-| `pub_handwriting_en/iam_lines__118` | pub_handwriting_en | 97.5% | — | for a man did obligingly present himself | 0\| +0r ٨٢١ >e T ٥re en- 06/` 9ih9 /9 0 `0 On |
-| `pub_handwriting_en/iam_lines__55` | pub_handwriting_en | 93.2% | — | dish was a grill , which he cooked himself , | Coued ^'nn Jocl ١ 2 سا رلاا 5%.00 0 LO4 اء اان |
-| `pub_tables_en/pubtabnet__590407` | pub_tables_en | 93.2% | too_short | <table frame="hsides" rules="groups" width="100%"> <thead> <tr> <td> <b> Treatm… | ٥3٥ #:i5hI Faniil le Z ug LL ٧ ١٦٥ |
-| `pub_handwriting_en/iam_lines__67` | pub_handwriting_en | 92.7% | — | that the wave might be transmitted by the | /OmMAOy ?747_ /2/7 2# |
-| `pub_handwriting_en/iam_lines__40` | pub_handwriting_en | 91.7% | — | only a disturbed tossing and turning | 7٨٨9 ٥م٥ ؟09!7005 O٨٧ 0 0S0عث0ت |
+| `syn_longtable/syn_longtable_0111` | syn_longtable | 74.7% | — | <h1>شركة الواحة للأغذية (Summit Engineering Ltd.)</h1> <h2>كشف حساب</h2> <p>الع… | Summit Engineering Ltd ) شركة الواحة للأغذية كشف حساب العميل : مؤسسة الواحة للأ… |
+| `syn_longtable/syn_longtable_0002` | syn_longtable | 74.6% | — | <h1>مجموعة النخبة للمقاولات</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: شركة الم… | مجموعة النخبة للمقاولات قائمة جرد المخزون العميل : شركة المستقبل للاستشارات SA8… |
+| `syn_longtable/syn_longtable_0071` | syn_longtable | 74.4% | — | <h1>مؤسسة النخبة للمقاولات</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: مؤسسة الن… | مؤسسة النخبة للمقاولات قاثمة جرد المخزون العميل : مؤسسة النخبة للمقاولات $A32 1… |
+| `syn_longtable/syn_longtable_0005` | syn_longtable | 73.7% | — | <h1>شركة الواحة للأغذية</h1> <h2>قائمة جرد المخزون</h2> <p>العميل: شركة النور ل… | شركة الواحة للأغذية قائمة جرد المخزون العميل : شركة النور للإلكترونيات SA17 919… |
+| `syn_longtable/syn_longtable_0118` | syn_longtable | 73.6% | — | <h1>مؤسسة الفجر للطباعة والنشر</h1> <h2>كشف حساب</h2> <p>العميل: مجموعة البناء … | مؤسسة الفجر للطباعة والنشر كشف حساب العميل : مجموعة البناء الحديث SA25 9017 159… |
 
 ## Cách đọc
 

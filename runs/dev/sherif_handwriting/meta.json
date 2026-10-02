@@ -23,9 +23,59 @@
       "load_s": 16.8,
       "finished": "2026-10-02T05:46:08+00:00",
       "peak_vram_mib": 11425
+    },
+    {
+      "shard": "1/2",
+      "dataset_fingerprint": "aa8fdd44e1715845",
+      "env": {},
+      "started": "2026-10-02T07:18:10+00:00",
+      "adapter": "hf_vlm",
+      "params": {
+        "model_id": "sherif1313/Arabic-English-handwritten-OCR-v3",
+        "prompt": "ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:",
+        "max_new_tokens": 1024,
+        "model_kwargs": {
+          "tie_word_embeddings": true
+        }
+      },
+      "host": "55a26f454aff",
+      "python": "3.12.12",
+      "gpus": [
+        "Tesla T4",
+        "Tesla T4"
+      ],
+      "cuda_visible_devices": "0",
+      "load_s": 18.1,
+      "finished": "2026-10-02T09:29:43+00:00",
+      "peak_vram_mib": 13299
+    },
+    {
+      "shard": "2/2",
+      "dataset_fingerprint": "aa8fdd44e1715845",
+      "env": {},
+      "started": "2026-10-02T07:18:15+00:00",
+      "adapter": "hf_vlm",
+      "params": {
+        "model_id": "sherif1313/Arabic-English-handwritten-OCR-v3",
+        "prompt": "ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:",
+        "max_new_tokens": 1024,
+        "model_kwargs": {
+          "tie_word_embeddings": true
+        }
+      },
+      "host": "55a26f454aff",
+      "python": "3.12.12",
+      "gpus": [
+        "Tesla T4",
+        "Tesla T4"
+      ],
+      "cuda_visible_devices": "1",
+      "load_s": 20.0,
+      "finished": "2026-10-02T09:35:19+00:00",
+      "peak_vram_mib": 11945
     }
   ],
   "spec_hash": "516187390a26cb3c",
   "dataset_fingerprint": "aa8fdd44e1715845",
-  "peak_vram_mib": 11425
+  "peak_vram_mib": 13299
 }

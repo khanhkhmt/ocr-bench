@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 07:19 UTC** · chuyen sang chay 2 GPU
+- Cập nhật: **2026-10-02 07:20 UTC** · chuyển sang chạy 2 GPU
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `e29131e` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
@@ -10,15 +10,15 @@
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
-| sherif_handwriting | ■ đã dừng | 310/1051 | 1 | 29.8% | 18.35 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
+| sherif_handwriting | ■ đã dừng | 375/1051 | 1 | 26.5% | 15.72 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
 
 | Nhóm | easyocr | sherif_handwriting | tesseract |
 |---|---:|---:|---:|
-| pub_handwriting_ar | 128: 49.3% | 118: 7.4% | 128: 74.4% |
-| pub_handwriting_en | 63: 81.3% | 1: 2.4% | 63: 61.7% |
+| pub_handwriting_ar | 128: 49.3% | 128: 7.2% | 128: 74.4% |
+| pub_handwriting_en | 63: 81.3% | 56: 11.7% | 63: 61.7% |
 | pub_printed_ar | 63: 28.4% | 63: 41.1% | 63: 32.1% |
 | pub_tables_ar | 58: 42.5% | 58: 49.5% | 58: 52.4% |
 | pub_tables_en | 61: 81.1% | 61: 46.3% | 61: 89.6% |

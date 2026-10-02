@@ -1,84 +1,3 @@
-Loading weights:  89%|████████▉ | 735/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.proj.bias]
-Loading weights:  89%|████████▉ | 736/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.proj.weight]
-Loading weights:  89%|████████▉ | 736/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.proj.weight]
-Loading weights:  89%|████████▉ | 737/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.qkv.bias]   
-Loading weights:  89%|████████▉ | 737/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.qkv.bias]
-Loading weights:  90%|████████▉ | 738/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.qkv.weight]
-Loading weights:  90%|████████▉ | 738/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.attn.qkv.weight]
-Loading weights:  90%|████████▉ | 739/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.down_proj.bias]
-Loading weights:  90%|████████▉ | 739/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.down_proj.bias]
-Loading weights:  90%|████████▉ | 740/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.down_proj.weight]
-Loading weights:  90%|████████▉ | 740/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.down_proj.weight]
-Loading weights:  90%|████████▉ | 741/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.gate_proj.bias]  
-Loading weights:  90%|████████▉ | 741/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.gate_proj.bias]
-Loading weights:  90%|█████████ | 742/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.gate_proj.weight]
-Loading weights:  90%|█████████ | 742/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.gate_proj.weight]
-Loading weights:  90%|█████████ | 743/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.up_proj.bias]    
-Loading weights:  90%|█████████ | 743/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.up_proj.bias]
-Loading weights:  90%|█████████ | 744/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.up_proj.weight]
-Loading weights:  90%|█████████ | 744/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.mlp.up_proj.weight]
-Loading weights:  90%|█████████ | 745/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.norm1.weight]      
-Loading weights:  90%|█████████ | 745/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.norm1.weight]
-Loading weights:  91%|█████████ | 746/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.norm2.weight]
-Loading weights:  91%|█████████ | 746/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.25.norm2.weight]
-Loading weights:  91%|█████████ | 747/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.proj.bias]
-Loading weights:  91%|█████████ | 747/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.proj.bias]
-Loading weights:  91%|█████████ | 748/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.proj.weight]
-Loading weights:  91%|█████████ | 748/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.proj.weight]
-Loading weights:  91%|█████████ | 749/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.qkv.bias]   
-Loading weights:  91%|█████████ | 749/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.qkv.bias]
-Loading weights:  91%|█████████ | 750/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.qkv.weight]
-Loading weights:  91%|█████████ | 750/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.attn.qkv.weight]
-Loading weights:  91%|█████████ | 751/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.down_proj.bias]
-Loading weights:  91%|█████████ | 751/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.down_proj.bias]
-Loading weights:  91%|█████████▏| 752/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.down_proj.weight]
-Loading weights:  91%|█████████▏| 752/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.down_proj.weight]
-Loading weights:  91%|█████████▏| 753/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.gate_proj.bias]  
-Loading weights:  91%|█████████▏| 753/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.gate_proj.bias]
-Loading weights:  92%|█████████▏| 754/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.gate_proj.weight]
-Loading weights:  92%|█████████▏| 754/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.gate_proj.weight]
-Loading weights:  92%|█████████▏| 755/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.up_proj.bias]    
-Loading weights:  92%|█████████▏| 755/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.up_proj.bias]
-Loading weights:  92%|█████████▏| 756/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.up_proj.weight]
-Loading weights:  92%|█████████▏| 756/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.mlp.up_proj.weight]
-Loading weights:  92%|█████████▏| 757/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.norm1.weight]      
-Loading weights:  92%|█████████▏| 757/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.norm1.weight]
-Loading weights:  92%|█████████▏| 758/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.norm2.weight]
-Loading weights:  92%|█████████▏| 758/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.26.norm2.weight]
-Loading weights:  92%|█████████▏| 759/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.proj.bias]
-Loading weights:  92%|█████████▏| 759/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.proj.bias]
-Loading weights:  92%|█████████▏| 760/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.proj.weight]
-Loading weights:  92%|█████████▏| 760/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.proj.weight]
-Loading weights:  92%|█████████▏| 761/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.qkv.bias]   
-Loading weights:  92%|█████████▏| 761/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.qkv.bias]
-Loading weights:  92%|█████████▏| 762/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.qkv.weight]
-Loading weights:  92%|█████████▏| 762/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.attn.qkv.weight]
-Loading weights:  93%|█████████▎| 763/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.down_proj.bias]
-Loading weights:  93%|█████████▎| 763/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.down_proj.bias]
-Loading weights:  93%|█████████▎| 764/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.down_proj.weight]
-Loading weights:  93%|█████████▎| 764/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.down_proj.weight]
-Loading weights:  93%|█████████▎| 765/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.gate_proj.bias]  
-Loading weights:  93%|█████████▎| 765/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.gate_proj.bias]
-Loading weights:  93%|█████████▎| 766/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.gate_proj.weight]
-Loading weights:  93%|█████████▎| 766/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.gate_proj.weight]
-Loading weights:  93%|█████████▎| 767/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.up_proj.bias]    
-Loading weights:  93%|█████████▎| 767/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.up_proj.bias]
-Loading weights:  93%|█████████▎| 768/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.up_proj.weight]
-Loading weights:  93%|█████████▎| 768/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.mlp.up_proj.weight]
-Loading weights:  93%|█████████▎| 769/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.norm1.weight]      
-Loading weights:  93%|█████████▎| 769/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.norm1.weight]
-Loading weights:  93%|█████████▎| 770/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.norm2.weight]
-Loading weights:  93%|█████████▎| 770/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.27.norm2.weight]
-Loading weights:  94%|█████████▎| 771/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.proj.bias]
-Loading weights:  94%|█████████▎| 771/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.proj.bias]
-Loading weights:  94%|█████████▎| 772/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.proj.weight]
-Loading weights:  94%|█████████▎| 772/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.proj.weight]
-Loading weights:  94%|█████████▍| 773/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.qkv.bias]   
-Loading weights:  94%|█████████▍| 773/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.qkv.bias]
-Loading weights:  94%|█████████▍| 774/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.qkv.weight]
-Loading weights:  94%|█████████▍| 774/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.attn.qkv.weight]
-Loading weights:  94%|█████████▍| 775/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.bias]
-Loading weights:  94%|█████████▍| 775/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.bias]
 Loading weights:  94%|█████████▍| 776/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.weight]
 Loading weights:  94%|█████████▍| 776/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.down_proj.weight]
 Loading weights:  94%|█████████▍| 777/824 [00:04<00:00, 381.56it/s, Materializing param=model.visual.blocks.28.mlp.gate_proj.bias]  
@@ -298,3 +217,84 @@ torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.28 GiB. GPU 0 ha
 [sherif_handwriting] 37/909 pub_printed_ar/misraj_dococr__1371558b-b017-41c5-9e26-f3e055b02644 84.17s
 [sherif_handwriting] 38/909 pub_printed_ar/misraj_dococr__b29ec2fd-b64b-4606-9b3f-cc596c7b1f76 21.25s
 [sherif_handwriting] 39/909 pub_printed_ar/misraj_dococr__a2328747-ebc3-47d0-a511-b672b7595eb2 34.54s
+[sherif_handwriting] 40/909 pub_printed_ar/misraj_dococr__78a554d5-b029-435f-9e48-64ae95726a05 116.14s
+[sherif_handwriting] 41/909 pub_printed_ar/misraj_dococr__d37bed59-12d3-4e23-ab98-42108acf5ed5 53.09s
+[sherif_handwriting] 42/909 pub_printed_ar/misraj_dococr__2da04064-e213-4a9e-b41d-f9d6ac96766f 15.88s
+[sherif_handwriting] 43/909 pub_printed_ar/misraj_dococr__41261000-dccb-4f27-bcca-c9ad7a4ff673 8.57s
+[sherif_handwriting] 44/909 pub_printed_ar/misraj_dococr__1d0d4e8c-6f53-4ff5-aaf0-f12829d34e90 85.38s
+[sherif_handwriting] 45/909 pub_printed_ar/misraj_dococr__9bc0f159-290e-40b8-a137-2b7622c209ef 15.34s
+[sherif_handwriting] 46/909 pub_printed_ar/misraj_dococr__6f549450-fbe4-4832-9d45-bb966e382cf1 18.14s
+[sherif_handwriting] 47/909 pub_printed_ar/misraj_dococr__3322fdaa-6399-4b08-ba4c-07c4a76d8306 38.82s
+[sherif_handwriting] 48/909 pub_printed_ar/misraj_dococr__e06e3d65-2391-47e4-b858-264ca3e37dde 4.73s
+[sherif_handwriting] 49/909 pub_printed_ar/misraj_dococr__b47eea44-66ea-4f1e-b5d5-5594af912c04 29.45s
+[sherif_handwriting] 50/909 pub_printed_ar/misraj_dococr__2eabb0c1-e53c-44ff-a2e4-3170ecb15044 45.36s
+[sherif_handwriting] 51/909 pub_printed_ar/misraj_dococr__c9c71a65-d720-4bb1-b324-98e7eb800c60 46.76s
+[sherif_handwriting] 52/909 pub_printed_ar/misraj_dococr__338c000c-13e9-42ec-949a-6214c53f6e82 23.18s
+[sherif_handwriting] 53/909 pub_printed_ar/misraj_dococr__18aa8ae5-64e1-4b6b-a7a6-9e2d8e7eeb1a 18.46s
+[sherif_handwriting] 54/909 pub_printed_ar/misraj_dococr__88c3d3e1-c065-422f-ad20-471223a01041 5.71s
+[sherif_handwriting] 55/909 pub_printed_ar/misraj_dococr__7c12c5c9-79ec-4007-bc73-7f1a7c5b99d5 73.51s
+[sherif_handwriting] 56/909 pub_printed_ar/misraj_dococr__8909188c-4efc-4815-8375-d09ec1e4ca16 23.99s
+[sherif_handwriting] 57/909 pub_printed_ar/misraj_dococr__7588dc2f-7235-46ef-9cc8-4f63df6b06b1 32.84s
+[sherif_handwriting] 58/909 pub_printed_ar/misraj_dococr__8be47aeb-1bdb-41e1-b6aa-a24ae6238a73 66.03s
+[sherif_handwriting] 59/909 pub_printed_ar/misraj_dococr__f36107f9-e651-4851-95ed-0593fbe741b7 59.44s
+[sherif_handwriting] 60/909 pub_printed_ar/misraj_dococr__69a75ff3-dc0a-4240-895c-af6d167335dd 22.38s
+[sherif_handwriting] 61/909 pub_printed_ar/misraj_dococr__de662755-0428-444d-8ba2-6e1b52a32063 37.12s
+[sherif_handwriting] 62/909 pub_printed_ar/misraj_dococr__0bd1eeef-1428-437d-aaef-d55ae9cb7e0b 30.15s
+[sherif_handwriting] 63/909 pub_tables_ar/kitab_tables__94 6.93s
+[sherif_handwriting] 64/909 pub_tables_ar/kitab_tables__451 14.55s
+[sherif_handwriting] 65/909 pub_tables_ar/kitab_tables__2 9.60s
+[sherif_handwriting] 66/909 pub_tables_ar/kitab_tables__377 12.14s
+[sherif_handwriting] 67/909 pub_tables_ar/kitab_tables__413 16.51s
+[sherif_handwriting] 68/909 pub_tables_ar/kitab_tables__44 54.71s
+[sherif_handwriting] 69/909 pub_tables_ar/kitab_tables__116 17.32s
+[sherif_handwriting] 70/909 pub_tables_ar/kitab_tables__193 13.10s
+[sherif_handwriting] 71/909 pub_tables_ar/kitab_tables__113 52.04s
+[sherif_handwriting] 72/909 pub_tables_ar/kitab_tables__349 14.04s
+[sherif_handwriting] 73/909 pub_tables_ar/kitab_tables__42 11.21s
+[sherif_handwriting] 74/909 pub_tables_ar/kitab_tables__75 10.50s
+[sherif_handwriting] 75/909 pub_tables_ar/kitab_tables__87 14.25s
+[sherif_handwriting] 76/909 pub_tables_ar/kitab_tables__430 54.73s
+[sherif_handwriting] 77/909 pub_tables_ar/kitab_tables__267 11.92s
+[sherif_handwriting] 78/909 pub_tables_ar/kitab_tables__19 23.64s
+[sherif_handwriting] 79/909 pub_tables_ar/kitab_tables__320 13.78s
+[sherif_handwriting] 80/909 pub_tables_ar/kitab_tables__232 1.74s
+[sherif_handwriting] 81/909 pub_tables_ar/kitab_tables__168 14.77s
+[sherif_handwriting] 82/909 pub_tables_ar/kitab_tables__93 9.38s
+[sherif_handwriting] 83/909 pub_tables_ar/kitab_tables__129 8.47s
+[sherif_handwriting] 84/909 pub_tables_ar/kitab_tables__39 12.95s
+[sherif_handwriting] 85/909 pub_tables_ar/kitab_tables__431 16.92s
+[sherif_handwriting] 86/909 pub_tables_ar/kitab_tables__379 11.79s
+[sherif_handwriting] 87/909 pub_tables_ar/kitab_tables__88 24.68s
+[sherif_handwriting] 88/909 pub_tables_ar/kitab_tables__132 12.34s
+[sherif_handwriting] 89/909 pub_tables_ar/kitab_tables__270 54.78s
+[sherif_handwriting] 90/909 pub_tables_ar/kitab_tables__462 7.97s
+[sherif_handwriting] 91/909 pub_tables_ar/kitab_tables__47 12.68s
+[sherif_handwriting] 92/909 pub_tables_ar/kitab_tables__156 6.71s
+[sherif_handwriting] 93/909 pub_tables_ar/kitab_tables__469 57.39s
+[sherif_handwriting] 94/909 pub_tables_ar/kitab_tables__358 13.74s
+[sherif_handwriting] 95/909 pub_tables_ar/kitab_tables__459 12.88s
+[sherif_handwriting] 96/909 pub_tables_ar/kitab_tables__342 10.24s
+[sherif_handwriting] 97/909 pub_tables_ar/kitab_tables__152 17.78s
+[sherif_handwriting] 98/909 pub_tables_ar/kitab_tables__10 18.30s
+[sherif_handwriting] 99/909 pub_tables_ar/kitab_tables__385 16.43s
+[sherif_handwriting] 100/909 pub_tables_ar/kitab_tables__388 20.26s
+[sherif_handwriting] 101/909 pub_tables_ar/kitab_tables__414 14.31s
+[sherif_handwriting] 102/909 pub_tables_ar/kitab_tables__279 13.18s
+[sherif_handwriting] 103/909 pub_tables_ar/kitab_tables__269 14.46s
+[sherif_handwriting] 104/909 pub_tables_ar/kitab_tables__355 54.58s
+[sherif_handwriting] 105/909 pub_tables_ar/kitab_tables__50 2.68s
+[sherif_handwriting] 106/909 pub_tables_ar/kitab_tables__158 18.31s
+[sherif_handwriting] 107/909 pub_tables_ar/kitab_tables__151 15.21s
+[sherif_handwriting] 108/909 pub_tables_ar/kitab_tables__45 2.29s
+[sherif_handwriting] 109/909 pub_tables_ar/kitab_tables__460 10.34s
+[sherif_handwriting] 110/909 pub_tables_ar/kitab_tables__76 8.05s
+[sherif_handwriting] 111/909 pub_tables_ar/kitab_tables__265 21.10s
+[sherif_handwriting] 112/909 pub_tables_ar/kitab_tables__202 15.00s
+[sherif_handwriting] 113/909 pub_tables_ar/kitab_tables__8 10.82s
+[sherif_handwriting] 114/909 pub_tables_ar/kitab_tables__126 7.82s
+[sherif_handwriting] 115/909 pub_tables_ar/kitab_tables__356 22.20s
+[sherif_handwriting] 116/909 pub_tables_ar/kitab_tables__306 7.70s
+[sherif_handwriting] 117/909 pub_tables_ar/kitab_tables__46 13.86s
+[sherif_handwriting] 118/909 pub_tables_ar/kitab_tables__127 51.95s
+[sherif_handwriting] 119/909 pub_tables_ar/kitab_tables__6 13.30s
+[sherif_handwriting] 120/909 pub_tables_en/pubtabnet__581259 7.41s

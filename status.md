@@ -1,15 +1,15 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 03:11 UTC** · bắt đầu tesseract
+- Cập nhật: **2026-10-02 03:36 UTC** · tesseract kết thúc (mã 0, 1051/128 mẫu)
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: tesseract
+- Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
-| tesseract | ▶ đang chạy | 923/1051 | 0 | 39.2% | 1.45 | — | 2026-10-02T03:06:17+00:00 |
+| tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
 
@@ -26,8 +26,8 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_invoice_ar | 57: 42.0% |
 | syn_invoice_en | 62: 19.1% |
 | syn_invoice_mixed | 57: 39.5% |
-| syn_longtable | — |
-| syn_longtext | — |
+| syn_longtable | 61: 54.7% |
+| syn_longtext | 67: 3.0% |
 | syn_text_ar | 60: 7.0% |
 | syn_text_en | 57: 1.9% |
 | syn_text_mixed | 64: 14.8% |

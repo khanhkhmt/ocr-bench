@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 08:18 UTC** · cập nhật định kỳ
+- Cập nhật: **2026-10-02 08:48 UTC** · cập nhật định kỳ
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `e29131e` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: sherif_handwriting
@@ -10,7 +10,7 @@
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
-| sherif_handwriting | ▶ đang chạy | 604/1051 | 1 | 20.4% | 21.07 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
+| sherif_handwriting | ▶ đang chạy | 689/1051 | 1 | 19.0% | 23.76 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
@@ -25,9 +25,9 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_degraded | 61: 31.5% | 1: 1.8% | 61: 32.2% |
 | syn_form_ar | 60: 20.4% | 1: 14.2% | 60: 35.2% |
 | syn_form_en | 72: 45.7% | 1: 0.6% | 72: 11.7% |
-| syn_invoice_ar | 57: 33.3% | 45: 28.7% | 57: 42.0% |
-| syn_invoice_en | 62: 9.2% | 1: 0.0% | 62: 19.1% |
-| syn_invoice_mixed | 57: 38.2% | 1: 20.4% | 57: 39.5% |
+| syn_invoice_ar | 57: 33.3% | 57: 27.5% | 57: 42.0% |
+| syn_invoice_en | 62: 9.2% | 62: 2.0% | 62: 19.1% |
+| syn_invoice_mixed | 57: 38.2% | 13: 29.8% | 57: 39.5% |
 | syn_longtable | 61: 52.3% | — | 61: 54.7% |
 | syn_longtext | 67: 10.3% | — | 67: 3.0% |
 | syn_text_ar | 60: 7.6% | 60: 5.2% | 60: 7.0% |

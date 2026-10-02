@@ -19,6 +19,7 @@ models:
   params:
     lang: ara+eng
     psm: 3
+  enabled: false
 - name: paddleocr_ar
   adapter: paddleocr
   params:

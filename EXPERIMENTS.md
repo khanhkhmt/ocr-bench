@@ -86,3 +86,13 @@
 - Model đang chạy: `sherif_handwriting` (Bước C — nhóm thường).
 - Đã chạy trước khi chuyển: 306/923 mẫu. Các mẫu còn lại được chia đôi cho 2 tiến trình trên 2 GPU.
 - Việc tiếp theo: Tiếp tục theo dõi sherif_handwriting Bước C trên 2 GPU cho tới khi xong 923 mẫu.
+
+## 2026-10-02 09:36 — sherif_handwriting — Bước C hoàn thành (nhóm thường)
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
+- Kết thúc: ✔ sherif_handwriting: kết thúc (mã 0) sau 137.2 phút, 923/923 mẫu
+- Thời gian chạy: 137.2 phút trên 2 GPU = 4.57 giờ GPU · Đã dùng tổng: 6.48 / 20 giờ (32.4%)
+- VRAM đỉnh: 13299 MiB (GPU 0), 11945 MiB (GPU 1)
+- Số liệu: | sherif_handwriting | 923/1051 | 19.8% ±2.5 | 21.8% | 31.9% | 36.5% | 0.075 | 1 | 26 (≤4.1%) | 23.52 | 13.0 GB |
+- Quyết định: Hoàn thành nhóm thường, chuyển sang Bước D (tài liệu dài: syn_longtable, syn_longtext) với biến thể sherif_handwriting__long.
+- Việc tiếp theo: Bước D — Tài liệu dài với sherif_handwriting__long
+- Nghi vấn dữ liệu: —

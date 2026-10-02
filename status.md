@@ -1,23 +1,23 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 07:18 UTC** · bắt đầu sherif_handwriting
+- Cập nhật: **2026-10-02 07:19 UTC** · chuyen sang chay 2 GPU
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `e29131e` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: sherif_handwriting
+- Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
-| sherif_handwriting | ▶ đang chạy | 307/1051 | 1 | 30.0% | 18.37 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
+| sherif_handwriting | ■ đã dừng | 310/1051 | 1 | 29.8% | 18.35 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
 
 | Nhóm | easyocr | sherif_handwriting | tesseract |
 |---|---:|---:|---:|
-| pub_handwriting_ar | 128: 49.3% | 115: 7.4% | 128: 74.4% |
+| pub_handwriting_ar | 128: 49.3% | 118: 7.4% | 128: 74.4% |
 | pub_handwriting_en | 63: 81.3% | 1: 2.4% | 63: 61.7% |
 | pub_printed_ar | 63: 28.4% | 63: 41.1% | 63: 32.1% |
 | pub_tables_ar | 58: 42.5% | 58: 49.5% | 58: 52.4% |
@@ -38,12 +38,9 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-02 05:46 — Giai đoạn 1 (Bước B) — sherif_handwriting
-- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting --per-category 1 --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`
-- Kết thúc: ✔ sherif_handwriting: kết thúc (mã 0) sau 6.3 phút, 14/14 mẫu
-- Thời gian chạy: 6.3 phút × 1 GPU = 0.11 giờ GPU · Đã dùng tổng: 1.91 / 20 giờ (9.6%)
-- VRAM đỉnh: 11425 MiB
-- Số liệu: | sherif_handwriting | 14/14 | 11.8% ±6.2 | 10.6% | 26.6% | 24.3% | 0.000 | 0 | 0 (≤21.5%) | 25.73 | 11.2 GB |
-- Quyết định: —
-- Việc tiếp theo: Bước C — Chạy đủ các nhóm thường cho sherif_handwriting
-- Nghi vấn dữ liệu: —
+## 2026-10-02 07:18 — Cập nhật hệ thống — chuyển sang chạy 2 GPU
+- Ghi chú: Kéo mã nguồn commit `e29131e` từ GitHub. Model vừa 1 GPU tự động chia mẫu đều cho cả 2 GPU (GPU 0 và GPU 1).
+- Trạng thái GPU: Cả 2 GPU đều đang chạy (GPU 0: PID 102461, GPU 1: PID 102516).
+- Model đang chạy: `sherif_handwriting` (Bước C — nhóm thường).
+- Đã chạy trước khi chuyển: 306/923 mẫu. Các mẫu còn lại được chia đôi cho 2 tiến trình trên 2 GPU.
+- Việc tiếp theo: Tiếp tục theo dõi sherif_handwriting Bước C trên 2 GPU cho tới khi xong 923 mẫu.

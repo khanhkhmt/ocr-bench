@@ -79,3 +79,10 @@
 - Quyết định: —
 - Việc tiếp theo: Bước C — Chạy đủ các nhóm thường cho sherif_handwriting
 - Nghi vấn dữ liệu: —
+
+## 2026-10-02 07:18 — Cập nhật hệ thống — chuyển sang chạy 2 GPU
+- Ghi chú: Kéo mã nguồn commit `e29131e` từ GitHub. Model vừa 1 GPU tự động chia mẫu đều cho cả 2 GPU (GPU 0 và GPU 1).
+- Trạng thái GPU: Cả 2 GPU đều đang chạy (GPU 0: PID 102461, GPU 1: PID 102516).
+- Model đang chạy: `sherif_handwriting` (Bước C — nhóm thường).
+- Đã chạy trước khi chuyển: 306/923 mẫu. Các mẫu còn lại được chia đôi cho 2 tiến trình trên 2 GPU.
+- Việc tiếp theo: Tiếp tục theo dõi sherif_handwriting Bước C trên 2 GPU cho tới khi xong 923 mẫu.

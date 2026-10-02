@@ -1,0 +1,110 @@
+dataset: /kaggle/working/testset/manifest.jsonl
+output_dir: /kaggle/working/runs
+normalization:
+  nfkc: true
+  strip_markdown: true
+  strip_tatweel: true
+  strip_diacritics: true
+  unify_alef: false
+  unify_yeh: false
+  unify_digits: true
+  unify_punct: false
+  lowercase: false
+status:
+  push: true
+  every_min: 30
+models:
+- name: tesseract
+  adapter: tesseract
+  params:
+    lang: ara+eng
+    psm: 3
+- name: paddleocr_ar
+  adapter: paddleocr
+  params:
+    lang: ar
+    device: gpu
+    engine: transformers
+- name: easyocr
+  adapter: easyocr
+  params:
+    langs:
+    - ar
+    - en
+- name: paddleocr_vl
+  adapter: paddleocr_vl
+  params:
+    engine: transformers
+- name: baseer
+  adapter: hf_vlm
+  params:
+    model_id: AbdoTarek/Baseer-OCR-V1.0
+    system_prompt: You are a helpful assistant.
+    prompt: "Extract ALL visible text from the document image.\n\nReturn the result\
+      \ strictly as JSON with this structure:\n\n{\n \"subject\": \"\",\n \"keywords\"\
+      : [],\n \"full_text\": \"\"\n}\n\nRules:\n- Do not repeat lines.\n- Preserve\
+      \ original order of text.\n- Do not add explanations."
+    json_field: full_text
+    max_new_tokens: 2048
+- name: qari_0_4
+  adapter: hf_vlm
+  params:
+    model_id: Qwen/Qwen3-VL-4B-Instruct
+    adapter_id: YasserSami/Qari-OCR-0.4.0-VL-4B-Instruct
+    processor_id: YasserSami/Qari-OCR-0.4.0-VL-4B-Instruct
+    prompt: Free OCR.
+    max_new_tokens: 2048
+- name: sherif_handwriting
+  adapter: hf_vlm
+  params:
+    model_id: sherif1313/Arabic-English-handwritten-OCR-v3
+    prompt: 'ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية
+      بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:'
+    max_new_tokens: 1024
+- name: amad_vlm6
+  adapter: hf_vlm
+  gpus: 2
+  params:
+    model_id: amad-iq/amad-vlm6
+    prompt: Extract the text in the image. Give me the final text, nothing else.
+    max_new_tokens: 4096
+    generation_kwargs:
+      repetition_penalty: 1.05
+- name: amad_vlm6_4bit
+  adapter: hf_vlm
+  params:
+    model_id: amad-iq/amad-vlm6
+    quantization: 4bit
+    prompt: Extract the text in the image. Give me the final text, nothing else.
+    max_new_tokens: 4096
+    generation_kwargs:
+      repetition_penalty: 1.05
+- name: hunyuan_ocr
+  enabled: false
+  adapter: hf_vlm
+  params:
+    model_id: tencent/HunyuanOCR
+    model_class: HunYuanVLForConditionalGeneration
+    trust_remote_code: true
+    input_mode: template
+    processor_kwargs:
+      use_fast: false
+    prompt: 提取文档图片中正文的所有信息用markdown格式表示，其中页眉、页脚部分忽略，表格用html格式表达，文档中公式用latex格式表示，按照阅读顺序组织进行解析。
+    max_new_tokens: 4096
+- name: surya
+  enabled: false
+  adapter: surya
+  python: /kaggle/working/venvs/surya/bin/python
+- name: my_api_model
+  enabled: false
+  adapter: openai_api
+  params:
+    base_url: http://127.0.0.1:8000/v1
+    model: my-model
+    prompt: Extract all text in the image. Return only the text.
+- name: my_script
+  enabled: false
+  adapter: command
+  params:
+    cmd: python /kaggle/working/my_repo/infer.py --image {image}
+    timeout: 300

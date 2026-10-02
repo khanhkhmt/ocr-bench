@@ -1,16 +1,16 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 05:48 UTC** · chay thu sherif_handwriting
+- Cập nhật: **2026-10-02 05:49 UTC** · bắt đầu sherif_handwriting
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `4c2739d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: sherif_handwriting
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
-| sherif_handwriting | ■ đã dừng | 14/1051 | 0 | 11.8% | 25.73 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
+| sherif_handwriting | ▶ đang chạy | 14/1051 | 0 | 11.8% | 25.73 | 11.2 GB | 2026-10-02T05:46:08+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):

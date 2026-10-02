@@ -1,4 +1,3 @@
-Loading weights:  83%|████████▎ | 684/824 [00:03<00:00, 424.15it/s, Materializing param=model.visual.blocks.20.mlp.up_proj.weight]
 Loading weights:  83%|████████▎ | 685/824 [00:03<00:00, 424.15it/s, Materializing param=model.visual.blocks.20.norm1.weight]      
 Loading weights:  83%|████████▎ | 685/824 [00:03<00:00, 424.15it/s, Materializing param=model.visual.blocks.20.norm1.weight]
 Loading weights:  83%|████████▎ | 686/824 [00:03<00:00, 424.15it/s, Materializing param=model.visual.blocks.20.norm2.weight]
@@ -298,3 +297,4 @@ The following generation flags are not valid and may be ignored: ['temperature']
 [sherif_handwriting] 12/14 syn_form_ar/syn_form_ar_0012 11.47s
 [sherif_handwriting] 13/14 syn_form_en/syn_form_en_0103 10.15s
 [sherif_handwriting] 14/14 syn_degraded/syn_degraded_0058 15.21s
+[sherif_handwriting] 923 mẫu, đã có 14, cần chạy 909

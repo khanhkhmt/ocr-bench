@@ -1,15 +1,15 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-02 02:43 UTC** · chay thu tesseract
+- Cập nhật: **2026-10-02 02:44 UTC** · bắt đầu tesseract
 - Máy: `55a26f454aff` · GPU: Tesla T4, Tesla T4
 - Code: `532d955` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: tesseract
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
-| tesseract | ■ đã dừng | 14/1051 | 0 | 39.6% | 1.65 | — | 2026-10-02T02:43:14+00:00 |
+| tesseract | ▶ đang chạy | 14/1051 | 0 | 39.6% | 1.65 | — | 2026-10-02T02:43:14+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
 

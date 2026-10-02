@@ -1,0 +1,28 @@
+{
+  "sessions": [
+    {
+      "dataset_fingerprint": "aa8fdd44e1715845",
+      "env": {},
+      "started": "2026-10-02T04:48:16+00:00",
+      "adapter": "hf_vlm",
+      "params": {
+        "model_id": "sherif1313/Arabic-English-handwritten-OCR-v3",
+        "prompt": "ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:",
+        "max_new_tokens": 1024
+      },
+      "host": "55a26f454aff",
+      "python": "3.12.12",
+      "gpus": [
+        "Tesla T4",
+        "Tesla T4"
+      ],
+      "cuda_visible_devices": "0",
+      "load_s": 64.4,
+      "finished": "2026-10-02T05:05:15+00:00",
+      "peak_vram_mib": 12021
+    }
+  ],
+  "spec_hash": "e499762abfdc0255",
+  "dataset_fingerprint": "aa8fdd44e1715845",
+  "peak_vram_mib": 12021
+}

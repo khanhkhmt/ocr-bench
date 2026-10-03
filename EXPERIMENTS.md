@@ -111,3 +111,7 @@
 - Trạng thái khôi phục: Đã khôi phục thành công 11 file từ nhánh results. Dấu vân tay dữ liệu: aa8fdd44e1715845 (khớp chính xác tuyệt đối).
 - Cấu hình: Biến thể sherif_handwriting__sl__long (max_new_tokens: 8192, stop_on_loop: true, gpus: 2, enabled: true). Biến thể cũ sherif_handwriting__long (enabled: false).
 - Việc tiếp theo: Chạy Bước D trong tmux bench: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__sl__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`
+
+### 2026-10-03 09:35 UTC — Kiểm tra định kỳ sherif_handwriting__sl__long
+- Tiến độ: 1/24 mẫu (mẫu `syn_longtable/syn_longtable_0007` xong trong 401.91s, 4.563 ký tự, không lỗi). Đang chạy mẫu 2/24.
+- GPU: GPU 0: 14.001 MiB / 15.360 MiB (36% util), GPU 1: 13.361 MiB / 15.360 MiB (68% util).

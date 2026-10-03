@@ -1,9 +1,9 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-03 08:10 UTC** · phiên mới (lần 3) — khôi phục từ GitHub
+- Cập nhật: **2026-10-03 09:11 UTC** · bắt đầu sherif_handwriting__sl__long
 - Máy: `a721299e3b15` · GPU: Tesla T4, Tesla T4
 - Code: `3dea06d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: sherif_handwriting__sl__long
 
 ## Split `dev` (1051 mẫu)
 

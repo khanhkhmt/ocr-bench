@@ -78,7 +78,7 @@ models:
       max_pixels: 1003520
     model_kwargs:
       tie_word_embeddings: true
-  enabled: true
+  enabled: false
 - name: amad_vlm6
   adapter: hf_vlm
   gpus: 2
@@ -126,3 +126,15 @@ models:
   params:
     cmd: python /kaggle/working/my_repo/infer.py --image {image}
     timeout: 300
+- name: sherif_handwriting__sl__long
+  adapter: hf_vlm
+  enabled: true
+  params:
+    model_id: sherif1313/Arabic-English-handwritten-OCR-v3
+    prompt: 'ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية
+      بدون اي اختصار ودون ذيادة او حذف. اقرأ كل المحتوى النصي الموجود في الصورة:'
+    max_new_tokens: 8192
+    stop_on_loop: true
+    model_kwargs:
+      tie_word_embeddings: true
+  gpus: 2

@@ -101,3 +101,8 @@
 - Trạng thái khôi phục: Đã khôi phục kết quả của tesseract, easyocr, sherif_handwriting từ nhánh results.
 - Mục tiêu: Chạy tài liệu dài cho sherif_handwriting với biến thể sherif_handwriting__sl__long (max_new_tokens: 8192, stop_on_loop: true, không max_pixels, --per-category 12).
 - Việc tiếp theo: Tắt biến thể sherif_handwriting__long cũ, tạo biến thể sherif_handwriting__sl__long, kiểm tra vram, chạy Bước D.
+
+## 2026-10-03 07:33 UTC — Phiên mới (lần 3) — khôi phục từ GitHub, tiếp tục: Bước D — Tài liệu dài cho sherif_handwriting (biến thể sherif_handwriting__sl__long)
+- Trạng thái khôi phục: Đã khôi phục kết quả tesseract, easyocr, sherif_handwriting từ nhánh results. Dấu vân tay dữ liệu: aa8fdd44e1715845 (khớp chính xác).
+- Mục tiêu: Chạy tài liệu dài cho sherif_handwriting với biến thể sherif_handwriting__sl__long (max_new_tokens: 8192, stop_on_loop: true, gpus: 2, không max_pixels, --per-category 12).
+- Việc tiếp theo: Chạy lại đúng lệnh trong tmux bench: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__sl__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`

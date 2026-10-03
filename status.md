@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-03 09:41 UTC** · cập nhật định kỳ
+- Cập nhật: **2026-10-03 10:11 UTC** · cập nhật định kỳ
 - Máy: `a721299e3b15` · GPU: Tesla T4, Tesla T4
 - Code: `3dea06d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: sherif_handwriting__sl__long
@@ -12,7 +12,7 @@
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
 | sherif_handwriting | ■ đã dừng | 923/1051 | 1 | 19.8% | 23.52 | 13.0 GB | 2026-10-02T09:35:19+00:00 |
 | sherif_handwriting__long | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 6/1051 | 0 | 102.6% | 581.69 | — | — |
-| sherif_handwriting__sl__long | ▶ đang chạy | 1/1051 | 0 | 0.0% | 401.91 | — | — |
+| sherif_handwriting__sl__long | ▶ đang chạy | 10/1051 | 3 | 77.0% | 379.18 | — | — |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
 CER norm theo nhóm (`số mẫu đã chạy: CER`):
@@ -30,7 +30,7 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_invoice_ar | 57: 33.3% | 57: 27.5% | — | — | 57: 42.0% |
 | syn_invoice_en | 62: 9.2% | 62: 2.0% | — | — | 62: 19.1% |
 | syn_invoice_mixed | 57: 38.2% | 57: 29.0% | — | — | 57: 39.5% |
-| syn_longtable | 61: 52.3% | — | 6: 102.6% | 1: 0.0% | 61: 54.7% |
+| syn_longtable | 61: 52.3% | — | 6: 102.6% | 10: 77.0% | 61: 54.7% |
 | syn_longtext | 67: 10.3% | — | — | — | 67: 3.0% |
 | syn_text_ar | 60: 7.6% | 60: 5.2% | — | — | 60: 7.0% |
 | syn_text_en | 57: 14.9% | 57: 1.0% | — | — | 57: 1.9% |

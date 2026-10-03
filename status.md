@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-03 11:09 UTC** · sherif_handwriting__sl__long kết thúc (mã 1, 24/24 mẫu)
+- Cập nhật: **2026-10-03 11:12 UTC** · kết quả sherif_handwriting tài liệu dài 24/24 (19 ok, 5 oom)
 - Máy: `a721299e3b15` · GPU: Tesla T4, Tesla T4
 - Code: `3dea06d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)

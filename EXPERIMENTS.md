@@ -96,3 +96,8 @@
 - Quyết định: Hoàn thành nhóm thường, chuyển sang Bước D (tài liệu dài: syn_longtable, syn_longtext) với biến thể sherif_handwriting__long.
 - Việc tiếp theo: Bước D — Tài liệu dài với sherif_handwriting__long
 - Nghi vấn dữ liệu: —
+
+## 2026-10-03 02:54 UTC — Phiên mới — khôi phục từ GitHub, tiếp tục: Bước D — Tài liệu dài cho sherif_handwriting
+- Trạng thái khôi phục: Đã khôi phục kết quả của tesseract, easyocr, sherif_handwriting từ nhánh results.
+- Mục tiêu: Chạy tài liệu dài cho sherif_handwriting với biến thể sherif_handwriting__sl__long (max_new_tokens: 8192, stop_on_loop: true, không max_pixels, --per-category 12).
+- Việc tiếp theo: Tắt biến thể sherif_handwriting__long cũ, tạo biến thể sherif_handwriting__sl__long, kiểm tra vram, chạy Bước D.

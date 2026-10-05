@@ -1,9 +1,9 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 03:30 UTC** · cập nhật định kỳ
+- Cập nhật: **2026-10-05 03:31 UTC** · sherif_handwriting__pp__long kết thúc (mã 0, 24/24 mẫu)
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
 - Code: `a36186d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: sherif_handwriting__pp__long
+- Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
 
@@ -12,7 +12,7 @@
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
 | sherif_handwriting | ■ đã dừng | 923/1051 | 1 | 19.8% | 23.52 | 13.0 GB | 2026-10-02T09:35:19+00:00 |
 | sherif_handwriting__long | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 6/1051 | 0 | 102.6% | 581.69 | — | — |
-| sherif_handwriting__pp__long | ▶ đang chạy | 23/1051 | 0 | 21.8% | 274.99 | 13.5 GB | 2026-10-05T03:18:57+00:00 |
+| sherif_handwriting__pp__long | ■ đã dừng | 24/1051 | 0 | 20.9% | 269.57 | 13.5 GB | 2026-10-05T03:31:36+00:00 |
 | sherif_handwriting__sl__long | ■ đã dừng | 24/1051 | 5 | 59.3% | 366.44 | 0.0 GB | 2026-10-03T11:09:14+00:00 |
 | tesseract | ■ đã dừng | 1051/1051 | 0 | 37.8% | 2.73 | — | 2026-10-02T03:36:45+00:00 |
 
@@ -32,7 +32,7 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | syn_invoice_en | 62: 9.2% | 62: 2.0% | — | — | — | 62: 19.1% |
 | syn_invoice_mixed | 57: 38.2% | 57: 29.0% | — | — | — | 57: 39.5% |
 | syn_longtable | 61: 52.3% | — | 6: 102.6% | 12: 38.9% | 12: 82.6% | 61: 54.7% |
-| syn_longtext | 67: 10.3% | — | — | 11: 3.2% | 12: 36.1% | 67: 3.0% |
+| syn_longtext | 67: 10.3% | — | — | 12: 2.9% | 12: 36.1% | 67: 3.0% |
 | syn_text_ar | 60: 7.6% | 60: 5.2% | — | — | — | 60: 7.0% |
 | syn_text_en | 57: 14.9% | 57: 1.0% | — | — | — | 57: 1.9% |
 | syn_text_mixed | 64: 13.7% | 64: 11.5% | — | — | — | 64: 14.8% |

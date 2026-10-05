@@ -1,5 +1,4 @@
 Loading weights:  88%|████████▊ | 727/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.bias]
-Loading weights:  88%|████████▊ | 727/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.bias]
 Loading weights:  88%|████████▊ | 728/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.weight]
 Loading weights:  88%|████████▊ | 728/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.weight]
 Loading weights:  96%|█████████▌| 791/824 [00:08<00:00, 250.62it/s, Materializing param=model.visual.blocks.29.mlp.up_proj.bias]    
@@ -298,3 +297,4 @@ The following generation flags are not valid and may be ignored: ['temperature']
 [sherif_handwriting__pp__long#1/2] 12/15 syn_longtext/syn_longtext_0042 127.21s
 [sherif_handwriting__pp__long#1/2] 13/15 syn_longtext/syn_longtext_0103 170.72s
 [sherif_handwriting__pp__long#1/2] 14/15 syn_longtext/syn_longtext_0107 239.13s
+[sherif_handwriting__pp__long#1/2] 15/15 syn_longtext/syn_longtext_0117 144.90s

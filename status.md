@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 05:13 UTC** · web demo dots đang chạy ở cổng 7860
+- Cập nhật: **2026-10-05 05:42 UTC** · web demo dots đang chạy ở cổng 7860 (sẵn sàng thử nghiệm)
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
 - Code: `ae4ecf3` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)

@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 08:15 UTC** · web demo: sửa danh sách a,b,c + DOCX
+- Cập nhật: **2026-10-05 08:25 UTC** · web demo: sửa hiển thị danh sách a,b,c
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `e511d8c` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `e219a4f` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)

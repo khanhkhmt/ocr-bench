@@ -115,3 +115,9 @@
 ### 2026-10-03 09:35 UTC — Kiểm tra định kỳ sherif_handwriting__sl__long
 - Tiến độ: 1/24 mẫu (mẫu `syn_longtable/syn_longtable_0007` xong trong 401.91s, 4.563 ký tự, không lỗi). Đang chạy mẫu 2/24.
 - GPU: GPU 0: 14.001 MiB / 15.360 MiB (36% util), GPU 1: 13.361 MiB / 15.360 MiB (68% util).
+
+## 2026-10-05 02:28 UTC — Phiên mới (lần 4) — khôi phục từ GitHub, tiếp tục: Bước D — Tài liệu dài cho sherif_handwriting (biến thể sherif_handwriting__pp__long)
+- Trạng thái khôi phục: Đã khôi phục thành công 13 file từ nhánh results. Dấu vân tay dữ liệu: aa8fdd44e1715845 (khớp chính xác).
+- Tình trạng: tesseract, easyocr HOÀN THÀNH. sherif_handwriting nhóm thường xong 923/923. Biến thể sherif_handwriting__sl__long chạy 24/24 có 5 mẫu OOM.
+- Quyết định người dùng: Đọc từng trang ở độ phân giải đầy đủ; không giảm độ phân giải; không chấp nhận 19/24; tạo biến thể sherif_handwriting__pp__long (max_new_tokens: 8192, stop_on_loop: true, multi_page: per_page, gpus: 1 để tự chia 2 GPU).
+- Việc tiếp theo: Đặt enabled: false cho sherif_handwriting__sl__long và sherif_handwriting__long; tạo mục sherif_handwriting__pp__long; chạy Bước D trong tmux bench với lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__pp__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`.

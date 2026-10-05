@@ -400,3 +400,6 @@ Thank you for your business. Payment due within 30 days.
 -------------------
 ✔ KIỂM TRA ĐẠT — mở web được
 ```
+
+## 2026-10-05 06:17 UTC — Web demo mở qua ngrok
+- Trạng thái: web demo mở qua ngrok, không đăng nhập

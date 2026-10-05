@@ -65,7 +65,7 @@ models:
     max_new_tokens: 1024
     model_kwargs: &id001
       tie_word_embeddings: true
-  enabled: true
+  enabled: false
 - name: sherif_handwriting__long
   adapter: hf_vlm
   gpus: 2
@@ -140,7 +140,7 @@ models:
   gpus: 2
 - name: sherif_handwriting__pp__long
   adapter: hf_vlm
-  enabled: true
+  enabled: false
   params:
     model_id: sherif1313/Arabic-English-handwritten-OCR-v3
     prompt: 'ارجو استخراج النص العربي كاملاً من هذه الصورة من البداية الى النهاية

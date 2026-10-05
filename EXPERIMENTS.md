@@ -141,3 +141,11 @@
 - Quyết định: Hoàn thành toàn bộ split dev cho sherif_handwriting (923 mẫu thường + 24 mẫu tài liệu dài, 0 lỗi OOM). Đứng đầu bảng xếp hạng BENCHMARK.md.
 - Việc tiếp theo: Bước F (clean-cache sherif_handwriting, tắt enabled cho mọi biến thể sherif_handwriting) -> Bước G -> chuyển sang model tiếp theo trong queue: qari_0_4.
 - Nghi vấn dữ liệu: —
+
+## 2026-10-05 03:50 UTC — Bước F — sherif_handwriting
+- Clean-cache: Đã chạy `ocrbench clean-cache --config /kaggle/working/config.yaml --models sherif_handwriting`, giải phóng ~7.5 GB cache trọng số.
+- Trạng thái biến thể: Đã tắt toàn bộ biến thể sherif_handwriting trong `/kaggle/working/config.yaml` (`enabled: false` cho `sherif_handwriting`, `sherif_handwriting__long`, `sherif_handwriting__sl__long`, `sherif_handwriting__pp__long`).
+- Dung lượng đĩa trống (`df -h /kaggle/working ~`):
+  - `/kaggle/working`: 19G khả dụng (554M đã dùng / 20G, 3%)
+  - `/root` (~): 1.1T khả dụng (7.0T đã dùng / 8.0T, 87%)
+- Ghi chú: Hàng đợi đã đổi (theo commit 62aa6f0), model tiếp theo là `dots_mocr` (hàng đợi mới: ... sherif_handwriting → dots_mocr → sherif_handwriting_pre → qari_0_4 → ...), không phải `qari_0_4`.

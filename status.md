@@ -1,9 +1,9 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 03:37 UTC** · DỪNG: chờ người dùng duyệt sau sherif_handwriting
+- Cập nhật: **2026-10-05 03:53 UTC** · bắt đầu dots_mocr
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `a36186d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Code: `62aa6f0` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Đang chạy: dots_mocr
 
 ## Split `dev` (1051 mẫu)
 
@@ -41,12 +41,10 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-05 03:34 — Giai đoạn 4 (Bước D & E) — sherif_handwriting (biến thể sherif_handwriting__pp__long)
-- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__pp__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`
-- Kết thúc: ✔ sherif_handwriting__pp__long: kết thúc (mã 0) sau 61.6 phút, 24/24 mẫu
-- Thời gian chạy: 61.6 phút trên 2 GPU = 2.05 giờ GPU · Đã dùng tổng: 8.53 / 20 giờ (42.7%)
-- VRAM đỉnh: 13873 MiB
-- Số liệu: | 1 | sherif_handwriting | đủ | 14.4% | 4.9% | 29 | 1 | 29.76 | 13.5 GB | `sherif_handwriting`, `sherif_handwriting__pp__long` |
-- Quyết định: Hoàn thành toàn bộ split dev cho sherif_handwriting (923 mẫu thường + 24 mẫu tài liệu dài, 0 lỗi OOM). Đứng đầu bảng xếp hạng BENCHMARK.md.
-- Việc tiếp theo: Bước F (clean-cache sherif_handwriting, tắt enabled cho mọi biến thể sherif_handwriting) -> Bước G -> chuyển sang model tiếp theo trong queue: qari_0_4.
-- Nghi vấn dữ liệu: —
+## 2026-10-05 03:50 UTC — Bước F — sherif_handwriting
+- Clean-cache: Đã chạy `ocrbench clean-cache --config /kaggle/working/config.yaml --models sherif_handwriting`, giải phóng ~7.5 GB cache trọng số.
+- Trạng thái biến thể: Đã tắt toàn bộ biến thể sherif_handwriting trong `/kaggle/working/config.yaml` (`enabled: false` cho `sherif_handwriting`, `sherif_handwriting__long`, `sherif_handwriting__sl__long`, `sherif_handwriting__pp__long`).
+- Dung lượng đĩa trống (`df -h /kaggle/working ~`):
+  - `/kaggle/working`: 19G khả dụng (554M đã dùng / 20G, 3%)
+  - `/root` (~): 1.1T khả dụng (7.0T đã dùng / 8.0T, 87%)
+- Ghi chú: Hàng đợi đã đổi (theo commit 62aa6f0), model tiếp theo là `dots_mocr` (hàng đợi mới: ... sherif_handwriting → dots_mocr → sherif_handwriting_pre → qari_0_4 → ...), không phải `qari_0_4`.

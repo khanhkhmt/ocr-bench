@@ -1,17 +1,3 @@
-Loading weights:  87%|████████▋ | 720/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.mlp.up_proj.weight]
-Loading weights:  87%|████████▋ | 720/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.mlp.up_proj.weight]
-Loading weights:  88%|████████▊ | 721/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.norm1.weight]      
-Loading weights:  88%|████████▊ | 721/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.norm1.weight]
-Loading weights:  88%|████████▊ | 722/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.norm2.weight]
-Loading weights:  88%|████████▊ | 722/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.23.norm2.weight]
-Loading weights:  88%|████████▊ | 723/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.proj.bias]
-Loading weights:  88%|████████▊ | 723/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.proj.bias]
-Loading weights:  88%|████████▊ | 724/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.proj.weight]
-Loading weights:  88%|████████▊ | 724/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.proj.weight]
-Loading weights:  88%|████████▊ | 725/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.qkv.bias]   
-Loading weights:  88%|████████▊ | 725/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.qkv.bias]
-Loading weights:  88%|████████▊ | 726/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.qkv.weight]
-Loading weights:  88%|████████▊ | 726/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.attn.qkv.weight]
 Loading weights:  88%|████████▊ | 727/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.bias]
 Loading weights:  88%|████████▊ | 727/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.bias]
 Loading weights:  88%|████████▊ | 728/824 [00:08<00:00, 294.97it/s, Materializing param=model.visual.blocks.24.mlp.down_proj.weight]
@@ -298,3 +284,17 @@ The following generation flags are not valid and may be ignored: ['temperature']
 [sherif_handwriting__pp__long#1/2] 4/15 syn_longtable/syn_longtable_0054 217.94s
 [sherif_handwriting__pp__long#1/2] 5/15 syn_longtable/syn_longtable_0059 498.50s
 [sherif_handwriting__pp__long#1/2] 6/15 syn_longtable/syn_longtable_0072 32.76s
+[sherif_handwriting__pp__long#1/2] 7/15 syn_longtable/syn_longtable_0096 211.12s
+[sherif_handwriting__pp__long#2/2] 4/9 syn_longtable/syn_longtable_0106 1030.42s
+[sherif_handwriting__pp__long#2/2] 5/9 syn_longtext/syn_longtext_0010 137.50s
+[sherif_handwriting__pp__long#1/2] 8/15 syn_longtable/syn_longtable_0115 338.20s
+[sherif_handwriting__pp__long#2/2] 6/9 syn_longtext/syn_longtext_0012 159.17s
+[sherif_handwriting__pp__long#1/2] 9/15 syn_longtext/syn_longtext_0013 281.00s
+[sherif_handwriting__pp__long#2/2] 7/9 syn_longtext/syn_longtext_0037 328.82s
+[sherif_handwriting__pp__long#2/2] 8/9 syn_longtext/syn_longtext_0062 156.64s
+[sherif_handwriting__pp__long#1/2] 10/15 syn_longtext/syn_longtext_0031 304.96s
+[sherif_handwriting__pp__long#2/2] 9/9 syn_longtext/syn_longtext_0066 144.53s
+[sherif_handwriting__pp__long#1/2] 11/15 syn_longtext/syn_longtext_0036 148.52s
+[sherif_handwriting__pp__long#1/2] 12/15 syn_longtext/syn_longtext_0042 127.21s
+[sherif_handwriting__pp__long#1/2] 13/15 syn_longtext/syn_longtext_0103 170.72s
+[sherif_handwriting__pp__long#1/2] 14/15 syn_longtext/syn_longtext_0107 239.13s

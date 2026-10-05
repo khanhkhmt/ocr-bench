@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 04:10 UTC** · TẠM DỪNG: chuyển sang web demo dots
+- Cập nhật: **2026-10-05 04:16 UTC** · TẠM DỪNG: chuyển sang web demo dots
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `62aa6f0` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `6576c1d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)

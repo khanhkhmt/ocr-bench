@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 07:44 UTC** · web demo cập nhật: phóng ảnh nhỏ + chặn chạy vòng
+- Cập nhật: **2026-10-05 08:09 UTC** · web demo: adaptive_max_tokens 8
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `b0a7609` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `a2e7195` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)

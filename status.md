@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 03:31 UTC** · sherif_handwriting__pp__long kết thúc (mã 0, 24/24 mẫu)
+- Cập nhật: **2026-10-05 03:35 UTC** · benchmark: sherif_handwriting
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
 - Code: `a36186d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
@@ -41,8 +41,12 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-05 02:28 UTC — Phiên mới (lần 4) — khôi phục từ GitHub, tiếp tục: Bước D — Tài liệu dài cho sherif_handwriting (biến thể sherif_handwriting__pp__long)
-- Trạng thái khôi phục: Đã khôi phục thành công 13 file từ nhánh results. Dấu vân tay dữ liệu: aa8fdd44e1715845 (khớp chính xác).
-- Tình trạng: tesseract, easyocr HOÀN THÀNH. sherif_handwriting nhóm thường xong 923/923. Biến thể sherif_handwriting__sl__long chạy 24/24 có 5 mẫu OOM.
-- Quyết định người dùng: Đọc từng trang ở độ phân giải đầy đủ; không giảm độ phân giải; không chấp nhận 19/24; tạo biến thể sherif_handwriting__pp__long (max_new_tokens: 8192, stop_on_loop: true, multi_page: per_page, gpus: 1 để tự chia 2 GPU).
-- Việc tiếp theo: Đặt enabled: false cho sherif_handwriting__sl__long và sherif_handwriting__long; tạo mục sherif_handwriting__pp__long; chạy Bước D trong tmux bench với lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__pp__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`.
+## 2026-10-05 03:34 — Giai đoạn 4 (Bước D & E) — sherif_handwriting (biến thể sherif_handwriting__pp__long)
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models sherif_handwriting__pp__long --categories syn_longtable,syn_longtext --per-category 12 --gpus 0,1`
+- Kết thúc: ✔ sherif_handwriting__pp__long: kết thúc (mã 0) sau 61.6 phút, 24/24 mẫu
+- Thời gian chạy: 61.6 phút trên 2 GPU = 2.05 giờ GPU · Đã dùng tổng: 8.53 / 20 giờ (42.7%)
+- VRAM đỉnh: 13873 MiB
+- Số liệu: | 1 | sherif_handwriting | đủ | 14.4% | 4.9% | 29 | 1 | 29.76 | 13.5 GB | `sherif_handwriting`, `sherif_handwriting__pp__long` |
+- Quyết định: Hoàn thành toàn bộ split dev cho sherif_handwriting (923 mẫu thường + 24 mẫu tài liệu dài, 0 lỗi OOM). Đứng đầu bảng xếp hạng BENCHMARK.md.
+- Việc tiếp theo: Bước F (clean-cache sherif_handwriting, tắt enabled cho mọi biến thể sherif_handwriting) -> Bước G -> chuyển sang model tiếp theo trong queue: qari_0_4.
+- Nghi vấn dữ liệu: —

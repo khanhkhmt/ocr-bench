@@ -149,3 +149,8 @@
   - `/kaggle/working`: 19G khả dụng (554M đã dùng / 20G, 3%)
   - `/root` (~): 1.1T khả dụng (7.0T đã dùng / 8.0T, 87%)
 - Ghi chú: Hàng đợi đã đổi (theo commit 62aa6f0), model tiếp theo là `dots_mocr` (hàng đợi mới: ... sherif_handwriting → dots_mocr → sherif_handwriting_pre → qari_0_4 → ...), không phải `qari_0_4`.
+
+## 2026-10-05 04:10 UTC — TẠM DỪNG benchmark theo yêu cầu người dùng, chuyển sang web demo dots.mocr
+- Model và bước đang dở: `dots_mocr` (Bước B — chạy thử 14 mẫu trên 2 GPU). Tiến trình đã dừng an toàn qua Ctrl-C trong tmux bench, giải phóng toàn bộ VRAM trên 2 GPU (0 MiB / 15360 MiB). Mẫu đã ghi trong predictions.jsonl được giữ nguyên.
+- LỆNH CẦN CHẠY LẠI để tiếp tục sau này:
+`ocrbench run --config /kaggle/working/config.yaml --models dots_mocr --per-category 1 --categories pub_handwriting_ar,pub_handwriting_en,pub_printed_ar,pub_tables_ar,pub_tables_en,syn_degraded,syn_form_ar,syn_form_en,syn_invoice_ar,syn_invoice_en,syn_invoice_mixed,syn_text_ar,syn_text_en,syn_text_mixed --gpus 0,1`

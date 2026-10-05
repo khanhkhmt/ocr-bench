@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 03:36 UTC** · xong sherif_handwriting, đã xóa trọng số
+- Cập nhật: **2026-10-05 03:37 UTC** · DỪNG: chờ người dùng duyệt sau sherif_handwriting
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
 - Code: `a36186d` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)

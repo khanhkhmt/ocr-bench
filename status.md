@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 06:17 UTC** · web demo dots mở qua ngrok
+- Cập nhật: **2026-10-05 07:44 UTC** · web demo cập nhật: phóng ảnh nhỏ + chặn chạy vòng
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `cb5c36c` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `b0a7609` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)

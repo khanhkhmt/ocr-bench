@@ -403,3 +403,41 @@ Thank you for your business. Payment due within 30 days.
 
 ## 2026-10-05 06:17 UTC — Web demo mở qua ngrok
 - Trạng thái: web demo mở qua ngrok, không đăng nhập
+
+## 2026-10-05 09:55 UTC — Bắt đầu thí nghiệm TTA ký hiệu nhỏ (experiments/tta_markers)
+- Web demo đã chuyển sang GPU 1 (ngrok link giữ nguyên, HTTP 200).
+- Thí nghiệm đang chạy trên GPU 0 trong tmux session `exp`.
+- Mẫu đầu tiên đang chạy: pubtabnet__552595.
+- 10:05 UTC — Đã chạy xong mẫu 1 (pubtabnet__552595: CER 1.73 → 1.46, ghép v1 đúng 2/3 ký hiệu, sai 0) và mẫu 2 (pubtabnet__699374: CER 0.0). Đang chạy mẫu 3 (pubtabnet__684148).
+- 10:16 UTC — Đã chạy xong 7 mẫu (552595, 699374, 684148, 707833, 644357, 590407, 550360). Đang chạy mẫu 8 (pubtabnet__729650). Còn 2 mẫu đối chứng (01, 08).
+
+
+## Thí nghiệm TTA ký hiệu nhỏ (hướng 3)
+
+# Thí nghiệm TTA + ghép ký hiệu nhỏ (dots.mocr)
+
+Lượt phụ: `x4_ocr,x5_ocr,x5_layout` · min_votes 1 (v1) và 2 (v2)
+
+| Ảnh | Kích thước | Ký hiệu đáp án | Gốc giữ | Ghép v1 (sai) | Ghép v2 (sai) | CER gốc | CER v1 | CER v2 | Giây gốc | Giây phụ |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| pubtabnet__552595 | 503×342 | 3 | 0 | 2 (0) | 0 (0) | 1.73 | 1.46 | 1.73 | 63.3 | 463.2 |
+| pubtabnet__699374 | 245×96 | 0 | 0 | 0 (0) | 0 (0) | 0.0 | 0.0 | 0.0 | 15.9 | 51.7 |
+| pubtabnet__684148 | 166×254 | 0 | 0 | 0 (0) | 0 (0) | 4.08 | 4.08 | 4.08 | 45.3 | 135.5 |
+| pubtabnet__707833 | 245×65 | 0 | 0 | 0 (0) | 0 (0) | 0.0 | 0.0 | 0.0 | 10.7 | 32.5 |
+| pubtabnet__644357 | 245×118 | 0 | 0 | 0 (0) | 0 (0) | 0.0 | 0.0 | 0.0 | 16.6 | 53.7 |
+| pubtabnet__590407 | 341×75 | 0 | 0 | 0 (0) | 0 (0) | 3.58 | 3.58 | 3.58 | 22.9 | 74.4 |
+| pubtabnet__550360 | 503×163 | 0 | 0 | 0 (0) | 0 (0) | 44.75 | 44.75 | 44.75 | 52.7 | 151.1 |
+| pubtabnet__729650 | 486×130 | 0 | 0 | 0 (0) | 0 (0) | 6.97 | 6.97 | 6.97 | 16.3 | 74.2 |
+| 01_hoa_don_tieng_anh | 1500×1793 | 0 | 0 | 0 (0) | 0 (0) | 0.0 | 0.0 | 0.0 | 93.4 | 0 |
+| 08_anh_chup_xau_hoa_don_a_rap | 1150×1088 | 0 | 0 | 0 (0) | 0 (0) | 0.0 | 0.0 | 0.0 | 63.8 | 0 |
+
+**Tổng ký hiệu trước số:** đáp án 3 · gốc giữ 0 · ghép v1 2 (thêm sai 0) · ghép v2 0 (thêm sai 0)
+
+**Lượt phụ lỗi:**
+- 01_hoa_don_tieng_anh · x4_ocr: OutOfMemoryError: CUDA out of memory. Tried to allocate 606.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 524.81 MiB is free. Including non-PyTorch memory, this process has 14.05 GiB memory in use. Of the allocated memory 13.29 GiB is allocated by PyTorch, and 641.10 MiB is reserved by Py
+- 01_hoa_don_tieng_anh · x5_ocr: OutOfMemoryError: CUDA out of memory. Tried to allocate 606.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 390.81 MiB is free. Including non-PyTorch memory, this process has 14.18 GiB memory in use. Of the allocated memory 13.29 GiB is allocated by PyTorch, and 774.26 MiB is reserved by Py
+- 01_hoa_don_tieng_anh · x5_layout: OutOfMemoryError: CUDA out of memory. Tried to allocate 640.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 114.81 MiB is free. Including non-PyTorch memory, this process has 14.45 GiB memory in use. Of the allocated memory 13.57 GiB is allocated by PyTorch, and 760.41 MiB is reserved by Py
+- 08_anh_chup_xau_hoa_don_a_rap · x4_ocr: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.00 GiB. GPU 0 has a total capacity of 14.56 GiB of which 2.15 GiB is free. Including non-PyTorch memory, this process has 12.41 GiB memory in use. Of the allocated memory 11.66 GiB is allocated by PyTorch, and 627.63 MiB is reserved by PyTorc
+- 08_anh_chup_xau_hoa_don_a_rap · x5_ocr: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.00 GiB. GPU 0 has a total capacity of 14.56 GiB of which 2.09 GiB is free. Including non-PyTorch memory, this process has 12.46 GiB memory in use. Of the allocated memory 11.66 GiB is allocated by PyTorch, and 685.63 MiB is reserved by PyTorc
+- 08_anh_chup_xau_hoa_don_a_rap · x5_layout: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.15 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.98 GiB is free. Including non-PyTorch memory, this process has 12.58 GiB memory in use. Of the allocated memory 11.83 GiB is allocated by PyTorch, and 627.83 MiB is reserved by PyTorc
+

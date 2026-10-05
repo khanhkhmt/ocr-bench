@@ -263,3 +263,103 @@ C++ 语言基础.
 
 软件开发管理.
 ```
+
+
+## 2026-10-05 04:55 UTC — Chẩn đoán dots lần 2 (manual_embeds)
+```text
+transformers 5.0.0 | torch 2.10.0+cu128 | cuda Tesla T4
+[1] token ảnh trong input: 416 · cần: 416 · OK · keys ['input_ids', 'attention_mask', 'pixel_values', 'image_grid_thw']
+nạp model 4s
+[2] bộ mã hoá ảnh: |gốc − vá| lớn nhất = 5.734e-04 · |gốc| TB = 1.232e+00 · OK · NaN/inf: False
+[3] đường gốc: bước đầu có pixel_values = True (cache_position[0] = 0) · vision_tower gọi 1 lần [(416, 1536)]
+    chữ: 
+[4] inputs_embeds tự dựng (fp16): 
+[5] inputs_embeds tự dựng (fp32):
+```
+
+
+## 2026-10-05 04:58 UTC — Kiểm tra web demo dots (thất bại)
+- Kết quả kiểm tra: ✘ KIỂM TRA KHÔNG ĐẠT
+- 80 dòng cuối demo.log:
+```text
+Loading weights:  95%|█████████▍| 609/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc2.weight]
+Loading weights:  95%|█████████▍| 609/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc2.weight]
+Loading weights:  95%|█████████▍| 610/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc3.weight]
+Loading weights:  95%|█████████▍| 610/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc3.weight]
+Loading weights:  95%|█████████▌| 611/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm1.weight]  
+Loading weights:  95%|█████████▌| 611/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm1.weight]
+Loading weights:  95%|█████████▌| 612/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm2.weight]
+Loading weights:  95%|█████████▌| 612/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm2.weight]
+Loading weights:  95%|█████████▌| 613/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.proj.weight]
+Loading weights:  95%|█████████▌| 613/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.proj.weight]
+Loading weights:  95%|█████████▌| 614/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.qkv.weight] 
+Loading weights:  95%|█████████▌| 614/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.qkv.weight]
+Loading weights:  96%|█████████▌| 615/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc1.weight] 
+Loading weights:  96%|█████████▌| 615/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc1.weight]
+Loading weights:  96%|█████████▌| 616/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc2.weight]
+Loading weights:  96%|█████████▌| 616/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc2.weight]
+Loading weights:  96%|█████████▌| 617/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc3.weight]
+Loading weights:  96%|█████████▌| 617/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc3.weight]
+Loading weights:  96%|█████████▌| 618/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm1.weight]  
+Loading weights:  96%|█████████▌| 618/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm1.weight]
+Loading weights:  96%|█████████▋| 619/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm2.weight]
+Loading weights:  96%|█████████▋| 619/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm2.weight]
+Loading weights:  96%|█████████▋| 620/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.proj.weight]
+Loading weights:  96%|█████████▋| 620/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.proj.weight]
+Loading weights:  97%|█████████▋| 621/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.qkv.weight] 
+Loading weights:  97%|█████████▋| 621/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.qkv.weight]
+Loading weights:  97%|█████████▋| 622/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc1.weight] 
+Loading weights:  97%|█████████▋| 622/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc1.weight]
+Loading weights:  97%|█████████▋| 623/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc2.weight]
+Loading weights:  97%|█████████▋| 623/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc2.weight]
+Loading weights:  97%|█████████▋| 624/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc3.weight]
+Loading weights:  97%|█████████▋| 624/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc3.weight]
+Loading weights:  97%|█████████▋| 625/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm1.weight]  
+Loading weights:  97%|█████████▋| 625/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm1.weight]
+Loading weights:  97%|█████████▋| 626/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm2.weight]
+Loading weights:  97%|█████████▋| 626/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm2.weight]
+Loading weights:  98%|█████████▊| 627/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.proj.weight]
+Loading weights:  98%|█████████▊| 627/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.proj.weight]
+Loading weights:  98%|█████████▊| 628/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.qkv.weight] 
+Loading weights:  98%|█████████▊| 628/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.qkv.weight]
+Loading weights:  98%|█████████▊| 629/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc1.weight] 
+Loading weights:  98%|█████████▊| 629/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc1.weight]
+Loading weights:  98%|█████████▊| 630/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc2.weight]
+Loading weights:  98%|█████████▊| 630/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc2.weight]
+Loading weights:  98%|█████████▊| 631/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc3.weight]
+Loading weights:  98%|█████████▊| 631/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc3.weight]
+Loading weights:  98%|█████████▊| 632/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm1.weight]  
+Loading weights:  98%|█████████▊| 632/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm1.weight]
+Loading weights:  98%|█████████▊| 633/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm2.weight]
+Loading weights:  98%|█████████▊| 633/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm2.weight]
+Loading weights:  99%|█████████▊| 634/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.bias]      
+Loading weights:  99%|█████████▊| 634/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.bias]
+Loading weights:  99%|█████████▉| 635/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.weight]
+Loading weights:  99%|█████████▉| 635/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.weight]
+Loading weights:  99%|█████████▉| 636/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.bias] 
+Loading weights:  99%|█████████▉| 636/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.bias]
+Loading weights:  99%|█████████▉| 637/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 637/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.bias]  
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.bias]
+Loading weights:  99%|█████████▉| 639/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.weight]
+Loading weights:  99%|█████████▉| 639/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.weight]
+Loading weights: 100%|█████████▉| 640/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.norm.weight]
+Loading weights: 100%|█████████▉| 640/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.norm.weight]
+Loading weights: 100%|█████████▉| 641/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.bias]  
+Loading weights: 100%|█████████▉| 641/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.bias]
+Loading weights: 100%|█████████▉| 642/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.weight]
+Loading weights: 100%|█████████▉| 642/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.weight]
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.post_trunk_norm.weight]            
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.post_trunk_norm.weight]
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 234.42it/s, Materializing param=vision_tower.post_trunk_norm.weight]
+nạp model: 20s trên 2 bản model
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+thời gian 1 trang: 21.1s · nguồn: OCR · lỗi: — · ghi chú: —
+số khối bố cục: 1 · có bảng HTML: False
+----- kết quả -----
+
+-------------------
+✘ KIỂM TRA KHÔNG ĐẠT — xem kết quả ở trên (gửi cho người sửa code)
+```

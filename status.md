@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 04:46 UTC** · chẩn đoán dots xong
+- Cập nhật: **2026-10-05 04:58 UTC** · DỪNG: web demo dots vẫn lỗi
 - Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `4b0cd19` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `6ff766e` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
@@ -42,110 +42,88 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-05 04:42 UTC — Chẩn đoán dots
+## 2026-10-05 04:58 UTC — Kiểm tra web demo dots (thất bại)
+- Kết quả kiểm tra: ✘ KIỂM TRA KHÔNG ĐẠT
+- 80 dòng cuối demo.log:
+```text
+Loading weights:  95%|█████████▍| 609/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc2.weight]
+Loading weights:  95%|█████████▍| 609/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc2.weight]
+Loading weights:  95%|█████████▍| 610/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc3.weight]
+Loading weights:  95%|█████████▍| 610/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.mlp.fc3.weight]
+Loading weights:  95%|█████████▌| 611/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm1.weight]  
+Loading weights:  95%|█████████▌| 611/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm1.weight]
+Loading weights:  95%|█████████▌| 612/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm2.weight]
+Loading weights:  95%|█████████▌| 612/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.38.norm2.weight]
+Loading weights:  95%|█████████▌| 613/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.proj.weight]
+Loading weights:  95%|█████████▌| 613/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.proj.weight]
+Loading weights:  95%|█████████▌| 614/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.qkv.weight] 
+Loading weights:  95%|█████████▌| 614/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.attn.qkv.weight]
+Loading weights:  96%|█████████▌| 615/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc1.weight] 
+Loading weights:  96%|█████████▌| 615/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc1.weight]
+Loading weights:  96%|█████████▌| 616/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc2.weight]
+Loading weights:  96%|█████████▌| 616/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc2.weight]
+Loading weights:  96%|█████████▌| 617/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc3.weight]
+Loading weights:  96%|█████████▌| 617/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.mlp.fc3.weight]
+Loading weights:  96%|█████████▌| 618/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm1.weight]  
+Loading weights:  96%|█████████▌| 618/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm1.weight]
+Loading weights:  96%|█████████▋| 619/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm2.weight]
+Loading weights:  96%|█████████▋| 619/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.39.norm2.weight]
+Loading weights:  96%|█████████▋| 620/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.proj.weight]
+Loading weights:  96%|█████████▋| 620/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.proj.weight]
+Loading weights:  97%|█████████▋| 621/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.qkv.weight] 
+Loading weights:  97%|█████████▋| 621/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.attn.qkv.weight]
+Loading weights:  97%|█████████▋| 622/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc1.weight] 
+Loading weights:  97%|█████████▋| 622/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc1.weight]
+Loading weights:  97%|█████████▋| 623/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc2.weight]
+Loading weights:  97%|█████████▋| 623/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc2.weight]
+Loading weights:  97%|█████████▋| 624/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc3.weight]
+Loading weights:  97%|█████████▋| 624/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.mlp.fc3.weight]
+Loading weights:  97%|█████████▋| 625/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm1.weight]  
+Loading weights:  97%|█████████▋| 625/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm1.weight]
+Loading weights:  97%|█████████▋| 626/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm2.weight]
+Loading weights:  97%|█████████▋| 626/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.40.norm2.weight]
+Loading weights:  98%|█████████▊| 627/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.proj.weight]
+Loading weights:  98%|█████████▊| 627/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.proj.weight]
+Loading weights:  98%|█████████▊| 628/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.qkv.weight] 
+Loading weights:  98%|█████████▊| 628/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.attn.qkv.weight]
+Loading weights:  98%|█████████▊| 629/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc1.weight] 
+Loading weights:  98%|█████████▊| 629/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc1.weight]
+Loading weights:  98%|█████████▊| 630/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc2.weight]
+Loading weights:  98%|█████████▊| 630/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc2.weight]
+Loading weights:  98%|█████████▊| 631/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc3.weight]
+Loading weights:  98%|█████████▊| 631/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.mlp.fc3.weight]
+Loading weights:  98%|█████████▊| 632/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm1.weight]  
+Loading weights:  98%|█████████▊| 632/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm1.weight]
+Loading weights:  98%|█████████▊| 633/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm2.weight]
+Loading weights:  98%|█████████▊| 633/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.blocks.41.norm2.weight]
+Loading weights:  99%|█████████▊| 634/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.bias]      
+Loading weights:  99%|█████████▊| 634/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.bias]
+Loading weights:  99%|█████████▉| 635/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.weight]
+Loading weights:  99%|█████████▉| 635/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.ln_q.weight]
+Loading weights:  99%|█████████▉| 636/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.bias] 
+Loading weights:  99%|█████████▉| 636/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.bias]
+Loading weights:  99%|█████████▉| 637/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 637/643 [00:02<00:00, 296.95it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.0.weight]
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.bias]  
+Loading weights:  99%|█████████▉| 638/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.bias]
+Loading weights:  99%|█████████▉| 639/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.weight]
+Loading weights:  99%|█████████▉| 639/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.merger.mlp.2.weight]
+Loading weights: 100%|█████████▉| 640/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.norm.weight]
+Loading weights: 100%|█████████▉| 640/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.norm.weight]
+Loading weights: 100%|█████████▉| 641/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.bias]  
+Loading weights: 100%|█████████▉| 641/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.bias]
+Loading weights: 100%|█████████▉| 642/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.weight]
+Loading weights: 100%|█████████▉| 642/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.patch_embed.patchifier.proj.weight]
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.post_trunk_norm.weight]            
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 253.32it/s, Materializing param=vision_tower.post_trunk_norm.weight]
+Loading weights: 100%|██████████| 643/643 [00:02<00:00, 234.42it/s, Materializing param=vision_tower.post_trunk_norm.weight]
+nạp model: 20s trên 2 bản model
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+thời gian 1 trang: 21.1s · nguồn: OCR · lỗi: — · ghi chú: —
+số khối bố cục: 1 · có bảng HTML: False
+----- kết quả -----
 
-### A) A_fp16
-- Dòng ✔ của lệnh: `✔ inference/samples/01_hoa_don_tieng_anh.png: 1 trang → /kaggle/working/diag/A_fp16/01_hoa_don_tieng_anh/`
-- Thời gian: real 0m49.103s (user 0m51.079s, sys 0m6.137s)
-- `head -c 1500` file .md:
-```markdown
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACLCAIAAABtM9WyAAABWElEQVR4nO3RgQkAIRDAsPf33/ncQsEmExS6Zubjdf/tAE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOcHmBJsTbE6wOWED+hUEExfG8/AAAAAASUVORK5CYII=)
-```
-
-### B) B_fp32
-- Dòng ✔ của lệnh: `✔ inference/samples/01_hoa_don_tieng_anh.png: 1 trang → /kaggle/working/diag/B_fp32/01_hoa_don_tieng_anh/`
-- Thời gian: real 1m7.395s (user 1m7.266s, sys 0m11.752s)
-- `head -c 1500` file .md:
-```markdown
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkcAAAHYCAIAAADI+durAACUfUlEQVR4nO39f1ATabow/F/nO2qn1ElPR23AqgStNYBlAjNrFPfhh/WQgdkNYg0oOxvEOqLUHBTPg8I76yM8hUJ9dV92Dgr7iuZMOcJbIjkzjmHKkczqGp5SyHNE4xklsRyJWw5JlZKoFJ0Zpdtxy/eP/CC/AUXFnutTW7Vj6HTf/eu+uu/7uu/807NnzwAhhBDihf/f6y4AQgghNGUwqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/sCohhBCiD8wqiGEEOIPjGoIIYT4A6MaQggh/s
-```
-
-### C) C_nho
-- Dòng ✔ của lệnh: `✔ /kaggle/working/testset/images/pub_tables_en/pubtabnet__598044.png: 1 trang → /kaggle/working/diag/C_nho/pubtabnet__598044/  (⚠ 1 trang JSON hỏng)`
-- Thời gian: real 0m53.758s (user 0m56.053s, sys 0m5.774s)
-- `head -c 1500` file .md:
-```markdown
-The 2024 National50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000]
-```
-
-### D) D_nho_fitz
-- Dòng ✔ của lệnh: `✔ /kaggle/working/testset/images/pub_tables_en/pubtabnet__598044.png: 1 trang → /kaggle/working/diag/D_nho_fitz/pubtabnet__598044/  (⚠ 1 trang JSON hỏng)`
-- Thời gian: real 1m39.952s (user 1m42.044s, sys 0m5.955s)
-- `head -c 1500` file .md:
-```markdown
-I am a student at the University of California, Berkeley.
-
-I am a first-year student in the Computer Science program.
-
-My name is John Smith.
-
-I am from California, USA.
-
-I am 19 years old.
-
-My major is Computer Science.
-
-I am interested in software engineering.
-
-I have taken several computer science courses.
-
-For example, I have taken
-
-Introduction to Programming.
-
-Introduction to Data Structures.
-
-Algorithms.
-
-Software Design.
-
-Computer Architecture.
-
-Operating Systems.
-
-Database Systems.
-
-C 编程语言基础.
-
-C++ 语言基础.
-
-计算机网络.
-
-人工智能基础.
-
-计算机图形学.
-
-算法与数据结构.
-
-软件工程基础.
-
-软件开发实践.
-
-软件质量保证.
-
-软件测试.
-
-软件设计模式.
-
-软件开发工具.
-
-软件开发环境.
-
-软件开发标准.
-
-软件开发流程.
-
-软件开发管理.
-
-软件开发文档.
-
-软件开发工具.
-
-软件开发环境.
-
-软件开发标准.
-
-软件开发流程.
-
-软件开发管理.
+-------------------
+✘ KIỂM TRA KHÔNG ĐẠT — xem kết quả ở trên (gửi cho người sửa code)
 ```

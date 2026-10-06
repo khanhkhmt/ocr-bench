@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-05 10:33 UTC** · thí nghiệm TTA ký hiệu nhỏ xong
-- Máy: `2b44e3deaaa3` · GPU: Tesla T4, Tesla T4
-- Code: `e12f498` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Cập nhật: **2026-10-06 02:48 UTC** · setup xong trên 70e508478732
+- Máy: `70e508478732` · GPU: Tesla T4, Tesla T4
+- Code: `cb0fbd4` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)

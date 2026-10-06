@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-06 02:48 UTC** · setup xong trên 70e508478732
+- Cập nhật: **2026-10-06 02:58 UTC** · server mới: web demo dots (DOCX bố cục)
 - Máy: `70e508478732` · GPU: Tesla T4, Tesla T4
 - Code: `cb0fbd4` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)

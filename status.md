@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-07 05:52 UTC** · cập nhật định kỳ
+- Cập nhật: **2026-10-07 06:22 UTC** · cập nhật định kỳ
 - Máy: `ca51a07eefd8` · GPU: Tesla T4, Tesla T4
 - Code: `60bebd4` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: dots_mocr__venv

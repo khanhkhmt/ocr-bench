@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-07 08:40 UTC** · setup xong trên 1cbe434b12b3
+- Cập nhật: **2026-10-07 08:49 UTC** · phiên mới: bắt đầu dots_mocr trên GPU 1
 - Máy: `1cbe434b12b3` · GPU: Tesla T4, Tesla T4
 - Code: `102f3e2` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
@@ -43,15 +43,8 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-07 03:35 UTC — Phiên mới — khôi phục, web demo GPU 0, benchmark dots_mocr GPU 1
-- Khôi phục kết quả từ nhánh results thành công.
-- Bộ test giải nén từ testset.zip, dấu vân tay dữ liệu: aa8fdd44e1715845.
-- Web demo dots.mocr đã khởi động trên GPU 0 (cổng 7860).
-- Chuẩn bị benchmark dots_mocr trên GPU 1 bằng biến thể dots_mocr__venv.
-
-### 2026-10-07 03:51 UTC — dots_mocr__venv bước B (chạy thử 14 mẫu)
-- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models dots_mocr__venv --per-category 1 --categories <nhóm thường> --gpus 1`
-- Thời gian: 13.9 phút.
-- Kết quả: 14/14 mẫu hoàn thành, 0 lỗi, 0 rỗng.
-- Toàn bộ 14/14 mẫu có extra.layout = "ok", trích xuất chữ đầy đủ và chính xác (tiếng Ả Rập, tiếng Anh, bảng biểu, viết tay).
-- GPU 0 hoàn toàn không bị ảnh hưởng (dành riêng cho web demo).
+## 2026-10-07 08:48 UTC — Phiên mới (server sập lúc ~07:00 UTC) — khôi phục, benchmark dots GPU 1, thí nghiệm GPU 0
+- Khôi phục kết quả và cấu hình từ nhánh results trên GitHub.
+- Bộ test tải từ Google Drive thành công, đủ 4.269 file, dấu vân tay dữ liệu: aa8fdd44e1715845.
+- Đã cài đặt môi trường venv dots (/kaggle/working/venvs/dots), LibreOffice và 21 phông Ả Rập.
+- Bắt đầu chạy tiếp bước C cho dots_mocr__venv trên GPU 1 (chạy nền trong tmux bench).

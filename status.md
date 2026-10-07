@@ -1,6 +1,6 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-07 03:50 UTC** · dots_mocr__venv kết thúc (mã 0, 14/14 mẫu)
+- Cập nhật: **2026-10-07 03:51 UTC** · dots_mocr: xong bước B
 - Máy: `ca51a07eefd8` · GPU: Tesla T4, Tesla T4
 - Code: `60bebd4` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
@@ -48,3 +48,10 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 - Bộ test giải nén từ testset.zip, dấu vân tay dữ liệu: aa8fdd44e1715845.
 - Web demo dots.mocr đã khởi động trên GPU 0 (cổng 7860).
 - Chuẩn bị benchmark dots_mocr trên GPU 1 bằng biến thể dots_mocr__venv.
+
+### 2026-10-07 03:51 UTC — dots_mocr__venv bước B (chạy thử 14 mẫu)
+- Lệnh: `ocrbench run --config /kaggle/working/config.yaml --models dots_mocr__venv --per-category 1 --categories <nhóm thường> --gpus 1`
+- Thời gian: 13.9 phút.
+- Kết quả: 14/14 mẫu hoàn thành, 0 lỗi, 0 rỗng.
+- Toàn bộ 14/14 mẫu có extra.layout = "ok", trích xuất chữ đầy đủ và chính xác (tiếng Ả Rập, tiếng Anh, bảng biểu, viết tay).
+- GPU 0 hoàn toàn không bị ảnh hưởng (dành riêng cho web demo).

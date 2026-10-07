@@ -1,209 +1,3 @@
-[dots_mocr__venv] 13/768 pub_tables_en/pubtabnet__730065 34.21s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 14/768 pub_tables_en/pubtabnet__585695 20.44s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 15/768 pub_tables_en/pubtabnet__567318 16.57s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 16/768 pub_tables_en/pubtabnet__632011 89.58s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 17/768 pub_tables_en/pubtabnet__683407 22.04s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-cells post process error: Unterminated string starting at: line 1 column 244 (char 243), when using prompt_layout_all_en
-🔧 Cleaning String data - Case 0
-  Original length: 76,298
-    ✂️ Truncated the last incomplete element, length reduced from 76,298 to 183
-    📊 Found 1 dict objects
-    ✅ No duplicate dict objects found
-  ✅ Cleaning complete: 1 objects
-    📊 Data length 1 <= 1, skipping deduplication check
-[dots_mocr__venv] 18/768 pub_tables_en/pubtabnet__575588 2417.34s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 19/768 pub_tables_en/pubtabnet__590407 22.52s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 20/768 pub_tables_en/pubtabnet__723657 39.74s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 21/768 pub_tables_en/pubtabnet__619718 23.01s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 22/768 pub_tables_en/pubtabnet__643150 71.95s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 23/768 pub_tables_en/pubtabnet__633451 57.16s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 24/768 pub_tables_en/pubtabnet__693788 17.36s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-cells post process error: Unterminated string starting at: line 1 column 11511 (char 11510), when using prompt_layout_all_en
-🔧 Cleaning String data - Case 0
-  Original length: 11,535
-    ✂️ Truncated the last incomplete element, length reduced from 11,535 to 11,449
-    📊 Found 25 dict objects
-    ✅ Removed 24 duplicate dicts, keeping 1 unique dicts (order preserved)
-  ✅ Cleaning complete: 1 objects
-    📊 Data length 1 <= 1, skipping deduplication check
-[dots_mocr__venv] 25/768 pub_tables_en/pubtabnet__549994 268.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 26/768 pub_tables_en/pubtabnet__562384 54.68s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-cells post process error: Unterminated string starting at: line 1 column 3938 (char 3937), when using prompt_layout_all_en
-🔧 Cleaning String data - Case 0
-  Original length: 3,938
-    ✂️ Truncated the last incomplete element, length reduced from 3,938 to 3,854
-    📊 Found 42 dict objects
-    ✅ No duplicate dict objects found
-  ✅ Cleaning complete: 42 objects
-    📊 Original data length: 42
-    🔍 Found duplicate category-text pair: category='Text', first 50 chars of text='Attitudes to...'
-        Count: 24, removing at positions: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]
-    ✅ Deduplication complete: Removed 23 duplicate items
-    📊 Cleaned data length: 19
-[dots_mocr__venv] 27/768 pub_tables_en/pubtabnet__654313 69.83s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 28/768 pub_tables_en/pubtabnet__620725 53.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 29/768 pub_tables_en/pubtabnet__670311 9.57s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 30/768 pub_tables_en/pubtabnet__595485 74.33s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 31/768 pub_tables_en/pubtabnet__550360 34.47s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 32/768 pub_tables_en/pubtabnet__674911 38.82s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 33/768 pub_tables_en/pubtabnet__696251 52.83s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 34/768 pub_tables_en/pubtabnet__580563 34.27s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 35/768 pub_tables_en/pubtabnet__655574 29.76s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 36/768 pub_tables_en/pubtabnet__624699 24.38s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 37/768 pub_tables_en/pubtabnet__584543 24.50s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 38/768 pub_tables_en/pubtabnet__622581 13.40s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 39/768 pub_handwriting_ar/khatt_lines__4 2.38s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 40/768 pub_handwriting_ar/khatt_lines__5 4.11s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 41/768 pub_handwriting_ar/khatt_lines__6 5.07s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 42/768 pub_handwriting_ar/khatt_lines__8 4.28s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 43/768 pub_handwriting_ar/khatt_lines__10 3.78s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 44/768 pub_handwriting_ar/khatt_lines__11 4.68s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 45/768 pub_handwriting_ar/khatt_lines__14 6.40s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 46/768 pub_handwriting_ar/khatt_lines__15 23.99s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 47/768 pub_handwriting_ar/khatt_lines__16 3.89s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 48/768 pub_handwriting_ar/khatt_lines__18 3.63s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 49/768 pub_handwriting_ar/khatt_lines__19 3.86s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 50/768 pub_handwriting_ar/khatt_lines__21 6.90s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 51/768 pub_handwriting_ar/khatt_lines__23 4.35s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 52/768 pub_handwriting_ar/khatt_lines__24 3.36s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 53/768 pub_handwriting_ar/khatt_lines__26 33.74s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 54/768 pub_handwriting_ar/khatt_lines__28 3.77s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 55/768 pub_handwriting_ar/khatt_lines__29 5.66s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 56/768 pub_handwriting_ar/khatt_lines__32 3.08s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 57/768 pub_handwriting_ar/khatt_lines__33 9.35s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 58/768 pub_handwriting_ar/khatt_lines__34 4.18s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 59/768 pub_handwriting_ar/khatt_lines__36 6.54s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 60/768 pub_handwriting_ar/khatt_lines__37 4.76s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 61/768 pub_handwriting_ar/khatt_lines__39 3.94s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 62/768 pub_handwriting_ar/khatt_lines__40 4.33s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-cells post process error: Unterminated string starting at: line 1 column 2536 (char 2535), when using prompt_layout_all_en
-🔧 Cleaning String data - Case 0
-  Original length: 2,556
-    ✂️ Truncated the last incomplete element, length reduced from 2,556 to 2,474
-    📊 Found 25 dict objects
-    ✅ Removed 23 duplicate dicts, keeping 2 unique dicts (order preserved)
-  ✅ Cleaning complete: 2 objects
-    📊 Original data length: 2
-    ✅ No category-text pairs or bboxes found exceeding the duplication threshold
-[dots_mocr__venv] 63/768 pub_handwriting_ar/khatt_lines__42 63.05s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 64/768 pub_handwriting_ar/khatt_lines__47 32.78s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 65/768 pub_handwriting_ar/khatt_lines__49 4.83s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 66/768 pub_handwriting_ar/khatt_lines__51 5.01s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 67/768 pub_handwriting_ar/khatt_lines__52 6.04s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 68/768 pub_handwriting_ar/khatt_lines__54 3.83s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 69/768 pub_handwriting_ar/khatt_lines__55 5.98s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 70/768 pub_handwriting_ar/khatt_lines__58 3.52s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 71/768 pub_handwriting_ar/khatt_lines__59 4.05s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 72/768 pub_handwriting_ar/khatt_lines__60 3.65s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 73/768 pub_handwriting_ar/khatt_lines__63 13.90s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 74/768 pub_handwriting_ar/khatt_lines__65 3.63s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 75/768 pub_handwriting_ar/khatt_lines__69 4.24s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 76/768 pub_handwriting_ar/khatt_lines__71 3.35s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 77/768 pub_handwriting_ar/khatt_lines__72 14.05s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 78/768 pub_handwriting_ar/khatt_lines__76 4.33s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 79/768 pub_handwriting_ar/khatt_lines__77 5.97s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 80/768 pub_handwriting_ar/khatt_lines__79 4.12s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 81/768 pub_handwriting_ar/khatt_lines__82 4.02s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 82/768 pub_handwriting_ar/khatt_lines__83 4.62s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 83/768 pub_handwriting_ar/khatt_lines__84 6.12s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 84/768 pub_handwriting_ar/khatt_lines__85 4.74s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 85/768 pub_handwriting_ar/khatt_lines__88 7.04s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 86/768 pub_handwriting_ar/khatt_lines__91 3.33s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 87/768 pub_handwriting_ar/khatt_lines__92 3.81s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 88/768 pub_handwriting_ar/khatt_lines__93 3.56s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 89/768 pub_handwriting_ar/khatt_lines__94 5.49s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 90/768 pub_handwriting_ar/khatt_lines__98 9.14s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 91/768 pub_handwriting_ar/khatt_lines__100 5.70s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 92/768 pub_handwriting_ar/khatt_lines__101 4.30s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 93/768 pub_handwriting_ar/khatt_lines__104 9.50s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 94/768 pub_handwriting_ar/khatt_lines__105 4.84s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 95/768 pub_handwriting_ar/khatt_lines__107 4.71s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 96/768 pub_handwriting_ar/khatt_lines__113 4.12s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 97/768 pub_handwriting_ar/khatt_lines__114 6.10s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 98/768 pub_handwriting_ar/khatt_lines__115 4.67s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
@@ -297,4 +91,210 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 134/768 pub_handwriting_ar/khatt_paragraphs__55 22.47s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 135/768 pub_handwriting_ar/khatt_paragraphs__56 19.90s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 136/768 pub_handwriting_ar/khatt_paragraphs__60 21.25s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 137/768 pub_handwriting_ar/khatt_paragraphs__62 56.63s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 138/768 pub_handwriting_ar/khatt_paragraphs__64 60.96s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 139/768 pub_handwriting_ar/khatt_paragraphs__65 34.53s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 140/768 pub_handwriting_ar/khatt_paragraphs__67 38.74s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 141/768 pub_handwriting_ar/khatt_paragraphs__70 19.12s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 142/768 pub_handwriting_ar/khatt_paragraphs__73 29.08s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 143/768 pub_handwriting_ar/khatt_paragraphs__74 18.23s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 144/768 pub_handwriting_ar/khatt_paragraphs__75 33.98s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 145/768 pub_handwriting_ar/khatt_paragraphs__77 11.35s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 146/768 pub_handwriting_ar/khatt_paragraphs__78 28.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 147/768 pub_handwriting_ar/khatt_paragraphs__82 24.62s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 148/768 pub_handwriting_ar/khatt_paragraphs__84 29.40s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 149/768 pub_handwriting_ar/khatt_paragraphs__88 12.99s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 150/768 pub_handwriting_ar/khatt_paragraphs__89 16.48s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 151/768 pub_handwriting_ar/khatt_paragraphs__90 38.10s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 152/768 pub_handwriting_ar/khatt_paragraphs__91 17.45s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 153/768 pub_handwriting_ar/khatt_paragraphs__93 24.37s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 154/768 pub_handwriting_ar/khatt_paragraphs__94 38.19s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 155/768 pub_handwriting_ar/khatt_paragraphs__95 38.08s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 156/768 pub_handwriting_ar/khatt_paragraphs__96 86.21s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 157/768 pub_handwriting_ar/khatt_paragraphs__98 37.02s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 158/768 pub_handwriting_ar/khatt_paragraphs__101 66.73s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 159/768 pub_handwriting_ar/khatt_paragraphs__102 41.12s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 160/768 pub_handwriting_ar/khatt_paragraphs__105 29.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 161/768 pub_handwriting_ar/khatt_paragraphs__108 38.93s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 162/768 pub_handwriting_ar/khatt_paragraphs__111 28.13s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 163/768 pub_handwriting_ar/khatt_paragraphs__112 26.87s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 164/768 pub_handwriting_ar/khatt_paragraphs__114 15.51s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 165/768 pub_handwriting_ar/khatt_paragraphs__117 39.15s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 166/768 pub_handwriting_en/iam_lines__3 3.72s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 167/768 pub_handwriting_en/iam_lines__4 2.61s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 168/768 pub_handwriting_en/iam_lines__7 3.00s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 169/768 pub_handwriting_en/iam_lines__9 4.09s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 170/768 pub_handwriting_en/iam_lines__10 3.05s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 171/768 pub_handwriting_en/iam_lines__14 3.70s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 172/768 pub_handwriting_en/iam_lines__15 3.13s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 173/768 pub_handwriting_en/iam_lines__18 2.74s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 174/768 pub_handwriting_en/iam_lines__25 4.77s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 175/768 pub_handwriting_en/iam_lines__26 2.54s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 176/768 pub_handwriting_en/iam_lines__27 2.90s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 177/768 pub_handwriting_en/iam_lines__30 3.99s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 178/768 pub_handwriting_en/iam_lines__31 2.62s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 179/768 pub_handwriting_en/iam_lines__32 2.90s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 180/768 pub_handwriting_en/iam_lines__33 4.58s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 181/768 pub_handwriting_en/iam_lines__34 3.29s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 182/768 pub_handwriting_en/iam_lines__35 3.00s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 183/768 pub_handwriting_en/iam_lines__40 2.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 184/768 pub_handwriting_en/iam_lines__41 2.86s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 185/768 pub_handwriting_en/iam_lines__42 3.85s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 186/768 pub_handwriting_en/iam_lines__43 2.63s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 187/768 pub_handwriting_en/iam_lines__44 3.27s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 188/768 pub_handwriting_en/iam_lines__48 3.26s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 189/768 pub_handwriting_en/iam_lines__50 2.82s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 190/768 pub_handwriting_en/iam_lines__53 3.84s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 191/768 pub_handwriting_en/iam_lines__54 3.02s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 192/768 pub_handwriting_en/iam_lines__55 2.65s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 193/768 pub_handwriting_en/iam_lines__56 3.18s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 194/768 pub_handwriting_en/iam_lines__57 2.37s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 195/768 pub_handwriting_en/iam_lines__58 2.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 196/768 pub_handwriting_en/iam_lines__59 2.41s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 197/768 pub_handwriting_en/iam_lines__64 3.05s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 198/768 pub_handwriting_en/iam_lines__67 2.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 199/768 pub_handwriting_en/iam_lines__69 3.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 200/768 pub_handwriting_en/iam_lines__71 3.28s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 201/768 pub_handwriting_en/iam_lines__73 2.50s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 202/768 pub_handwriting_en/iam_lines__74 2.79s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 203/768 pub_handwriting_en/iam_lines__77 2.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 204/768 pub_handwriting_en/iam_lines__79 3.14s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 205/768 pub_handwriting_en/iam_lines__80 2.21s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 206/768 pub_handwriting_en/iam_lines__81 3.40s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 207/768 pub_handwriting_en/iam_lines__83 3.47s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 208/768 pub_handwriting_en/iam_lines__87 2.80s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 209/768 pub_handwriting_en/iam_lines__88 3.12s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 210/768 pub_handwriting_en/iam_lines__89 2.50s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 211/768 pub_handwriting_en/iam_lines__92 3.70s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 212/768 pub_handwriting_en/iam_lines__94 2.41s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 213/768 pub_handwriting_en/iam_lines__95 2.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 214/768 pub_handwriting_en/iam_lines__96 2.58s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 215/768 pub_handwriting_en/iam_lines__97 2.82s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 216/768 pub_handwriting_en/iam_lines__100 3.03s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 217/768 pub_handwriting_en/iam_lines__101 3.34s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 218/768 pub_handwriting_en/iam_lines__102 3.56s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 219/768 pub_handwriting_en/iam_lines__103 2.10s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 220/768 pub_handwriting_en/iam_lines__105 2.30s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 221/768 pub_handwriting_en/iam_lines__106 2.63s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 222/768 pub_handwriting_en/iam_lines__109 3.08s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 223/768 pub_handwriting_en/iam_lines__110 2.58s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 224/768 pub_handwriting_en/iam_lines__112 4.35s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 225/768 pub_handwriting_en/iam_lines__116 2.78s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 226/768 pub_handwriting_en/iam_lines__117 2.92s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 227/768 pub_handwriting_en/iam_lines__118 3.12s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 228/768 syn_text_ar/syn_text_ar_0003 62.50s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 229/768 syn_text_ar/syn_text_ar_0004 31.87s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 230/768 syn_text_ar/syn_text_ar_0005 64.37s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 231/768 syn_text_ar/syn_text_ar_0010 68.06s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 232/768 syn_text_ar/syn_text_ar_0015 53.56s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 233/768 syn_text_ar/syn_text_ar_0016 49.26s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 234/768 syn_text_ar/syn_text_ar_0017 66.97s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 235/768 syn_text_ar/syn_text_ar_0020 56.98s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 236/768 syn_text_ar/syn_text_ar_0022 61.47s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 237/768 syn_text_ar/syn_text_ar_0023 47.34s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 238/768 syn_text_ar/syn_text_ar_0024 42.09s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

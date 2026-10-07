@@ -114,3 +114,55 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 17/768 pub_tables_en/pubtabnet__683407 22.04s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+cells post process error: Unterminated string starting at: line 1 column 244 (char 243), when using prompt_layout_all_en
+🔧 Cleaning String data - Case 0
+  Original length: 76,298
+    ✂️ Truncated the last incomplete element, length reduced from 76,298 to 183
+    📊 Found 1 dict objects
+    ✅ No duplicate dict objects found
+  ✅ Cleaning complete: 1 objects
+    📊 Data length 1 <= 1, skipping deduplication check
+[dots_mocr__venv] 18/768 pub_tables_en/pubtabnet__575588 2417.34s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 19/768 pub_tables_en/pubtabnet__590407 22.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 20/768 pub_tables_en/pubtabnet__723657 39.74s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 21/768 pub_tables_en/pubtabnet__619718 23.01s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 22/768 pub_tables_en/pubtabnet__643150 71.95s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 23/768 pub_tables_en/pubtabnet__633451 57.16s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 24/768 pub_tables_en/pubtabnet__693788 17.36s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+cells post process error: Unterminated string starting at: line 1 column 11511 (char 11510), when using prompt_layout_all_en
+🔧 Cleaning String data - Case 0
+  Original length: 11,535
+    ✂️ Truncated the last incomplete element, length reduced from 11,535 to 11,449
+    📊 Found 25 dict objects
+    ✅ Removed 24 duplicate dicts, keeping 1 unique dicts (order preserved)
+  ✅ Cleaning complete: 1 objects
+    📊 Data length 1 <= 1, skipping deduplication check
+[dots_mocr__venv] 25/768 pub_tables_en/pubtabnet__549994 268.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 26/768 pub_tables_en/pubtabnet__562384 54.68s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+cells post process error: Unterminated string starting at: line 1 column 3938 (char 3937), when using prompt_layout_all_en
+🔧 Cleaning String data - Case 0
+  Original length: 3,938
+    ✂️ Truncated the last incomplete element, length reduced from 3,938 to 3,854
+    📊 Found 42 dict objects
+    ✅ No duplicate dict objects found
+  ✅ Cleaning complete: 42 objects
+    📊 Original data length: 42
+    🔍 Found duplicate category-text pair: category='Text', first 50 chars of text='Attitudes to...'
+        Count: 24, removing at positions: [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]
+    ✅ Deduplication complete: Removed 23 duplicate items
+    📊 Cleaned data length: 19
+[dots_mocr__venv] 27/768 pub_tables_en/pubtabnet__654313 69.83s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 28/768 pub_tables_en/pubtabnet__620725 53.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 29/768 pub_tables_en/pubtabnet__670311 9.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

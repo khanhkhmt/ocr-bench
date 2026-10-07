@@ -42,3 +42,7 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 4/774 pub_tables_en/pubtabnet__714920 24.55s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 5/774 pub_tables_en/pubtabnet__580352 74.92s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 6/774 pub_tables_en/pubtabnet__656201 29.44s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

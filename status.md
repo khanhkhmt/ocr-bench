@@ -1,8 +1,8 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-07 09:32 UTC** · kiểm tra tiến độ 09:33 UTC
+- Cập nhật: **2026-10-07 09:47 UTC** · chạy lại dots sau sự cố
 - Máy: `1cbe434b12b3` · GPU: Tesla T4, Tesla T4
-- Code: `102f3e2` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
+- Code: `1df21f6` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
 - Đang chạy: (không có)
 
 ## Split `dev` (1051 mẫu)
@@ -10,7 +10,7 @@
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | dots_mocr | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 1/1051 | 0 | 96.8% | 22.46 | — | — |
-| dots_mocr__venv | ■ đã dừng | 153/1051 | 1 | 17.8% | 82.43 | 12.4 GB | 2026-10-07T03:50:29+00:00 |
+| dots_mocr__venv | ■ đã dừng | 155/1051 | 1 | 18.1% | 82.04 | 12.4 GB | 2026-10-07T03:50:29+00:00 |
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
 | sherif_handwriting | ■ đã dừng | 923/1051 | 1 | 19.8% | 23.52 | 13.0 GB | 2026-10-02T09:35:19+00:00 |
 | sherif_handwriting__long | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 6/1051 | 0 | 102.6% | 581.69 | — | — |
@@ -26,7 +26,7 @@ CER norm theo nhóm (`số mẫu đã chạy: CER`):
 | pub_handwriting_en | — | 1: 0.0% | 63: 81.3% | 63: 10.9% | — | — | — | 63: 61.7% |
 | pub_printed_ar | — | 63: 16.9% | 63: 28.4% | 63: 41.1% | — | — | — | 63: 32.1% |
 | pub_tables_ar | — | 58: 17.8% | 58: 42.5% | 58: 49.5% | — | — | — | 58: 52.4% |
-| pub_tables_en | 1: 96.8% | 21: 25.4% | 61: 81.1% | 61: 46.3% | — | — | — | 61: 89.6% |
+| pub_tables_en | 1: 96.8% | 23: 27.1% | 61: 81.1% | 61: 46.3% | — | — | — | 61: 89.6% |
 | syn_degraded | — | 1: 0.2% | 61: 31.5% | 61: 40.4% | — | — | — | 61: 32.2% |
 | syn_form_ar | — | 1: 0.6% | 60: 20.4% | 60: 21.8% | — | — | — | 60: 35.2% |
 | syn_form_en | — | 1: 0.0% | 72: 45.7% | 72: 1.9% | — | — | — | 72: 11.7% |
@@ -43,8 +43,6 @@ Số liệu ở đây là CER tính nhanh trên các mẫu đã chạy (chưa c�
 
 ## Mục nhật ký gần nhất (EXPERIMENTS.md)
 
-## 2026-10-07 08:48 UTC — Phiên mới (server sập lúc ~07:00 UTC) — khôi phục, benchmark dots GPU 1, thí nghiệm GPU 0
-- Khôi phục kết quả và cấu hình từ nhánh results trên GitHub.
-- Bộ test tải từ Google Drive thành công, đủ 4.269 file, dấu vân tay dữ liệu: aa8fdd44e1715845.
-- Đã cài đặt môi trường venv dots (/kaggle/working/venvs/dots), LibreOffice và 21 phông Ả Rập.
-- Bắt đầu chạy tiếp bước C cho dots_mocr__venv trên GPU 1 (chạy nền trong tmux bench).
+## 2026-10-07 09:44 UTC — Chạy lại dots_mocr__venv sau khi tắt (nguyên nhân: mẫu pub_tables_en/pubtabnet__610256 bị lặp 500 ô bố cục tốn 2402s ~40 phút; đã dừng phiên để cập nhật code); code 1df21f6 (dừng sớm lặp ô bố cục)
+- Cập nhật code commit 1df21f6 thành công, pytest 8 passed.
+- Chạy lại benchmark dots_mocr__venv trên GPU 1 (tự bỏ qua 155 mẫu đã có).

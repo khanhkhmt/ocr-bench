@@ -460,3 +460,11 @@ Lượt phụ: `x4_ocr,x5_ocr,x5_layout` · min_votes 1 (v1) và 2 (v2)
 - Bộ test tải từ Google Drive thành công, đủ 4.269 file, dấu vân tay dữ liệu: aa8fdd44e1715845.
 - Đã cài đặt môi trường venv dots (/kaggle/working/venvs/dots), LibreOffice và 21 phông Ả Rập.
 - Bắt đầu chạy tiếp bước C cho dots_mocr__venv trên GPU 1 (chạy nền trong tmux bench).
+
+## 2026-10-07 09:44 UTC — Chạy lại dots_mocr__venv sau khi tắt (nguyên nhân: mẫu pub_tables_en/pubtabnet__610256 bị lặp 500 ô bố cục tốn 2402s ~40 phút; đã dừng phiên để cập nhật code); code 1df21f6 (dừng sớm lặp ô bố cục)
+- Cập nhật code commit 1df21f6 thành công, pytest 8 passed.
+- Chạy lại benchmark dots_mocr__venv trên GPU 1 (tự bỏ qua 155 mẫu đã có).
+
+## 2026-10-07 09:44 UTC — Chạy lại dots_mocr__venv sau khi tắt (nguyên nhân: mẫu pub_tables_en/pubtabnet__610256 bị lặp 500 ô bố cục tốn 2402s ~40 phút; đã dừng phiên để cập nhật code); code 1df21f6 (dừng sớm lặp ô bố cục)
+- Cập nhật code commit 1df21f6 thành công, pytest 8 passed.
+- Chạy lại benchmark dots_mocr__venv trên GPU 1 (tự bỏ qua 155 mẫu đã có).

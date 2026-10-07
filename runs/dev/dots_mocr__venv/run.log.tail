@@ -46,3 +46,5 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 6/774 pub_tables_en/pubtabnet__656201 29.44s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 923 mẫu, đã có 155, phần này cần chạy 768
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.

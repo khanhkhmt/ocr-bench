@@ -1,36 +1,4 @@
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 15/909 pub_printed_ar/misraj_dococr__1e0dd74b-4bc4-4126-90ab-8f68067089b0 131.99s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 16/909 pub_printed_ar/misraj_dococr__08d0a504-ee66-43f1-adf9-e59b37e6b38a 72.64s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 17/909 pub_printed_ar/misraj_dococr__4da934c5-1ff8-436f-9e8e-5786ebdc3ac3 59.52s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 18/909 pub_printed_ar/misraj_dococr__73de45ac-65c0-4cb3-83f9-7e27098ea09c 243.87s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 19/909 pub_printed_ar/misraj_dococr__7ef32ee8-ff38-450a-b23e-d1d1b616e525 148.75s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 20/909 pub_printed_ar/misraj_dococr__38c01ef3-e952-4df2-979d-183e08990f7a 40.32s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 21/909 pub_printed_ar/misraj_dococr__d5b57550-dc2f-478d-bccf-a9b5868e238a 57.72s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 22/909 pub_printed_ar/misraj_dococr__1233d7ab-4d84-49f7-912a-b7e7674576fe 67.72s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 23/909 pub_printed_ar/misraj_dococr__8d69b8f5-bebf-4b7c-90fc-09646a0ab6ac 182.72s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 24/909 pub_printed_ar/misraj_dococr__01e9cad5-acc1-4b9c-8054-1e76224bfbc6 60.90s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 25/909 pub_printed_ar/misraj_dococr__70bacf37-2f63-4921-98e0-1bfd82f34afc 44.04s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 26/909 pub_printed_ar/misraj_dococr__8b0b20de-d655-4d1b-8987-1bf99f181613 142.37s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 27/909 pub_printed_ar/misraj_dococr__89d737ae-7aaf-48ed-822b-951ac7a9e540 91.73s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 28/909 pub_printed_ar/misraj_dococr__7815ffd0-2b57-46e5-9a71-228de6ec3308 95.49s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 29/909 pub_printed_ar/misraj_dococr__52f34b6e-2ab3-47ee-901f-953db66cbe15 67.92s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 30/909 pub_printed_ar/misraj_dococr__eb897264-8426-4bf6-9232-15251f5da389 116.69s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 31/909 pub_printed_ar/misraj_dococr__f0678538-5a78-40b4-8e23-5f8dc511e355 69.17s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 32/909 pub_printed_ar/misraj_dococr__b181ae59-300c-4ba9-8baa-2a842ca42b79 84.45s
@@ -297,4 +265,36 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 124/909 pub_tables_en/pubtabnet__672495 18.01s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 125/909 pub_tables_en/pubtabnet__730680 16.47s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+cells post process error: Expecting ',' delimiter: line 1 column 58430 (char 58429), when using prompt_layout_all_en
+🔧 Cleaning String data - Case 0
+  Original length: 58,429
+    ✂️ Truncated the last incomplete element, length reduced from 58,429 to 58,416
+    📊 Found 579 dict objects
+    ✅ Removed 563 duplicate dicts, keeping 16 unique dicts (order preserved)
+  ✅ Cleaning complete: 16 objects
+    📊 Original data length: 16
+    🔍 Found duplicate bbox: [0, 11, 1004, 11]
+        Count: 15, removing at positions: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    ✅ Deduplication complete: Removed 14 duplicate items
+    📊 Cleaned data length: 2
+[dots_mocr__venv] 126/909 pub_tables_en/pubtabnet__705625 2459.68s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 127/909 pub_tables_en/pubtabnet__584371 15.15s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 128/909 pub_tables_en/pubtabnet__710971 13.24s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 129/909 pub_tables_en/pubtabnet__692835 26.11s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 130/909 pub_tables_en/pubtabnet__665505 16.79s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 131/909 pub_tables_en/pubtabnet__595583 44.37s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 132/909 pub_tables_en/pubtabnet__573203 16.34s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 133/909 pub_tables_en/pubtabnet__658582 139.70s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 134/909 pub_tables_en/pubtabnet__641492 6.92s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 135/909 pub_tables_en/pubtabnet__729650 16.84s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

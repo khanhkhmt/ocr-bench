@@ -1,2 +1,49 @@
 [dots_mocr__venv] 14 mẫu, đã có 0, phần này cần chạy 14
 warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+
+Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]
+Fetching 22 files: 100%|██████████| 22/22 [00:00<00:00, 2944.78it/s]
+2026-10-07 03:36:44.280746: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1791344204.306987   17250 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1791344204.315469   17250 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1791344204.336593   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791344204.336622   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791344204.336625   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791344204.336627   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2026-10-07 03:36:44.341812: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.56s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.20it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.06it/s]
+[dots_mocr__venv] nạp model xong sau 16.6s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 1/14 pub_printed_ar/misraj_dococr__8d18a279-ce9a-451b-82c3-3541ae3349f5 100.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 2/14 pub_tables_ar/kitab_tables__426 24.39s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 3/14 pub_tables_en/pubtabnet__598044 15.40s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 4/14 pub_handwriting_ar/khatt_lines__73 4.53s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 5/14 pub_handwriting_en/iam_lines__66 2.97s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 6/14 syn_text_ar/syn_text_ar_0009 60.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 7/14 syn_text_en/syn_text_en_0065 50.53s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 8/14 syn_text_mixed/syn_text_mixed_0028 70.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 9/14 syn_invoice_ar/syn_invoice_ar_0043 152.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 10/14 syn_invoice_en/syn_invoice_en_0114 100.55s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 11/14 syn_invoice_mixed/syn_invoice_mixed_0058 110.94s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 12/14 syn_form_ar/syn_form_ar_0012 40.78s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 13/14 syn_form_en/syn_form_en_0103 33.06s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 14/14 syn_degraded/syn_degraded_0058 45.93s

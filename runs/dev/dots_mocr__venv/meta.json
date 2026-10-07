@@ -1,0 +1,40 @@
+{
+  "sessions": [
+    {
+      "shard": "1/1",
+      "dataset_fingerprint": "aa8fdd44e1715845",
+      "env": {},
+      "started": "2026-10-07T03:36:38+00:00",
+      "adapter": "dots",
+      "params": {
+        "model_id": "dots-studio/dots.mocr",
+        "prompt_mode": "prompt_layout_all_en",
+        "fitz_preprocess": false,
+        "max_new_tokens": 24000,
+        "stop_on_loop": true,
+        "modes": {
+          "Bố cục đầy đủ": {},
+          "Chỉ chữ": {
+            "prompt_mode": "prompt_ocr"
+          },
+          "Chỉ bố cục (không chữ)": {
+            "prompt_mode": "prompt_layout_only_en"
+          }
+        }
+      },
+      "host": "ca51a07eefd8",
+      "python": "3.12.12",
+      "gpus": [
+        "Tesla T4",
+        "Tesla T4"
+      ],
+      "cuda_visible_devices": "1",
+      "load_s": 16.6,
+      "finished": "2026-10-07T03:50:29+00:00",
+      "peak_vram_mib": 12737
+    }
+  ],
+  "spec_hash": "88244939d86a451f",
+  "dataset_fingerprint": "aa8fdd44e1715845",
+  "peak_vram_mib": 12737
+}

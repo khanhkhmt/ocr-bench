@@ -1,2 +1,24 @@
 [dots_mocr__venv] 923 mẫu, đã có 149, phần này cần chạy 774
 warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+
+Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]
+Fetching 22 files:  95%|█████████▌| 21/22 [00:10<00:00,  2.10it/s]
+Fetching 22 files: 100%|██████████| 22/22 [00:17<00:00,  1.28it/s]
+Fetching 22 files: 100%|██████████| 22/22 [00:17<00:00,  1.28it/s]
+2026-10-07 08:50:41.012944: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1791363041.132498   14744 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1791363041.170046   14744 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1791363041.490991   14744 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791363041.491036   14744 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791363041.491041   14744 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791363041.491044   14744 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2026-10-07 08:50:41.530534: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.52s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.23it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.09it/s]
+[dots_mocr__venv] nạp model xong sau 58.1s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

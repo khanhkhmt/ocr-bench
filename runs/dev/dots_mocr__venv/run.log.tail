@@ -92,3 +92,25 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 6/768 pub_tables_en/pubtabnet__700469 16.22s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 7/768 pub_tables_en/pubtabnet__640391 32.94s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 8/768 pub_tables_en/pubtabnet__707833 9.42s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 9/768 pub_tables_en/pubtabnet__644357 14.68s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 10/768 pub_tables_en/pubtabnet__632896 13.79s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 11/768 pub_tables_en/pubtabnet__699374 14.21s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 12/768 pub_tables_en/pubtabnet__569997 16.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 13/768 pub_tables_en/pubtabnet__730065 34.21s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 14/768 pub_tables_en/pubtabnet__585695 20.44s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 15/768 pub_tables_en/pubtabnet__567318 16.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 16/768 pub_tables_en/pubtabnet__632011 89.58s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 17/768 pub_tables_en/pubtabnet__683407 22.04s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

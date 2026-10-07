@@ -441,3 +441,9 @@ Lượt phụ: `x4_ocr,x5_ocr,x5_layout` · min_votes 1 (v1) và 2 (v2)
 - 08_anh_chup_xau_hoa_don_a_rap · x5_ocr: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.00 GiB. GPU 0 has a total capacity of 14.56 GiB of which 2.09 GiB is free. Including non-PyTorch memory, this process has 12.46 GiB memory in use. Of the allocated memory 11.66 GiB is allocated by PyTorch, and 685.63 MiB is reserved by PyTorc
 - 08_anh_chup_xau_hoa_don_a_rap · x5_layout: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.15 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.98 GiB is free. Including non-PyTorch memory, this process has 12.58 GiB memory in use. Of the allocated memory 11.83 GiB is allocated by PyTorch, and 627.83 MiB is reserved by PyTorc
 
+
+## 2026-10-07 03:35 UTC — Phiên mới — khôi phục, web demo GPU 0, benchmark dots_mocr GPU 1
+- Khôi phục kết quả từ nhánh results thành công.
+- Bộ test giải nén từ testset.zip, dấu vân tay dữ liệu: aa8fdd44e1715845.
+- Web demo dots.mocr đã khởi động trên GPU 0 (cổng 7860).
+- Chuẩn bị benchmark dots_mocr trên GPU 1 bằng biến thể dots_mocr__venv.

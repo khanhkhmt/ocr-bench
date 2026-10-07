@@ -149,16 +149,34 @@ models:
     model_kwargs: *id001
     stop_on_loop: true
     multi_page: per_page
-
 - name: dots_mocr
   adapter: dots
   params:
     model_id: dots-studio/dots.mocr
     prompt_mode: prompt_layout_all_en
-    fitz_preprocess: false     # ảnh bộ test đã ~200 DPI; bật = ảnh to gấp ~2 lần, chậm ~4 lần
-    max_new_tokens: 24000      # như _inference_with_hf của họ
+    fitz_preprocess: false
+    max_new_tokens: 24000
     stop_on_loop: true
-    modes:                     # cho giao diện / ocrbench convert --mode
+    modes:
       Bố cục đầy đủ: {}
-      Chỉ chữ: {prompt_mode: prompt_ocr}
-      Chỉ bố cục (không chữ): {prompt_mode: prompt_layout_only_en}
+      Chỉ chữ:
+        prompt_mode: prompt_ocr
+      Chỉ bố cục (không chữ):
+        prompt_mode: prompt_layout_only_en
+  enabled: false
+- name: dots_mocr__venv
+  adapter: dots
+  python: /kaggle/working/venvs/dots/bin/python
+  params:
+    model_id: dots-studio/dots.mocr
+    prompt_mode: prompt_layout_all_en
+    fitz_preprocess: false
+    max_new_tokens: 24000
+    stop_on_loop: true
+    modes:
+      Bố cục đầy đủ: {}
+      Chỉ chữ:
+        prompt_mode: prompt_ocr
+      Chỉ bố cục (không chữ):
+        prompt_mode: prompt_layout_only_en
+  enabled: true

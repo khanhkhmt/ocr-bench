@@ -48,3 +48,67 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 14/14 syn_degraded/syn_degraded_0058 45.93s
 [dots_mocr__venv] 923 mẫu, đã có 14, phần này cần chạy 909
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+
+Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]
+Fetching 22 files: 100%|██████████| 22/22 [00:00<00:00, 2611.20it/s]
+2026-10-07 03:52:03.968871: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1791345123.998317   22792 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1791345124.007461   22792 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1791345124.032120   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791345124.032159   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791345124.032163   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1791345124.032167   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+2026-10-07 03:52:04.038678: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
+Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.59s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.17it/s]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.04it/s]
+[dots_mocr__venv] nạp model xong sau 18.3s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 1/909 pub_printed_ar/misraj_dococr__71096aac-6051-4861-8564-58c255810faa 109.49s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 2/909 pub_printed_ar/misraj_dococr__75aee6e9-89d0-4a0a-a517-767be769b95d 60.01s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 3/909 pub_printed_ar/misraj_dococr__ea8bfd43-34ae-445c-87c4-b6a219b2fa5e 21.75s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 4/909 pub_printed_ar/misraj_dococr__33c306fa-e462-4526-9b41-59975cbebb3c 145.89s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 5/909 pub_printed_ar/misraj_dococr__bf7f85a9-16c5-4007-9b5f-2803e0badc6a 42.10s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 6/909 pub_printed_ar/misraj_dococr__92efd475-712e-4ff8-8bc0-49882907b4a2 39.47s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 7/909 pub_printed_ar/misraj_dococr__868ebb62-285a-4401-88ca-84c4b83d7d54 47.43s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 8/909 pub_printed_ar/misraj_dococr__0cfa7262-979c-4dc8-80e3-4088ff4a1a48 142.92s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 9/909 pub_printed_ar/misraj_dococr__f78b63b3-ad8f-43f9-9092-cd6c31157ca2 47.03s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 10/909 pub_printed_ar/misraj_dococr__08fbb4a3-cb9a-4f2b-b1e3-414b115848f8 71.82s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 11/909 pub_printed_ar/misraj_dococr__802eeb8d-3596-4f2a-b85b-f5a90b8f006f 58.48s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 12/909 pub_printed_ar/misraj_dococr__843ed04e-b743-44c9-a7a5-0019f3fcdbd2 50.22s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 13/909 pub_printed_ar/misraj_dococr__890ed30a-5473-47a0-b2c0-03d76ff12b49 45.62s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 14/909 pub_printed_ar/misraj_dococr__46f3e399-6c97-4b59-b7f9-6cdab9c713e0 66.80s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 15/909 pub_printed_ar/misraj_dococr__1e0dd74b-4bc4-4126-90ab-8f68067089b0 131.99s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 16/909 pub_printed_ar/misraj_dococr__08d0a504-ee66-43f1-adf9-e59b37e6b38a 72.64s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 17/909 pub_printed_ar/misraj_dococr__4da934c5-1ff8-436f-9e8e-5786ebdc3ac3 59.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 18/909 pub_printed_ar/misraj_dococr__73de45ac-65c0-4cb3-83f9-7e27098ea09c 243.87s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 19/909 pub_printed_ar/misraj_dococr__7ef32ee8-ff38-450a-b23e-d1d1b616e525 148.75s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 20/909 pub_printed_ar/misraj_dococr__38c01ef3-e952-4df2-979d-183e08990f7a 40.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 21/909 pub_printed_ar/misraj_dococr__d5b57550-dc2f-478d-bccf-a9b5868e238a 57.72s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 22/909 pub_printed_ar/misraj_dococr__1233d7ab-4d84-49f7-912a-b7e7674576fe 67.72s

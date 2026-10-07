@@ -1,101 +1,3 @@
-[dots_mocr__venv] 14 mẫu, đã có 0, phần này cần chạy 14
-warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
-
-Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]
-Fetching 22 files: 100%|██████████| 22/22 [00:00<00:00, 2944.78it/s]
-2026-10-07 03:36:44.280746: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1791344204.306987   17250 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-E0000 00:00:1791344204.315469   17250 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-W0000 00:00:1791344204.336593   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791344204.336622   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791344204.336625   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791344204.336627   17250 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-2026-10-07 03:36:44.341812: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
-Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.56s/it]
-Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.20it/s]
-Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.06it/s]
-[dots_mocr__venv] nạp model xong sau 16.6s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 1/14 pub_printed_ar/misraj_dococr__8d18a279-ce9a-451b-82c3-3541ae3349f5 100.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 2/14 pub_tables_ar/kitab_tables__426 24.39s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 3/14 pub_tables_en/pubtabnet__598044 15.40s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 4/14 pub_handwriting_ar/khatt_lines__73 4.53s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 5/14 pub_handwriting_en/iam_lines__66 2.97s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 6/14 syn_text_ar/syn_text_ar_0009 60.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 7/14 syn_text_en/syn_text_en_0065 50.53s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 8/14 syn_text_mixed/syn_text_mixed_0028 70.32s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 9/14 syn_invoice_ar/syn_invoice_ar_0043 152.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 10/14 syn_invoice_en/syn_invoice_en_0114 100.55s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 11/14 syn_invoice_mixed/syn_invoice_mixed_0058 110.94s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 12/14 syn_form_ar/syn_form_ar_0012 40.78s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 13/14 syn_form_en/syn_form_en_0103 33.06s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 14/14 syn_degraded/syn_degraded_0058 45.93s
-[dots_mocr__venv] 923 mẫu, đã có 14, phần này cần chạy 909
-warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
-
-Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]
-Fetching 22 files: 100%|██████████| 22/22 [00:00<00:00, 2611.20it/s]
-2026-10-07 03:52:03.968871: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1791345123.998317   22792 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-E0000 00:00:1791345124.007461   22792 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-W0000 00:00:1791345124.032120   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791345124.032159   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791345124.032163   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791345124.032167   22792 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-2026-10-07 03:52:04.038678: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
-Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.59s/it]
-Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.17it/s]
-Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.04it/s]
-[dots_mocr__venv] nạp model xong sau 18.3s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 1/909 pub_printed_ar/misraj_dococr__71096aac-6051-4861-8564-58c255810faa 109.49s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 2/909 pub_printed_ar/misraj_dococr__75aee6e9-89d0-4a0a-a517-767be769b95d 60.01s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 3/909 pub_printed_ar/misraj_dococr__ea8bfd43-34ae-445c-87c4-b6a219b2fa5e 21.75s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 4/909 pub_printed_ar/misraj_dococr__33c306fa-e462-4526-9b41-59975cbebb3c 145.89s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 5/909 pub_printed_ar/misraj_dococr__bf7f85a9-16c5-4007-9b5f-2803e0badc6a 42.10s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 6/909 pub_printed_ar/misraj_dococr__92efd475-712e-4ff8-8bc0-49882907b4a2 39.47s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 7/909 pub_printed_ar/misraj_dococr__868ebb62-285a-4401-88ca-84c4b83d7d54 47.43s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 8/909 pub_printed_ar/misraj_dococr__0cfa7262-979c-4dc8-80e3-4088ff4a1a48 142.92s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 9/909 pub_printed_ar/misraj_dococr__f78b63b3-ad8f-43f9-9092-cd6c31157ca2 47.03s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 10/909 pub_printed_ar/misraj_dococr__08fbb4a3-cb9a-4f2b-b1e3-414b115848f8 71.82s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 11/909 pub_printed_ar/misraj_dococr__802eeb8d-3596-4f2a-b85b-f5a90b8f006f 58.48s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 12/909 pub_printed_ar/misraj_dococr__843ed04e-b743-44c9-a7a5-0019f3fcdbd2 50.22s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 13/909 pub_printed_ar/misraj_dococr__890ed30a-5473-47a0-b2c0-03d76ff12b49 45.62s
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-[dots_mocr__venv] 14/909 pub_printed_ar/misraj_dococr__46f3e399-6c97-4b59-b7f9-6cdab9c713e0 66.80s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 15/909 pub_printed_ar/misraj_dococr__1e0dd74b-4bc4-4126-90ab-8f68067089b0 131.99s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
@@ -295,4 +197,104 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 74/909 pub_tables_ar/kitab_tables__75 24.39s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 75/909 pub_tables_ar/kitab_tables__87 31.70s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 76/909 pub_tables_ar/kitab_tables__430 49.28s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 77/909 pub_tables_ar/kitab_tables__267 28.11s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 78/909 pub_tables_ar/kitab_tables__19 32.35s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 79/909 pub_tables_ar/kitab_tables__320 24.32s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 80/909 pub_tables_ar/kitab_tables__232 23.00s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 81/909 pub_tables_ar/kitab_tables__168 28.46s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 82/909 pub_tables_ar/kitab_tables__93 23.38s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 83/909 pub_tables_ar/kitab_tables__129 17.57s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 84/909 pub_tables_ar/kitab_tables__39 26.45s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 85/909 pub_tables_ar/kitab_tables__431 29.95s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 86/909 pub_tables_ar/kitab_tables__379 27.56s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 87/909 pub_tables_ar/kitab_tables__88 31.38s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 88/909 pub_tables_ar/kitab_tables__132 25.06s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 89/909 pub_tables_ar/kitab_tables__270 29.49s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 90/909 pub_tables_ar/kitab_tables__462 20.83s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 91/909 pub_tables_ar/kitab_tables__47 27.58s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 92/909 pub_tables_ar/kitab_tables__156 18.59s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 93/909 pub_tables_ar/kitab_tables__469 32.17s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 94/909 pub_tables_ar/kitab_tables__358 24.13s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 95/909 pub_tables_ar/kitab_tables__459 24.38s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 96/909 pub_tables_ar/kitab_tables__342 21.74s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 97/909 pub_tables_ar/kitab_tables__152 27.98s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 98/909 pub_tables_ar/kitab_tables__10 28.60s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 99/909 pub_tables_ar/kitab_tables__385 24.47s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 100/909 pub_tables_ar/kitab_tables__388 36.15s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 101/909 pub_tables_ar/kitab_tables__414 20.12s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 102/909 pub_tables_ar/kitab_tables__279 37.53s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 103/909 pub_tables_ar/kitab_tables__269 26.49s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 104/909 pub_tables_ar/kitab_tables__355 32.99s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 105/909 pub_tables_ar/kitab_tables__50 20.70s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 106/909 pub_tables_ar/kitab_tables__158 31.46s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 107/909 pub_tables_ar/kitab_tables__151 25.25s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 108/909 pub_tables_ar/kitab_tables__45 21.31s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 109/909 pub_tables_ar/kitab_tables__460 17.93s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 110/909 pub_tables_ar/kitab_tables__76 21.73s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 111/909 pub_tables_ar/kitab_tables__265 34.69s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 112/909 pub_tables_ar/kitab_tables__202 26.82s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 113/909 pub_tables_ar/kitab_tables__8 26.89s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 114/909 pub_tables_ar/kitab_tables__126 21.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 115/909 pub_tables_ar/kitab_tables__356 37.08s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 116/909 pub_tables_ar/kitab_tables__306 18.05s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 117/909 pub_tables_ar/kitab_tables__46 29.85s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 118/909 pub_tables_ar/kitab_tables__127 22.98s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 119/909 pub_tables_ar/kitab_tables__6 23.99s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 120/909 pub_tables_en/pubtabnet__581259 11.56s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 121/909 pub_tables_en/pubtabnet__567856 18.94s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 122/909 pub_tables_en/pubtabnet__703897 30.43s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 123/909 pub_tables_en/pubtabnet__711083 38.69s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 124/909 pub_tables_en/pubtabnet__672495 18.01s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 125/909 pub_tables_en/pubtabnet__730680 16.47s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

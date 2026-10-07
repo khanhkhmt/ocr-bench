@@ -112,3 +112,119 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 21/909 pub_printed_ar/misraj_dococr__d5b57550-dc2f-478d-bccf-a9b5868e238a 57.72s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 22/909 pub_printed_ar/misraj_dococr__1233d7ab-4d84-49f7-912a-b7e7674576fe 67.72s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 23/909 pub_printed_ar/misraj_dococr__8d69b8f5-bebf-4b7c-90fc-09646a0ab6ac 182.72s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 24/909 pub_printed_ar/misraj_dococr__01e9cad5-acc1-4b9c-8054-1e76224bfbc6 60.90s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 25/909 pub_printed_ar/misraj_dococr__70bacf37-2f63-4921-98e0-1bfd82f34afc 44.04s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 26/909 pub_printed_ar/misraj_dococr__8b0b20de-d655-4d1b-8987-1bf99f181613 142.37s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 27/909 pub_printed_ar/misraj_dococr__89d737ae-7aaf-48ed-822b-951ac7a9e540 91.73s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 28/909 pub_printed_ar/misraj_dococr__7815ffd0-2b57-46e5-9a71-228de6ec3308 95.49s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 29/909 pub_printed_ar/misraj_dococr__52f34b6e-2ab3-47ee-901f-953db66cbe15 67.92s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 30/909 pub_printed_ar/misraj_dococr__eb897264-8426-4bf6-9232-15251f5da389 116.69s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 31/909 pub_printed_ar/misraj_dococr__f0678538-5a78-40b4-8e23-5f8dc511e355 69.17s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 32/909 pub_printed_ar/misraj_dococr__b181ae59-300c-4ba9-8baa-2a842ca42b79 84.45s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 33/909 pub_printed_ar/misraj_dococr__b7ab3a48-f715-486d-8de8-01bcf4d9d386 62.41s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 34/909 pub_printed_ar/misraj_dococr__ab1c0777-577f-40b8-b22f-8e97b25e0f03 108.93s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 35/909 pub_printed_ar/misraj_dococr__d75f833e-e033-4a78-a609-6ff932a693b8 33.69s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Traceback (most recent call last):
+  File "/kaggle/working/ocr-bench/ocrbench/worker.py", line 286, in run_model
+    pred = adapter.predict(pages[0], it) if len(pages) == 1 else adapter.predict_pages(pages, it)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/ocr-bench/ocrbench/adapters/dots.py", line 194, in predict
+    r = self.parse_image(image.convert("RGB"))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/ocr-bench/ocrbench/adapters/dots.py", line 190, in parse_image
+    response, extra = self._inference_with_hf(image, prompt)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/ocr-bench/ocrbench/adapters/dots.py", line 153, in _inference_with_hf
+    generated_ids = self._model.generate(**gen_inputs, **gen)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/generation/utils.py", line 2539, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/generation/utils.py", line 2867, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/utils/generic.py", line 940, in wrapper
+    output = func(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 449, in forward
+    outputs: BaseModelOutputWithPast = self.model(
+                                       ^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/utils/generic.py", line 1064, in wrapper
+    outputs = func(self, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 384, in forward
+    hidden_states = decoder_layer(
+                    ^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 234, in forward
+    hidden_states, _ = self.self_attn(
+                       ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1776, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 1787, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/models/qwen2/modeling_qwen2.py", line 169, in forward
+    attn_output, attn_weights = attention_interface(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/integrations/sdpa_attention.py", line 83, in sdpa_attention_forward
+    attn_output = torch.nn.functional.scaled_dot_product_attention(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 656.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 178.81 MiB is free. Including non-PyTorch memory, this process has 14.38 GiB memory in use. Of the allocated memory 13.70 GiB is allocated by PyTorch, and 563.70 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[dots_mocr__venv] 36/909 pub_printed_ar/misraj_dococr__f08647a9-786a-4a35-a090-fdbd4590354f LỖI OutOfMemoryError: CUDA out of memory. Tried to allocate 656.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 178
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 37/909 pub_printed_ar/misraj_dococr__1371558b-b017-41c5-9e26-f3e055b02644 73.98s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 38/909 pub_printed_ar/misraj_dococr__b29ec2fd-b64b-4606-9b3f-cc596c7b1f76 30.83s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 39/909 pub_printed_ar/misraj_dococr__a2328747-ebc3-47d0-a511-b672b7595eb2 108.52s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 40/909 pub_printed_ar/misraj_dococr__78a554d5-b029-435f-9e48-64ae95726a05 178.04s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+[dots_mocr__venv] 41/909 pub_printed_ar/misraj_dococr__d37bed59-12d3-4e23-ab98-42108acf5ed5 65.54s
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.

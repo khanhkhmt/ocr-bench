@@ -1,16 +1,16 @@
 # Trạng thái ocrbench
 
-- Cập nhật: **2026-10-07 03:51 UTC** · dots_mocr: xong bước B
+- Cập nhật: **2026-10-07 03:51 UTC** · bắt đầu dots_mocr__venv
 - Máy: `ca51a07eefd8` · GPU: Tesla T4, Tesla T4
 - Code: `60bebd4` · Dấu vân tay dữ liệu: `aa8fdd44e1715845`
-- Đang chạy: (không có)
+- Đang chạy: dots_mocr__venv
 
 ## Split `dev` (1051 mẫu)
 
 | Model | Trạng thái | Đã chạy | Lỗi | CER norm (TB các mẫu đã chạy) | s/mẫu | VRAM đỉnh | Lần chạy cuối |
 |---|---|---:|---:|---:|---:|---:|---|
 | dots_mocr | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 1/1051 | 0 | 96.8% | 22.46 | — | — |
-| dots_mocr__venv | ■ đã dừng | 14/1051 | 0 | 9.4% | 58.08 | 12.4 GB | 2026-10-07T03:50:29+00:00 |
+| dots_mocr__venv | ▶ đang chạy | 14/1051 | 0 | 9.4% | 58.08 | 12.4 GB | 2026-10-07T03:50:29+00:00 |
 | easyocr | ■ đã dừng | 1051/1051 | 0 | 35.9% | 3.36 | 13.3 GB | 2026-10-02T04:43:28+00:00 |
 | sherif_handwriting | ■ đã dừng | 923/1051 | 1 | 19.8% | 23.52 | 13.0 GB | 2026-10-02T09:35:19+00:00 |
 | sherif_handwriting__long | ⚠ dừng giữa chừng (chưa kết thúc lần nào, có thể do sập) | 6/1051 | 0 | 102.6% | 581.69 | — | — |

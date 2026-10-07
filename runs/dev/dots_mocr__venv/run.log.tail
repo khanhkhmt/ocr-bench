@@ -47,3 +47,4 @@ Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 13/14 syn_form_en/syn_form_en_0103 33.06s
 Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
 [dots_mocr__venv] 14/14 syn_degraded/syn_degraded_0058 45.93s
+[dots_mocr__venv] 923 mẫu, đã có 14, phần này cần chạy 909

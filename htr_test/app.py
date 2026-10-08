@@ -1,4 +1,4 @@
-"""Web thử 2 model đọc chữ viết tay theo dòng — bố cục do dots.mocr.
+"""Web thử các model đọc chữ viết tay theo dòng — bố cục do dots.mocr.
 
     <python venv dots> -m htr_test.app [--port 7861] [--gpu 0] [--no-quant4]
 
@@ -22,17 +22,18 @@ import gradio as gr
 from PIL import Image, ImageDraw
 
 from .lines import split_lines
-from .models import ArTrOCR, KetabaOCR, free_cuda
+from .models import ArTrOCR, BaseerNakba, KetabaOCR, free_cuda
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}
+M_BASEER = "Baseer-Nakba (hạng 1 NAKBA, phi thương mại)"
 M_KETABA, M_SHERIF, M_TROCR = "Ketaba-OCR (LoRA)", "sherif gốc (tắt LoRA)", "ArTrOCR"
-ALL_MODELS = [M_KETABA, M_SHERIF, M_TROCR]
+ALL_MODELS = [M_BASEER, M_KETABA, M_SHERIF, M_TROCR]
 DOTS_FULL, DOTS_LAYOUT = "dots đọc cả chữ (để so sánh)", "dots chỉ chia khối (nhanh hơn)"
 
 GR6 = int(gr.__version__.split(".")[0]) >= 6
 
-S = {"dots": None, "ketaba": None, "trocr": None, "gpu": 0, "quant4": True}
+S = {"dots": None, "baseer": None, "ketaba": None, "trocr": None, "baseer_quant4": False, "gpu": 0, "quant4": True}
 
 
 def dots():
@@ -49,6 +50,12 @@ def ketaba():
     return S["ketaba"]
 
 
+def baseer():
+    if S["baseer"] is None:
+        S["baseer"] = BaseerNakba(device=f"cuda:{S['gpu']}", quant4=S["baseer_quant4"]).load()
+    return S["baseer"]
+
+
 def trocr():
     if S["trocr"] is None:
         S["trocr"] = ArTrOCR(device=f"cuda:{S['gpu']}").load()
@@ -56,9 +63,9 @@ def trocr():
 
 
 def unload():
-    S["ketaba"] = S["trocr"] = None
+    S["baseer"] = S["ketaba"] = S["trocr"] = None
     free_cuda()
-    return "Đã giải phóng Ketaba / ArTrOCR (dots vẫn giữ)."
+    return "Đã giải phóng Baseer / Ketaba / ArTrOCR (dots vẫn giữ)."
 
 
 def load_pages(path: str) -> list[Image.Image]:
@@ -75,6 +82,8 @@ def read_lines(models: list[str], crops: list[Image.Image]) -> dict[str, list[st
     out = {}
     if not crops:
         return {m: [] for m in models}
+    if M_BASEER in models:
+        out[M_BASEER] = baseer().read(crops)
     if M_KETABA in models:
         out[M_KETABA] = ketaba().read(crops, use_lora=True)
     if M_SHERIF in models:
@@ -199,16 +208,16 @@ def run_line(image, models):
 
 def build() -> gr.Blocks:
     kw = {} if GR6 else {"css": CSS}  # gradio 6: css chuyển sang launch()
-    with gr.Blocks(title="Thử 2 model chữ viết tay", **kw) as demo:
-        gr.Markdown("## Thử 2 model đọc chữ viết tay theo dòng (Ketaba-OCR, ArTrOCR) — bố cục do dots.mocr\n"
-                    "Hai model chỉ đọc **ảnh một dòng** → web tách dòng trong từng khối chữ của dots rồi cho model đọc "
+    with gr.Blocks(title="Thử model chữ viết tay", **kw) as demo:
+        gr.Markdown("## Thử model đọc chữ viết tay theo dòng (Baseer-Nakba, Ketaba-OCR, ArTrOCR) — bố cục do dots.mocr\n"
+                    "Các model này chỉ đọc **ảnh một dòng** → web tách dòng trong từng khối chữ của dots rồi cho model đọc "
                     "từng dòng. *sherif gốc* = cùng model nền với Ketaba nhưng TẮT LoRA (để thấy LoRA giúp bao nhiêu).")
         with gr.Tab("Trang tài liệu"):
             with gr.Row():
                 with gr.Column(scale=1):
                     f = gr.File(label="Ảnh hoặc PDF", file_types=["image", ".pdf"], type="filepath")
                     page = gr.Number(value=1, precision=0, label="Trang (PDF)")
-                    models = gr.CheckboxGroup(ALL_MODELS, value=[M_KETABA, M_TROCR], label="Model đọc chữ")
+                    models = gr.CheckboxGroup(ALL_MODELS, value=[M_BASEER, M_KETABA], label="Model đọc chữ")
                     dmode = gr.Radio([DOTS_FULL, DOTS_LAYOUT], value=DOTS_FULL, label="dots")
                     seg = gr.Radio([("Chiếu ngang (nhanh)", "chieu_ngang"), ("Kraken (nếu đã cài)", "kraken")],
                                    value="chieu_ngang", label="Tách dòng")
@@ -239,9 +248,10 @@ def main():
     ap.add_argument("--port", type=int, default=7861)
     ap.add_argument("--gpu", type=int, default=0)
     ap.add_argument("--no-quant4", action="store_true", help="nạp Ketaba fp16 thay vì 4-bit như tác giả")
+    ap.add_argument("--baseer-4bit", action="store_true", help="nạp Baseer-Nakba 4-bit khi thiếu VRAM")
     ap.add_argument("--share", action="store_true")
     a = ap.parse_args()
-    S["gpu"], S["quant4"] = a.gpu, not a.no_quant4
+    S["gpu"], S["quant4"], S["baseer_quant4"] = a.gpu, not a.no_quant4, a.baseer_4bit
     build().queue(default_concurrency_limit=1).launch(server_name="127.0.0.1", server_port=a.port, share=a.share,
                                                      **({"css": CSS} if GR6 else {}))
 

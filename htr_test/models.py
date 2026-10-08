@@ -1,4 +1,4 @@
-"""Hai model đọc chữ viết tay theo dòng — gọi ĐÚNG như code mẫu trên trang Hugging Face của tác giả.
+"""Các model đọc chữ viết tay theo dòng — gọi ĐÚNG như code mẫu của tác giả (BaseerNakba: xem lớp bên dưới).
 
 KetabaOCR  — https://huggingface.co/HassanB4/Ketaba-OCR-LoRA
     LoRA (QLoRA 4-bit + DoRA + RSLoRA) trên sherif1313/Arabic-English-handwritten-OCR-v3 (Qwen2.5-VL-3B), huấn luyện
@@ -160,6 +160,77 @@ class ArTrOCR:
             with _LOCK, torch.no_grad():
                 ids = self.model.generate(pv, max_length=self.max_length)
             out += [t.strip() for t in self.processor.batch_decode(ids, skip_special_tokens=True)]
+        return out
+
+
+def clean_repeated_substrings(text: str) -> str:
+    """Chép nguyên từ Baseer_Nakba.py của tác giả: cắt đuôi lặp (≥ 10 lần) khi model rơi vào vòng lặp."""
+    n = len(text)
+    if n < 200:
+        return text
+    for length in range(2, n // 10 + 1):
+        candidate = text[-length:]
+        count = 0
+        i = n - length
+        while i >= 0 and text[i:i + length] == candidate:
+            count += 1
+            i -= length
+        if count >= 10:
+            return text[:n - length * (count - 1)]
+    return text
+
+
+class BaseerNakba:
+    """Misraj/Baseer__Nakba — hạng 1 NAKBA NLP 2026 (CER 7,9%, WER 24,4% trên dòng chữ tay Omar Al-Saleh 1951–65).
+
+    Qwen2.5-VL-3B (Baseer) huấn luyện tiếp: Muharaf (chỉ decoder) → Nakba (cả encoder + decoder) → trộn SLERP 2 checkpoint.
+    Giấy phép CC BY-NC-SA 4.0 (PHI THƯƠNG MẠI). Tham số y như Baseer_Nakba.py (github.com/misraj-ai/Nakba-pipeline):
+    prompt "Extract the text from the above document." kèm system mặc định, min_pixels 28·28, max_pixels 1280·28·28,
+    giải mã tham lam, repetition_penalty 1.1, tối đa 128 token, cắt đuôi lặp. Tác giả chạy vLLM; ở đây dùng
+    transformers (không cài vLLM để khỏi đổi torch) — cùng trọng số, cùng tham số.
+    """
+
+    REPO = "Misraj/Baseer__Nakba"
+    PROMPT = "Extract the text from the above document."
+    TEMPLATE = ("<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n"
+                "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{p}<|im_end|>\n"
+                "<|im_start|>assistant\n")
+
+    def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128):
+        self.device, self.quant4, self.max_new_tokens = device, quant4, max_new_tokens
+        self.model = self.processor = None
+
+    def load(self):
+        from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
+
+        t = time.time()
+        dtype = torch.bfloat16 if _bf16_ok() else torch.float16  # T4 không có bf16 → fp16
+        kw = {"device_map": {"": self.device}, "torch_dtype": dtype}
+        if self.quant4:  # chỉ khi thiếu VRAM (không phải cách tác giả chạy)
+            kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                                                           bnb_4bit_compute_dtype=dtype)
+        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.REPO, **kw).eval()
+        self.processor = AutoProcessor.from_pretrained(self.REPO, min_pixels=28 * 28, max_pixels=1280 * 28 * 28)
+        self.processor.tokenizer.padding_side = "left"
+        self.load_s = round(time.time() - t, 1)
+        return self
+
+    def read(self, lines: list[Image.Image], batch: int = 8) -> list[str]:
+        if self.model is None:
+            self.load()
+        out = []
+        prompt = self.TEMPLATE.format(p=self.PROMPT)
+        for i in range(0, len(lines), batch):
+            chunk = [im.convert("RGB") for im in lines[i:i + batch]]
+            inputs = self.processor(text=[prompt] * len(chunk), images=chunk, return_tensors="pt", padding=True)
+            inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            with _LOCK, torch.no_grad():
+                ids = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, do_sample=False,
+                                          repetition_penalty=1.1, eos_token_id=[151645, 151643],
+                                          pad_token_id=151643)
+            n_in = inputs["input_ids"].shape[1]
+            out += [clean_repeated_substrings(self.processor.decode(r[n_in:], skip_special_tokens=True).strip())
+                    for r in ids]
         return out
 
 

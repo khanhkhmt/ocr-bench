@@ -30,6 +30,8 @@ M_KETABA, M_SHERIF, M_TROCR = "Ketaba-OCR (LoRA)", "sherif gốc (tắt LoRA)", 
 ALL_MODELS = [M_KETABA, M_SHERIF, M_TROCR]
 DOTS_FULL, DOTS_LAYOUT = "dots đọc cả chữ (để so sánh)", "dots chỉ chia khối (nhanh hơn)"
 
+GR6 = int(gr.__version__.split(".")[0]) >= 6
+
 S = {"dots": None, "ketaba": None, "trocr": None, "gpu": 0, "quant4": True}
 
 
@@ -196,7 +198,8 @@ def run_line(image, models):
 
 
 def build() -> gr.Blocks:
-    with gr.Blocks(title="Thử 2 model chữ viết tay", css=CSS) as demo:
+    kw = {} if GR6 else {"css": CSS}  # gradio 6: css chuyển sang launch()
+    with gr.Blocks(title="Thử 2 model chữ viết tay", **kw) as demo:
         gr.Markdown("## Thử 2 model đọc chữ viết tay theo dòng (Ketaba-OCR, ArTrOCR) — bố cục do dots.mocr\n"
                     "Hai model chỉ đọc **ảnh một dòng** → web tách dòng trong từng khối chữ của dots rồi cho model đọc "
                     "từng dòng. *sherif gốc* = cùng model nền với Ketaba nhưng TẮT LoRA (để thấy LoRA giúp bao nhiêu).")
@@ -216,7 +219,7 @@ def build() -> gr.Blocks:
                     vis = gr.Image(label="Khối dots (xanh) · dòng (đỏ)", type="pil")
             out = gr.HTML()
             with gr.Accordion("Văn bản ghép theo từng model", open=False):
-                txt = gr.Textbox(lines=18, show_copy_button=True, rtl=True)
+                txt = gr.Textbox(lines=18, rtl=True)
             dl = gr.Files(label="Tải kết quả (JSON / TXT)")
             go.click(run_page, [f, page, models, dmode, seg], [vis, out, txt, dl])
             free.click(unload, None, msg)
@@ -239,7 +242,8 @@ def main():
     ap.add_argument("--share", action="store_true")
     a = ap.parse_args()
     S["gpu"], S["quant4"] = a.gpu, not a.no_quant4
-    build().queue(default_concurrency_limit=1).launch(server_name="127.0.0.1", server_port=a.port, share=a.share)
+    build().queue(default_concurrency_limit=1).launch(server_name="127.0.0.1", server_port=a.port, share=a.share,
+                                                     **({"css": CSS} if GR6 else {}))
 
 
 if __name__ == "__main__":

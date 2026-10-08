@@ -51,10 +51,12 @@ def load_lines(data: str | None, split: str) -> list[tuple[str, Image.Image, str
     import pyarrow.parquet as pq
     from huggingface_hub import hf_hub_download
 
-    tok = os.environ.get("HF_TOKEN")
-    if not tok:
-        sys.exit("Thiếu HF_TOKEN (bộ dữ liệu gated) — hoặc dùng --data <thư mục đã tách>")
-    f = hf_hub_download(HF_REPO, f"data/{split}-00000-of-00001.parquet", repo_type="dataset", token=tok)
+    try:  # HF_TOKEN hoặc token đã lưu bởi `hf auth login`
+        f = hf_hub_download(HF_REPO, f"data/{split}-00000-of-00001.parquet", repo_type="dataset",
+                            token=os.environ.get("HF_TOKEN") or None)
+    except Exception as e:
+        sys.exit(f"Không tải được {HF_REPO} ({e.__class__.__name__}) — bộ gated: cần HF_TOKEN của tài khoản đã bấm "
+                 "đồng ý điều khoản, hoặc dùng --data <thư mục đã tách>")
     out = []
     for i, r in enumerate(pq.read_table(f).to_pylist()):
         out.append((Path(r["filename"] or f"{split}_{i:05d}").stem,

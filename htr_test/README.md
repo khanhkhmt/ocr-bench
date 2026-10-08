@@ -31,6 +31,14 @@ python -m htr_test.tai_muharaf ~/du_lieu_muharaf      # chữ tay Liban TK 19–
 ```
 Ra `<tập>/<mẫu>/input|output`, `danh_sach.csv`, `NGUON.md`, `xem_mau.html`.
 
+## Benchmark gộp: các model × 2 bộ (một lệnh)
+```bash
+export HF_TOKEN=... GITHUB_TOKEN=...
+/kaggle/working/venvs/dots/bin/python -m htr_test.benchmark --push   # mặc định: baseer,ketaba,dots × Omar blind_test + Muharaf test, cả tập
+```
+Ra `/kaggle/working/htr_benchmark/BENCHMARK_HTR.md` (bảng % đúng mỗi model × mỗi bộ, chênh lệch khi sang giấy cũ), cập nhật sau
+mỗi bước và đẩy lên nhánh `results-htr`. Chạy lại = đi tiếp.
+
 ## Chấm bằng số trên blind_test của Omar Al-Saleh (`htr_test/eval_lines.py`)
 Baseer-Nakba và Ketaba đã học train (+test) của bộ này → chỉ chấm trên `blind_test` (2.671 dòng).
 ```bash

@@ -28,6 +28,6 @@ VRAM (T4 15 GB): dots ~7–8 GB + Ketaba 4-bit ~3 GB + ArTrOCR ~1,3 GB. Nút "Gi
 Baseer-Nakba và Ketaba đã học train (+test) của bộ này → chỉ chấm trên `blind_test` (2.671 dòng).
 ```bash
 export HF_TOKEN=...   # tài khoản đã bấm đồng ý điều khoản bộ U4RASD/omar-al-saleh-manuscripts-segments
-/kaggle/working/venvs/dots/bin/python -m htr_test.eval_lines --out /kaggle/working/htr_eval --models baseer,ketaba,dots --n 500
+/kaggle/working/venvs/dots/bin/python -m htr_test.eval_lines --out /kaggle/working/htr_eval --models baseer,ketaba,dots --n 500 --push
 ```
-Chạy lại = đi tiếp. Kết quả `tom_tat.md`: CER/WER gốc và chuẩn hoá, tỉ lệ độ dài, số dòng dài/ngắn bất thường.
+Chạy lại = đi tiếp (kể cả khi Colab mất ổ: `--push` tự kéo phần đã chấm từ nhánh `results-htr` về). `--push` đẩy jsonl + bảng tạm lên nhánh GitHub `results-htr` mỗi 10 phút và khi xong mỗi model (cần GITHUB_TOKEN). Kết quả `tom_tat.md`: CER/WER gốc và chuẩn hoá, tỉ lệ độ dài, số dòng dài/ngắn bất thường.

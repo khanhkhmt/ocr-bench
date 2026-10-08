@@ -7,6 +7,8 @@
 Vì sao blind_test: Ketaba-OCR và Baseer-Nakba đều đã HỌC train (+ test) của bộ này; blind_test là tập ẩn của cuộc thi.
 Model: baseer, ketaba, sherif (Ketaba tắt LoRA), trocr, dots (dots.mocr chế độ "Chỉ chữ" trên ảnh dòng — mốc so sánh).
 Chạy lại: bỏ qua dòng đã có trong <out>/<model>.jsonl. Kết quả: <out>/tom_tat.md (+ in ra màn hình).
+--push: cứ --push-every phút (mặc định 10) + khi xong mỗi model → đẩy jsonl + tom_tat lên nhánh GitHub results-htr;
+lúc khởi động tự kéo phần đã chấm từ GitHub về (server Colab mất ổ khi sập). Xem htr_test/sync.py.
 
 Hai cách chấm:
 - "gốc": NFC + gộp khoảng trắng (khắt khe; giống CER công bố của cuộc thi nhất có thể)
@@ -107,6 +109,41 @@ def score(pairs: list[tuple[str, str]]) -> dict:
     return res
 
 
+def read_done(f: Path) -> dict[str, str]:
+    done = {}
+    if f.exists():
+        for ln in f.read_text(encoding="utf-8").splitlines():
+            if ln.strip():
+                d = json.loads(ln)
+                done[d["id"]] = d["doan"]
+    return done
+
+
+def write_summary(out: Path, lines: list, names: list[str], split: str, note: str = "") -> str:
+    """Bảng kết quả từ mọi .jsonl hiện có (chấm dở cũng ghi — cột "đã chấm" cho biết bao nhiêu dòng)."""
+    summary = {}
+    for name in names:
+        done = read_done(out / f"{name}.jsonl")
+        pairs = [(ref, done[lid]) for lid, _, ref in lines if lid in done]
+        if pairs:
+            summary[name] = score(pairs)
+            summary[name]["so_dong"] = len(pairs)
+    rows = ["# Dòng chữ viết tay Omar Al-Saleh — " + split + f" ({len(lines)} dòng)", "",
+            f"Cập nhật: {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}" + (f" — {note}" if note else ""), "",
+            "| Model | đã chấm | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+    for name, s in sorted(summary.items(), key=lambda kv: kv[1]["chuan_hoa"]["cer"]):
+        g, c, d = s["goc"], s["chuan_hoa"], s["do_dai"]
+        rows.append(f"| {name} | {s['so_dong']}/{len(lines)} | {100 * g['cer']:.1f}% | {100 * g['wer']:.1f}% | "
+                    f"{100 * c['cer']:.1f}% | {100 * c['wer']:.1f}% | {100 * c['cer_dong']:.1f}% | {d['tb']:.2f} | "
+                    f"{d['dai_x1_5']} | {d['ngan_x0_5']} |")
+    rows += ["", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
+             "· baseline Qwen3-VL-8B LoRA 36,8% / 69,1%."]
+    (out / "tom_tat.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    (out / "tom_tat.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
+    return "\n".join(rows)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
@@ -116,53 +153,53 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=0, help="0 = cả tập; >0 = lấy ngẫu nhiên (cố định, seed 0) n dòng")
     ap.add_argument("--gpu", type=int, default=0, help="-1 = CPU (chỉ để thử)")
     ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
+    ap.add_argument("--push-every", type=float, default=10, help="phút giữa 2 lần đẩy khi đang chấm")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    names = [m.strip() for m in a.models.split(",") if m.strip()]
+    sync = None
+    if a.push:
+        from htr_test.sync import Sync
+        sync = Sync(out, every_min=a.push_every)
+        sync.restore()  # Colab mất ổ khi khởi động lại → lấy lại phần đã chấm từ GitHub
     lines = load_lines(a.data, a.split)
     if a.n:
         lines = random.Random(0).sample(lines, min(a.n, len(lines)))
     print(f"{a.split}: {len(lines)} dòng", flush=True)
-    summary = {}
-    for name in [m.strip() for m in a.models.split(",") if m.strip()]:
+
+    def checkpoint(note: str, force: bool = False) -> None:
+        if sync and (force or sync.due()):
+            write_summary(out, lines, names, a.split, note)
+            sync.push(note)
+
+    for name in names:
         f = out / f"{name}.jsonl"
-        done = {}
-        if f.exists():
-            for ln in f.read_text(encoding="utf-8").splitlines():
-                d = json.loads(ln)
-                done[d["id"]] = d["doan"]
+        done = read_done(f)
         todo = [x for x in lines if x[0] not in done]
-        if todo:
-            t0 = time.time()
-            read = make_reader(name, a.gpu)
-            print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
-            t0 = time.time()
-            with open(f, "a", encoding="utf-8") as fo:
-                for i in range(0, len(todo), a.batch):
-                    chunk = todo[i:i + a.batch]
-                    for (lid, _, _), hyp in zip(chunk, read([x[1] for x in chunk])):
-                        done[lid] = hyp
-                        fo.write(json.dumps({"id": lid, "doan": hyp}, ensure_ascii=False) + "\n")
-                    fo.flush()
-                    k = i + len(chunk)
-                    print(f"   {name}: {k}/{len(todo)} · {(time.time() - t0) / k:.2f} s/dòng", flush=True)
-            del read
-            from htr_test.models import free_cuda
-            free_cuda()
-        summary[name] = score([(ref, done[lid]) for lid, _, ref in lines if lid in done])
-        summary[name]["so_dong"] = sum(lid in done for lid, _, _ in lines)
-    rows = ["# Dòng chữ viết tay Omar Al-Saleh — " + a.split + f" ({len(lines)} dòng)", "",
-            "| Model | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|---:|"]
-    for name, s in sorted(summary.items(), key=lambda kv: kv[1]["chuan_hoa"]["cer"]):
-        g, c, d = s["goc"], s["chuan_hoa"], s["do_dai"]
-        rows.append(f"| {name} | {100 * g['cer']:.1f}% | {100 * g['wer']:.1f}% | {100 * c['cer']:.1f}% | "
-                    f"{100 * c['wer']:.1f}% | {100 * c['cer_dong']:.1f}% | {d['tb']:.2f} | {d['dai_x1_5']} | {d['ngan_x0_5']} |")
-    rows += ["", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
-             "· baseline Qwen3-VL-8B LoRA 36,8% / 69,1%."]
-    (out / "tom_tat.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
-    (out / "tom_tat.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
-    print("\n".join(rows))
+        if not todo:
+            print(f"== {name}: đã chấm đủ {len(lines)} dòng", flush=True)
+            continue
+        t0 = time.time()
+        read = make_reader(name, a.gpu)
+        print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
+        t0 = time.time()
+        with open(f, "a", encoding="utf-8") as fo:
+            for i in range(0, len(todo), a.batch):
+                chunk = todo[i:i + a.batch]
+                for (lid, _, _), hyp in zip(chunk, read([x[1] for x in chunk])):
+                    fo.write(json.dumps({"id": lid, "doan": hyp}, ensure_ascii=False) + "\n")
+                fo.flush()
+                k = i + len(chunk)
+                print(f"   {name}: {k}/{len(todo)} · {(time.time() - t0) / k:.2f} s/dòng", flush=True)
+                checkpoint(f"đang chấm {name} {len(done) + k}/{len(lines)}")
+        del read
+        from htr_test.models import free_cuda
+        free_cuda()
+        checkpoint(f"xong {name}", force=True)
+    print(write_summary(out, lines, names, a.split, "xong"))
+    checkpoint("XONG tất cả", force=True)
     return 0
 
 

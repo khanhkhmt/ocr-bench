@@ -24,10 +24,16 @@ VRAM (T4 15 GB): dots ~7–8 GB + Ketaba 4-bit ~3 GB + ArTrOCR ~1,3 GB. Nút "Gi
 - Kraken blla (chính xác hơn với chữ tay cổ) nếu có `/kaggle/working/venvs/kraken/bin/kraken`
   (tạo bằng `experiments/real_docs_probe/run_kraken.sh`), không có thì tự dùng chiếu ngang.
 
+## Tải bộ dữ liệu về xem
+```bash
+python -m htr_test.tai_omar ~/du_lieu_omar_al_saleh   # cần HF_TOKEN / hf auth login của tài khoản đã đồng ý điều khoản
+```
+Ra `<tập>/<mẫu>/input|output`, `danh_sach.csv`, `NGUON.md`, `xem_mau.html`.
+
 ## Chấm bằng số trên blind_test của Omar Al-Saleh (`htr_test/eval_lines.py`)
 Baseer-Nakba và Ketaba đã học train (+test) của bộ này → chỉ chấm trên `blind_test` (2.671 dòng).
 ```bash
 export HF_TOKEN=...   # tài khoản đã bấm đồng ý điều khoản bộ U4RASD/omar-al-saleh-manuscripts-segments
 /kaggle/working/venvs/dots/bin/python -m htr_test.eval_lines --out /kaggle/working/htr_eval --models baseer,ketaba,dots --n 500 --push
 ```
-Chạy lại = đi tiếp (kể cả khi Colab mất ổ: `--push` tự kéo phần đã chấm từ nhánh `results-htr` về). `--push` đẩy jsonl + bảng tạm lên nhánh GitHub `results-htr` mỗi 10 phút và khi xong mỗi model (cần GITHUB_TOKEN). Kết quả `tom_tat.md`: CER/WER gốc và chuẩn hoá, tỉ lệ độ dài, số dòng dài/ngắn bất thường.
+Chạy lại = đi tiếp (kể cả khi Colab mất ổ: `--push` tự kéo phần đã chấm từ nhánh `results-htr` về). `--push` đẩy jsonl + bảng tạm lên nhánh GitHub `results-htr` mỗi 10 phút và khi xong mỗi model (cần GITHUB_TOKEN). Kết quả: `tom_tat.md` (cả tập: **% đúng ký tự / từ**, CER/WER gốc và chuẩn hoá, tỉ lệ độ dài, số dòng dài/ngắn bất thường), `chi_tiet.csv` (**từng dòng**: nhãn, chữ mỗi model đọc, % đúng — mở bằng Excel), `xem_ket_qua.html` (như csv, kèm ảnh dòng).

@@ -1,7 +1,8 @@
 """Đồng bộ kết quả chấm (htr_test/eval_lines.py) với GitHub — server (Colab) có thể sập và MẤT ổ bất cứ lúc nào.
 
 Nhánh riêng `results-htr` (không lẫn với nhánh `results` của benchmark), thư mục <tên lần chạy>/:
-<model>.jsonl (từng dòng đoán), tom_tat.md / tom_tat.json (kết quả tạm hoặc cuối). Chỉ dùng cho dữ liệu CÔNG KHAI
+<model>.jsonl (từng dòng đoán), tom_tat.md / tom_tat.json (kết quả tạm hoặc cuối), chi_tiet.csv + xem_ket_qua.html
+(từng dòng, có % đúng). Chỉ dùng cho dữ liệu CÔNG KHAI
 (Omar Al-Saleh) — tuyệt đối không dùng cho real_docs. Token: GITHUB_TOKEN qua header (như ocrbench status), không ghi
 vào .git/config, không in ra. Lỗi mạng / thiếu token → chỉ cảnh báo, không làm dừng việc chấm.
 """
@@ -15,7 +16,7 @@ from pathlib import Path
 
 from ocrbench.status import _git, _git_out, github_token
 
-FILES = ("*.jsonl", "tom_tat.md", "tom_tat.json")
+FILES = ("*.jsonl", "tom_tat.md", "tom_tat.json", "chi_tiet.csv", "xem_ket_qua.html")
 
 
 class Sync:

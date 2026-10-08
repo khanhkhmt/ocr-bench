@@ -6,7 +6,8 @@
 
 Vì sao blind_test: Ketaba-OCR và Baseer-Nakba đều đã HỌC train (+ test) của bộ này; blind_test là tập ẩn của cuộc thi.
 Model: baseer, ketaba, sherif (Ketaba tắt LoRA), trocr, dots (dots.mocr chế độ "Chỉ chữ" trên ảnh dòng — mốc so sánh).
-Chạy lại: bỏ qua dòng đã có trong <out>/<model>.jsonl. Kết quả: <out>/tom_tat.md (+ in ra màn hình).
+Chạy lại: bỏ qua dòng đã có trong <out>/<model>.jsonl. Kết quả: <out>/tom_tat.md (cả tập, có % đúng), <out>/chi_tiet.csv
+(TỪNG dòng: nhãn, chữ mỗi model đọc, % đúng ký tự / từ) và <out>/xem_ket_qua.html (như csv, kèm ảnh dòng).
 --push: cứ --push-every phút (mặc định 10) + khi xong mỗi model → đẩy jsonl + tom_tat lên nhánh GitHub results-htr;
 lúc khởi động tự kéo phần đã chấm từ GitHub về (server Colab mất ổ khi sập). Xem htr_test/sync.py.
 
@@ -109,6 +110,80 @@ def score(pairs: list[tuple[str, str]]) -> dict:
     return res
 
 
+def _norm(s: str) -> str:
+    return " ".join(normalize(s, NORM).split())
+
+
+def line_scores(ref: str, hyp: str) -> dict:
+    """% đúng của MỘT dòng = 100 − CER (chặn ở 0 khi model đọc thừa quá nhiều)."""
+    g, c = edit_stats(normalize_raw(ref), normalize_raw(hyp)), edit_stats(_norm(ref), _norm(hyp))
+    cer_g = g["char_edits"] / max(1, g["ref_chars"])
+    cer_c = c["char_edits"] / max(1, c["ref_chars"])
+    wer_c = c["word_edits"] / max(1, c["ref_words"])
+    return {"cer_goc": cer_g, "cer": cer_c, "wer": wer_c, "dung": max(0.0, 1 - cer_c), "dung_tu": max(0.0, 1 - wer_c)}
+
+
+def _thumb(im) -> str:
+    import base64
+    t = im.copy()
+    t.thumbnail((900, 70))
+    buf = io.BytesIO()
+    t.convert("L").save(buf, format="JPEG", quality=70)
+    return base64.b64encode(buf.getvalue()).decode()
+
+
+def write_details(out: Path, lines: list, names: list[str], html_too: bool) -> None:
+    """chi_tiet.csv: MỖI DÒNG một hàng — nhãn, chữ từng model đọc, % đúng ký tự / từ. xem_ket_qua.html: kèm ảnh."""
+    import html as H
+    preds = {m: read_done(out / f"{m}.jsonl") for m in names}
+    names = [m for m in names if preds[m]]
+    if not names:
+        return
+    cols = ["id", "nhan"]
+    for m in names:
+        cols += [f"{m}_doc", f"{m}_dung_ky_tu_%", f"{m}_dung_tu_%", f"{m}_cer_goc_%"]
+    recs = []
+    with open(out / "chi_tiet.csv", "w", encoding="utf-8-sig", newline="") as fo:  # -sig: Excel mở đúng tiếng Ả Rập
+        w = csv.writer(fo)
+        w.writerow(cols)
+        for lid, im, ref in lines:
+            row, rec = [lid, ref], {"id": lid, "im": im, "ref": ref, "m": {}}
+            for m in names:
+                hyp = preds[m].get(lid)
+                if hyp is None:
+                    row += ["", "", "", ""]
+                    continue
+                sc = line_scores(ref, hyp)
+                rec["m"][m] = (hyp, sc)
+                row += [hyp, f"{100 * sc['dung']:.1f}", f"{100 * sc['dung_tu']:.1f}", f"{100 * sc['cer_goc']:.1f}"]
+            w.writerow(row)
+            recs.append(rec)
+    if not html_too:
+        return
+    def color(x):
+        return "#0a7d32" if x >= 0.95 else "#b8860b" if x >= 0.8 else "#c0392b"
+    head = "".join(f"<th>{H.escape(m)}</th>" for m in names)
+    body = []
+    for r in recs:
+        cells = "".join(
+            (f"<td><div class=ar>{H.escape(r['m'][m][0])}</div><b style='color:{color(r['m'][m][1]['dung'])}'>"
+             f"{100 * r['m'][m][1]['dung']:.0f}% ký tự · {100 * r['m'][m][1]['dung_tu']:.0f}% từ</b></td>")
+            if m in r["m"] else "<td class=m>(chưa chấm)</td>" for m in names)
+        body.append(f"<tr><td class=m>{H.escape(r['id'])}<br><img src='data:image/jpeg;base64,{_thumb(r['im'])}'>"
+                    f"<div class=ar style='color:#063'>{H.escape(r['ref'])}</div></td>{cells}</tr>")
+    css = ("body{font-family:sans-serif;margin:12px} table{border-collapse:collapse;width:100%} "
+           "td,th{border:1px solid #ccc;padding:4px;vertical-align:top} th{background:#f3f3f3;position:sticky;top:0} "
+           ".ar{direction:rtl;text-align:right;font-family:'Noto Naskh Arabic','Amiri',serif;font-size:17px;line-height:1.7} "
+           ".m{color:#777;font-size:12px} img{max-width:420px}")
+    summary = (out / "tom_tat.md").read_text(encoding="utf-8") if (out / "tom_tat.md").exists() else ""
+    (out / "xem_ket_qua.html").write_text(
+        f"<!doctype html><meta charset=utf-8><title>Kết quả từng dòng</title><style>{css}</style>"
+        f"<h1>Kết quả từng dòng — chữ viết tay Omar Al-Saleh</h1><pre>{H.escape(summary)}</pre>"
+        "<p>Mỗi hàng: ảnh dòng + nhãn thật (xanh lá) · chữ từng model đọc + % đúng (xanh ≥ 95%, vàng ≥ 80%, đỏ &lt; 80%; "
+        "đã chuẩn hoá hamza / dấu nguyên âm).</p>"
+        f"<table><tr><th>dòng · nhãn</th>{head}</tr>{''.join(body)}</table>", encoding="utf-8")
+
+
 def read_done(f: Path) -> dict[str, str]:
     done = {}
     if f.exists():
@@ -130,14 +205,17 @@ def write_summary(out: Path, lines: list, names: list[str], split: str, note: st
             summary[name]["so_dong"] = len(pairs)
     rows = ["# Dòng chữ viết tay Omar Al-Saleh — " + split + f" ({len(lines)} dòng)", "",
             f"Cập nhật: {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}" + (f" — {note}" if note else ""), "",
-            "| Model | đã chấm | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+            "| Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for name, s in sorted(summary.items(), key=lambda kv: kv[1]["chuan_hoa"]["cer"]):
         g, c, d = s["goc"], s["chuan_hoa"], s["do_dai"]
-        rows.append(f"| {name} | {s['so_dong']}/{len(lines)} | {100 * g['cer']:.1f}% | {100 * g['wer']:.1f}% | "
+        rows.append(f"| {name} | {s['so_dong']}/{len(lines)} | **{max(0.0, 100 - 100 * c['cer']):.1f}%** | "
+                    f"**{max(0.0, 100 - 100 * c['wer']):.1f}%** | {100 * g['cer']:.1f}% | {100 * g['wer']:.1f}% | "
                     f"{100 * c['cer']:.1f}% | {100 * c['wer']:.1f}% | {100 * c['cer_dong']:.1f}% | {d['tb']:.2f} | "
                     f"{d['dai_x1_5']} | {d['ngan_x0_5']} |")
-    rows += ["", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
+    rows += ["", "đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. "
+             "Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).",
+             "", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
              "· baseline Qwen3-VL-8B LoRA 36,8% / 69,1%."]
     (out / "tom_tat.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
     (out / "tom_tat.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -172,6 +250,7 @@ def main() -> int:
     def checkpoint(note: str, force: bool = False) -> None:
         if sync and (force or sync.due()):
             write_summary(out, lines, names, a.split, note)
+            write_details(out, lines, names, html_too=force)  # html (có ảnh, vài MB) chỉ khi xong một model
             sync.push(note)
 
     for name in names:
@@ -199,6 +278,8 @@ def main() -> int:
         free_cuda()
         checkpoint(f"xong {name}", force=True)
     print(write_summary(out, lines, names, a.split, "xong"))
+    write_details(out, lines, names, html_too=True)
+    print(f"Từng dòng: {out / 'chi_tiet.csv'}  ·  {out / 'xem_ket_qua.html'}")
     checkpoint("XONG tất cả", force=True)
     return 0
 

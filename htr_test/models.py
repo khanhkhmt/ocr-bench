@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import threading
 import time
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -93,7 +94,7 @@ class ArTrOCR:
         from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 
         t = time.time()
-        self.processor = TrOCRProcessor.from_pretrained(self.REPO)
+        self.processor = self._processor(TrOCRProcessor)
         model = VisionEncoderDecoderModel.from_pretrained(self.REPO).to(self.device)
         # như tác giả: bật nội suy vị trí (ảnh 512×102 khác kích thước lúc tiền huấn luyện)
         model.config.encoder.interpolate_pos_encoding = True
@@ -109,6 +110,30 @@ class ArTrOCR:
         self.model = model
         self.load_s = round(time.time() - t, 1)
         return self
+
+    def _processor(self, TrOCRProcessor):
+        """Repo lưu bằng transformers 5 (tokenizer_class "TokenizersBackend" — bản 4.56.1 của venv dots không có).
+        Bản 5 đọc được thẳng; bản 4 thì dựng lại từ đúng các file đó: tokenizer.json (BPE byte-level kiểu RoBERTa
+        + chữ Ả Rập thêm vào) và ảnh theo processor_config.json (không resize, chuẩn hoá 0,5 / 0,5)."""
+        try:
+            return TrOCRProcessor.from_pretrained(self.REPO)
+        except ValueError as e:
+            if "TokenizersBackend" not in str(e):
+                raise
+        import json
+
+        from huggingface_hub import hf_hub_download
+        from transformers import PreTrainedTokenizerFast, ViTImageProcessor
+
+        cfg = json.loads(Path(hf_hub_download(self.REPO, "tokenizer_config.json")).read_text())
+        tok = PreTrainedTokenizerFast(
+            tokenizer_file=hf_hub_download(self.REPO, "tokenizer.json"),
+            **{k: cfg[k] for k in ("bos_token", "eos_token", "unk_token", "sep_token", "pad_token", "cls_token",
+                                   "mask_token", "model_max_length", "padding_side") if k in cfg})
+        ip = json.loads(Path(hf_hub_download(self.REPO, "processor_config.json")).read_text())["image_processor"]
+        img = ViTImageProcessor(**{k: ip[k] for k in ("do_resize", "size", "resample", "do_rescale", "rescale_factor",
+                                                      "do_normalize", "image_mean", "image_std") if k in ip})
+        return TrOCRProcessor(image_processor=img, tokenizer=tok)
 
     @staticmethod
     def prep(img: Image.Image) -> np.ndarray:

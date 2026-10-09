@@ -209,11 +209,27 @@ class BaseerNakba:
         if self.quant4:  # chỉ khi thiếu VRAM (không phải cách tác giả chạy)
             kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                                            bnb_4bit_compute_dtype=dtype)
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.REPO, **kw).eval()
+        from transformers import AutoConfig
+
+        cfg = self._fix_config(AutoConfig.from_pretrained(self.REPO))
+        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.REPO, config=cfg, **kw).eval()
         self.processor = AutoProcessor.from_pretrained(self.REPO, min_pixels=28 * 28, max_pixels=1280 * 28 * 28)
         self.processor.tokenizer.padding_side = "left"
         self.load_s = round(time.time() - t, 1)
         return self
+
+    TOKEN_KEYS = ("image_token_id", "video_token_id", "vision_start_token_id", "vision_end_token_id", "vision_token_id")
+
+    @classmethod
+    def _fix_config(cls, cfg):
+        """Repo trộn bằng mergekit + lưu bằng transformers 4.57: các mã token ảnh CHỈ nằm trong text_config; bản 4.56.1
+        (venv dots) đọc ở cấp ngoài → AttributeError 'vision_start_token_id'. Chép giá trị (không đổi) ra ngoài."""
+        tc = getattr(cfg, "text_config", None)
+        for k in cls.TOKEN_KEYS:
+            v = getattr(tc, k, None) if tc is not None else None
+            if v is not None and getattr(cfg, k, None) is None:
+                setattr(cfg, k, v)
+        return cfg
 
     def read(self, lines: list[Image.Image], batch: int = 8) -> list[str]:
         if self.model is None:

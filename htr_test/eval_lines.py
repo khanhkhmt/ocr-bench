@@ -64,17 +64,17 @@ def load_lines(data: str | None, split: str) -> list[tuple[str, Image.Image, str
     return out
 
 
-def make_reader(name: str, gpu: int):
+def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 16):
     """→ hàm(list ảnh) → list chữ."""
     dev = f"cuda:{gpu}" if gpu >= 0 else "cpu"
     if name == "baseer":
         from htr_test.models import BaseerNakba
-        m = BaseerNakba(device=dev).load()
-        return m.read
+        m = BaseerNakba(device=dev, dtype=dtype).load()
+        return lambda ims: m.read(ims, batch=batch)
     if name in ("ketaba", "sherif"):
         from htr_test.models import KetabaOCR
-        m = KetabaOCR(device=dev).load()
-        return lambda ims: m.read(ims, use_lora=(name == "ketaba"))
+        m = KetabaOCR(device=dev, dtype=dtype).load()
+        return lambda ims: m.read(ims, use_lora=(name == "ketaba"), batch=batch)
     if name == "trocr":
         from htr_test.models import ArTrOCR
         m = ArTrOCR(device=dev).load()
@@ -233,6 +233,8 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=0, help="0 = cả tập; >0 = lấy ngẫu nhiên (cố định, seed 0) n dòng")
     ap.add_argument("--gpu", type=int, default=0, help="-1 = CPU (chỉ để thử)")
     ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"],
+                    help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
     ap.add_argument("--push-every", type=float, default=10, help="phút giữa 2 lần đẩy khi đang chấm")
     a = ap.parse_args()
@@ -263,7 +265,7 @@ def main() -> int:
             print(f"== {name}: đã chấm đủ {len(lines)} dòng", flush=True)
             continue
         t0 = time.time()
-        read = make_reader(name, a.gpu)
+        read = make_reader(name, a.gpu, a.dtype, a.batch)
         print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
         t0 = time.time()
         with open(f, "a", encoding="utf-8") as fo:

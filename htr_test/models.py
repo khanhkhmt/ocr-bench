@@ -27,13 +27,20 @@ def _bf16_ok() -> bool:
     return torch.cuda.is_available() and torch.cuda.get_device_capability()[0] >= 8
 
 
+def resolve_dtype(name: str = "auto") -> torch.dtype:
+    """auto = bf16 nếu GPU hỗ trợ (Ampere+), không thì fp16 (T4). fp32 = chính xác số học nhất (chậm, tốn gấp đôi VRAM)."""
+    if name == "auto":
+        return torch.bfloat16 if _bf16_ok() else torch.float16
+    return {"fp16": torch.float16, "bf16": torch.bfloat16, "fp32": torch.float32}[name]
+
+
 class KetabaOCR:
     BASE = "sherif1313/Arabic-English-handwritten-OCR-v3"
     LORA = "HassanB4/Ketaba-OCR-LoRA"
     PROMPT = "اقرأ النص الموجود في الصورة:"
 
-    def __init__(self, quant4: bool = True, device: str = "cuda:0", max_new_tokens: int = 512):
-        self.quant4, self.device, self.max_new_tokens = quant4, device, max_new_tokens
+    def __init__(self, quant4: bool = True, device: str = "cuda:0", max_new_tokens: int = 512, dtype: str = "auto"):
+        self.quant4, self.device, self.max_new_tokens, self.dtype = quant4, device, max_new_tokens, dtype
         self.model = self.processor = None
 
     def load(self):
@@ -45,9 +52,11 @@ class KetabaOCR:
         if self.quant4:  # như tác giả: 4-bit NF4, double quant (T4 không có bf16 → tính toán fp16)
             kw["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
-                bnb_4bit_compute_dtype=torch.bfloat16 if _bf16_ok() else torch.float16)
+                bnb_4bit_compute_dtype=resolve_dtype(self.dtype))
+            if self.dtype == "fp32":  # phần không lượng tử hoá (vision, norm...) cũng fp32
+                kw["torch_dtype"] = torch.float32
         else:
-            kw["torch_dtype"] = torch.float16
+            kw["torch_dtype"] = resolve_dtype(self.dtype)
         model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.BASE, **kw)
         model = PeftModel.from_pretrained(model, self.LORA)
         model.lm_head.weight = model.model.language_model.embed_tokens.weight  # sửa ràng buộc trọng số (tác giả)
@@ -196,15 +205,15 @@ class BaseerNakba:
                 "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{p}<|im_end|>\n"
                 "<|im_start|>assistant\n")
 
-    def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128):
-        self.device, self.quant4, self.max_new_tokens = device, quant4, max_new_tokens
+    def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto"):
+        self.device, self.quant4, self.max_new_tokens, self.dtype = device, quant4, max_new_tokens, dtype
         self.model = self.processor = None
 
     def load(self):
         from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
 
         t = time.time()
-        dtype = torch.bfloat16 if _bf16_ok() else torch.float16  # T4 không có bf16 → fp16
+        dtype = resolve_dtype(self.dtype)  # auto: T4 không có bf16 → fp16 (tác giả chạy bf16 trên H100)
         kw = {"device_map": {"": self.device}, "torch_dtype": dtype}
         if self.quant4:  # chỉ khi thiếu VRAM (không phải cách tác giả chạy)
             kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",

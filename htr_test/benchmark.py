@@ -40,8 +40,12 @@ MODEL_INFO = {
 CONG_BO = {"baseer": "7,9% / 24,4%", "ketaba": "9,4% / 30,0%"}  # CER/WER corpus, 2.671 dòng blind_test (bảng NAKBA)
 
 
-def write_benchmark(root: Path, models: list[str], n: int, note: str) -> Path:
-    out = root / "htr_benchmark"
+def bench_dir(tag: str = "") -> str:
+    return f"htr_benchmark_{tag}" if tag else "htr_benchmark"
+
+
+def write_benchmark(root: Path, models: list[str], n: int, note: str, tag: str = "") -> Path:
+    out = root / bench_dir(tag)
     out.mkdir(parents=True, exist_ok=True)
     res = {}
     for key, ds in DATASETS.items():
@@ -98,8 +102,8 @@ def write_benchmark(root: Path, models: list[str], n: int, note: str) -> Path:
           "- Model ĐÃ HỌC bộ nào thì điểm trên bộ đó có thể cao hơn thực tế (xem mục Model). Omar blind_test là tập ẩn "
           "của cuộc thi — không model nào học.",
           f"- Cỡ mẫu: {'cả tập' if not n else f'{n} dòng ngẫu nhiên cố định mỗi bộ'}. "
-          "Từng dòng (ảnh, nhãn, chữ từng model, % đúng): `htr_eval/xem_ket_qua.html`, `htr_eval_muharaf/xem_ket_qua.html`"
-          " và `chi_tiet.csv` cùng thư mục (nhánh results-htr)."]
+          "Từng dòng (ảnh, nhãn, chữ từng model, % đúng): " + ", ".join(f"`{ds['out']}/xem_ket_qua.html`" for ds in DATASETS.values())
+          + " và `chi_tiet.csv` cùng thư mục (nhánh results-htr)."]
     md = out / "BENCHMARK_HTR.md"
     md.write_text("\n".join(L) + "\n", encoding="utf-8")
     (out / "BENCHMARK_HTR.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -114,19 +118,25 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=0)
     ap.add_argument("--gpu", type=int, default=0)
     ap.add_argument("--omar-data", default=None, help="thư mục Omar đã tách (mặc định: tải thẳng từ HF)")
+    ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"])
+    ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--tag", default="", help="hậu tố thư mục kết quả (vd. fp32) → lần chạy mới, KHÔNG dùng lại kết quả cũ")
     ap.add_argument("--push", action="store_true")
     a = ap.parse_args()
+    if a.tag:
+        for ds in DATASETS.values():
+            ds["out"] = f"{ds['out']}_{a.tag}"
     root = Path(a.root)
     models = [m.strip() for m in a.models.split(",") if m.strip()]
     dsets = [d.strip() for d in a.datasets.split(",") if d.strip()]
     sync = None
     if a.push:
         from htr_test.sync import Sync
-        sync = Sync(root / "htr_benchmark")
+        sync = Sync(root / bench_dir(a.tag))
         sync.restore()
 
     def publish(note: str) -> None:
-        md = write_benchmark(root, models, a.n, note)
+        md = write_benchmark(root, models, a.n, f"{note} · dtype {a.dtype} · batch {a.batch}", a.tag)
         print(f"✔ BENCHMARK: {md} — {note}", flush=True)
         if sync:
             sync.push(note)
@@ -142,7 +152,8 @@ def main() -> int:
             ds = DATASETS[k]
             data = (str(root / ds["data"]) if ds["data"] else a.omar_data)
             cmd = [sys.executable, "-m", "htr_test.eval_lines", "--out", str(root / ds["out"]), "--models", m,
-                   "--split", ds["split"], "--n", str(a.n), "--gpu", str(a.gpu)]
+                   "--split", ds["split"], "--n", str(a.n), "--gpu", str(a.gpu), "--dtype", a.dtype,
+                   "--batch", str(a.batch)]
             if data:
                 cmd += ["--data", data]
             if a.push:
@@ -154,7 +165,7 @@ def main() -> int:
                 return r.returncode
             publish(f"xong {m} × {ds['ten']}")
     publish("XONG TẤT CẢ")
-    print((root / "htr_benchmark" / "BENCHMARK_HTR.md").read_text(encoding="utf-8"))
+    print((root / bench_dir(a.tag) / "BENCHMARK_HTR.md").read_text(encoding="utf-8"))
     return 0
 
 

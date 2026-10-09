@@ -1,10 +1,10 @@
 # Dòng chữ viết tay Omar Al-Saleh — test (500 dòng)
 
-Cập nhật: 2026-10-09 04:35 UTC — đang chấm baseer 384/500
+Cập nhật: 2026-10-09 04:38 UTC — xong baseer
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| baseer | 384/500 | **79.3%** | **54.7%** | 23.4% | 53.5% | 20.7% | 45.3% | 23.8% | 1.02 | 2 | 8 |
+| baseer | 500/500 | **79.1%** | **55.0%** | 23.6% | 53.3% | 20.9% | 45.0% | 22.3% | 1.01 | 2 | 9 |
 
 đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).
 

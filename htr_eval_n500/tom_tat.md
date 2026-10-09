@@ -1,10 +1,10 @@
 # Dòng chữ viết tay Omar Al-Saleh — blind_test (500 dòng)
 
-Cập nhật: 2026-10-09 05:56 UTC — đang chấm ketaba 176/500
+Cập nhật: 2026-10-09 06:10 UTC — đang chấm ketaba 208/500
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| ketaba | 176/500 | **93.4%** | **78.8%** | 8.9% | 29.6% | 6.6% | 21.2% | 6.2% | 1.00 | 0 | 0 |
+| ketaba | 208/500 | **93.3%** | **78.9%** | 9.0% | 29.9% | 6.7% | 21.1% | 6.2% | 1.00 | 0 | 0 |
 
 đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).
 

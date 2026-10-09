@@ -10,7 +10,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 3. ✅ Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
 5. ✅ Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
-6. Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
+6. ✅ Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
 7. Khối công chứng Hebrew
 8. Ghép kết quả chữ tay vào DOCX A/B
 
@@ -81,3 +81,23 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
   thứ hai" độc lập cho so khớp (chủ đề 3) — không bịa câu trôi chảy, chạy CPU được.
 - Nguồn: Qwen LICENSE (link trên) · https://aclanthology.org/2026.nakbanlp-1.7/ · https://huggingface.co/Misraj/Baseer__Nakba
   · https://huggingface.co/ericmrib/math-ocr · https://huggingface.co/NAMAA-Space/Qari-OCR-0.4.0-VL-4B-Instruct
+
+### 2026-10-09 15:45 ICT — Chủ đề 6: con dấu / chữ ký / vân tay đè lên chữ
+- Xoá dấu kiểu cổ điển (không cần huấn luyện): chiếu màu điểm ảnh lên thành phần chính trong HSV + ngưỡng Otsu tách dấu
+  khỏi chữ, rồi đóng hình thái học nối lại nét bị đứt (Springer, "Colored Rubber Stamp Removal").
+- Học sâu: U-Net hay để lại vệt dấu; GAN (SERGAN, UNet bất đối xứng + PatchGAN — ACM 2025); khuếch tán (diffusion) cho kết
+  quả sạch nhất (PSNR 44,7 — ScienceDirect 2024; bản 2026 đề xuất thước đo EA-RMSE). Khó nhất: dấu MÀU NHẠT, gần màu mực.
+  DocRevive (arXiv 2604.10077): khôi phục chữ bị che, có lớp thử nghiệm "Stamp" (dấu bán trong suốt).
+- Chữ ký đè chữ in: SignaTR6K (ICCV 2023) — 200 mẫu giấy tờ PHÁP LÝ thật, gán nhãn từng điểm ảnh (chữ ký / chữ tay / chữ in,
+  CHỒNG nhau được); tải qua Microsoft Forms (forms.office.com/r/2a5RDg7cAY) — cần người dùng điền.
+- Lưu ý từ chủ đề trước: VLM bị HẠI khi sửa ảnh mạnh (nhị phân, khử nhiễu) → xoá dấu phải có kiểm chứng bằng CER.
+- **Đề xuất áp dụng**:
+  - Khối ĐÁNH MÁY (mực đen) bị dấu / vân tay MÀU (tím, xanh) đè: lọc theo độ bão hoà màu (giữ điểm ảnh tối, ít màu) TRƯỚC khi
+    dots đọc — tách màu dễ vì khác hẳn màu mực.
+  - Khối VIẾT TAY bút bi XANH: KHÔNG lọc màu (dấu xanh trùng màu mực → xoá luôn chữ); dựa vào so khớp 2 model (chủ đề 3) để
+    đánh dấu chỗ đáng ngờ.
+  - Kiểm chứng khi server sống lại: chồng dấu / vân tay giả (màu, bán trong suốt) lên dòng chữ in tự tạo và dòng Omar →
+    đo CER của dots / model chữ tay khi có và không có bước lọc màu.
+- Nguồn: https://link.springer.com/content/pdf/10.1007/978-3-642-45062-4_75.pdf ·
+  https://www.sciencedirect.com/science/article/abs/pii/S0045790624006657 · https://dl.acm.org/doi/10.1145/3772128.3772162 ·
+  https://arxiv.org/html/2604.10077v2 · https://arxiv.org/abs/2307.07887

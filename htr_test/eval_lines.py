@@ -64,7 +64,7 @@ def load_lines(data: str | None, split: str) -> list[tuple[str, Image.Image, str
     return out
 
 
-def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 16):
+def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1):
     """→ hàm(list ảnh) → list chữ."""
     dev = f"cuda:{gpu}" if gpu >= 0 else "cpu"
     if name == "baseer":
@@ -232,7 +232,9 @@ def main() -> int:
     ap.add_argument("--split", default="blind_test")
     ap.add_argument("--n", type=int, default=0, help="0 = cả tập; >0 = lấy ngẫu nhiên (cố định, seed 0) n dòng")
     ap.add_argument("--gpu", type=int, default=0, help="-1 = CPU (chỉ để thử)")
-    ap.add_argument("--batch", type=int, default=16)
+    ap.add_argument("--batch", type=int, default=16, help="số dòng mỗi lần ghi file / báo tiến độ")
+    ap.add_argument("--model-batch", type=int, default=1,
+                    help="số ảnh model đọc cùng lúc (baseer/ketaba). 1 = đúng; >1 làm Qwen2.5-VL dừng sớm (xem models.py)")
     ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"],
                     help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
@@ -265,7 +267,7 @@ def main() -> int:
             print(f"== {name}: đã chấm đủ {len(lines)} dòng", flush=True)
             continue
         t0 = time.time()
-        read = make_reader(name, a.gpu, a.dtype, a.batch)
+        read = make_reader(name, a.gpu, a.dtype, a.model_batch)
         print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
         t0 = time.time()
         with open(f, "a", encoding="utf-8") as fo:

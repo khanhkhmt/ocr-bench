@@ -67,7 +67,9 @@ class KetabaOCR:
         self.load_s = round(time.time() - t, 1)
         return self
 
-    def read(self, lines: list[Image.Image], use_lora: bool = True, batch: int = 4) -> list[str]:
+    def read(self, lines: list[Image.Image], use_lora: bool = True, batch: int = 1) -> list[str]:
+        # batch = 1 MẶC ĐỊNH: ghép nhiều ảnh dòng vào một lô (đệm trái) làm Qwen2.5-VL trên transformers 4.56.1 dừng sớm /
+        # lặp dòng — chẩn đoán 32 dòng Omar: Baseer lô 16 → 72,1% đúng ký tự, lô 1 → 91,2% (= công bố); fp16 = fp32.
         from qwen_vl_utils import process_vision_info
 
         if self.model is None:
@@ -240,7 +242,9 @@ class BaseerNakba:
                 setattr(cfg, k, v)
         return cfg
 
-    def read(self, lines: list[Image.Image], batch: int = 8) -> list[str]:
+    def read(self, lines: list[Image.Image], batch: int = 1) -> list[str]:
+        # batch = 1 MẶC ĐỊNH: ghép nhiều ảnh dòng vào một lô (đệm trái) làm Qwen2.5-VL trên transformers 4.56.1 dừng sớm /
+        # lặp dòng — chẩn đoán 32 dòng Omar: Baseer lô 16 → 72,1% đúng ký tự, lô 1 → 91,2% (= công bố); fp16 = fp32.
         if self.model is None:
             self.load()
         out = []

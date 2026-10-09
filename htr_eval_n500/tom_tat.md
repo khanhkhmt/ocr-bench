@@ -1,6 +1,6 @@
 # Dòng chữ viết tay Omar Al-Saleh — blind_test (500 dòng)
 
-Cập nhật: 2026-10-09 04:23 UTC — xong baseer
+Cập nhật: 2026-10-09 04:23 UTC — XONG tất cả
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|

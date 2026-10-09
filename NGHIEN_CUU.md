@@ -16,6 +16,8 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 9. ✅ Tách dòng bằng Kraken + model Muharaf trong htr_test/lines.py (cắt theo đa giác) — làm code, thử trên máy
 10. ✅ Gắn danh_dau vào web / DOCX A: khối viết tay = model chữ tay + dots đọc song song → tô vàng chỗ lệch
 11. [cần GPU] Ứng viên THƯƠNG MẠI chạy sẵn: Qari-OCR 0.4 (Qwen3-VL-4B, Apache) trên Omar + Muharaf
+13. Bộ tạo dòng ĐÁNH MÁY cũ tổng hợp (phông kiểu máy chữ — Amiri Typewriter…, làm cũ, dấu giả) — CPU
+14. Phân loại dòng tay / máy bằng CNN nhỏ (CPU): tay = Omar + Muharaf, máy = chủ đề 13; kiểm định giữ riêng 1 nguồn
 12. [cần GPU] dots trên 30 dòng Hebrew tự tạo (so với Kraken 99,6%); chồng dấu giả → đo lọc màu (chủ đề 6)
 
 ## Kết quả

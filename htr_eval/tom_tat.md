@@ -1,10 +1,10 @@
 # Dòng chữ viết tay Omar Al-Saleh — blind_test (2671 dòng)
 
-Cập nhật: 2026-10-09 02:54 UTC — đang chấm baseer 16/2671
+Cập nhật: 2026-10-09 03:04 UTC — đang chấm baseer 1296/2671
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| baseer | 16/2671 | **67.3%** | **53.2%** | 36.5% | 58.9% | 32.7% | 46.8% | 33.6% | 0.86 | 1 | 3 |
+| baseer | 1296/2671 | **72.4%** | **58.5%** | 30.1% | 50.5% | 27.6% | 41.5% | 34.0% | 0.91 | 19 | 224 |
 
 đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).
 

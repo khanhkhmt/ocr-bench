@@ -13,7 +13,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 6. ✅ Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
 7. ✅ Khối công chứng Hebrew
 8. ✅ Ghép kết quả chữ tay vào DOCX A/B
-9. Tách dòng bằng Kraken + model Muharaf trong htr_test/lines.py (cắt theo đa giác) — làm code, thử trên máy
+9. ✅ Tách dòng bằng Kraken + model Muharaf trong htr_test/lines.py (cắt theo đa giác) — làm code, thử trên máy
 10. Gắn danh_dau vào web / DOCX A: khối viết tay = model chữ tay + dots đọc song song → tô vàng chỗ lệch
 11. [cần GPU] Ứng viên THƯƠNG MẠI chạy sẵn: Qari-OCR 0.4 (Qwen3-VL-4B, Apache) trên Omar + Muharaf
 12. [cần GPU] dots trên 30 dòng Hebrew tự tạo (so với Kraken 99,6%); chồng dấu giả → đo lọc màu (chủ đề 6)
@@ -130,3 +130,12 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 - DOCX mẫu (dữ liệu công khai Omar) đã gửi người dùng.
 - **Đề xuất áp dụng**: DOCX A — khối viết tay = chữ model chữ tay, tô vàng chỗ lệch với bộ đọc thứ hai; DOCX B — giữ
   nguyên bố cục, cùng tô vàng (chú thích có thể bỏ để không lệch bố cục). Gắn vào web: chủ đề 10.
+
+### 2026-10-09 17:10 ICT — Chủ đề 9: tách dòng Kraken + Muharaf trong web (làm code, commit 3cd9d67)
+- lines.py: tách dòng CẢ TRANG bằng Kraken + model Muharaf → gán vào khối dots theo tâm chân chữ → cắt ảnh dòng theo
+  ĐA GIÁC (ngoài đa giác tô màu giấy). Web dùng mặc định; không có Kraken hoặc khối không có dòng → chiếu ngang.
+- Kiểm tra trên 4 "trang giả" (xếp lại dòng THẬT của 4 trang Muharaf test, 69 dòng): mỗi dòng thật được đúng 1 dòng
+  tách ra — **Kraken+Muharaf 87%** (60/69), chiếu ngang 71% (49/69). Trang giả có dòng thẳng, cách đều → có lợi cho chiếu
+  ngang; trên trang thật (dòng cong / nghiêng, giấy kẻ) cách biệt dự kiến lớn hơn (xem chủ đề 1).
+  Lỗi còn lại của Kraken: dòng ngắn / dòng đã cắt sẵn bị tách đôi (trang MG1_045_02v: 8 dòng → 14).
+- cai_kraken.sh: venv riêng, torch CPU, tải model; khoi_phuc.sh tự gọi khi dựng lại server.

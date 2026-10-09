@@ -71,6 +71,10 @@ def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba
         from htr_test.models import BaseerNakba
         m = BaseerNakba(device=dev, dtype=dtype).load()
         return lambda ims: m.read(ims, batch=batch)
+    if name == "ketaba16":  # Ketaba nền fp16 (không nén 4-bit) + cùng adapter — tên riêng để không trộn với "ketaba" (4-bit)
+        from htr_test.models import KetabaOCR
+        m = KetabaOCR(device=dev, dtype=dtype, quant4=False).load()
+        return lambda ims: m.read(ims, use_lora=True, batch=batch)
     if name in ("ketaba", "sherif"):
         from htr_test.models import KetabaOCR
         m = KetabaOCR(device=dev, dtype=dtype, quant4=(ketaba_mode == "q4")).load()
@@ -91,7 +95,7 @@ def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba
                 out.append((conv.adapter.predict(img, item).text or "").strip())
             return out
         return read
-    raise SystemExit(f"model lạ: {name} (có: baseer, ketaba, sherif, trocr, dots)")
+    raise SystemExit(f"model lạ: {name} (có: baseer, ketaba, ketaba16, sherif, trocr, dots)")
 
 
 def score(pairs: list[tuple[str, str]]) -> dict:

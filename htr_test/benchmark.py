@@ -33,11 +33,12 @@ DATASETS = {
 MODEL_INFO = {
     "baseer": "Baseer-Nakba (Misraj) — hạng 1 NAKBA 2026 · CC BY-NC-SA (phi thương mại) · ĐÃ HỌC Muharaf + Omar train/test",
     "ketaba": "Ketaba-OCR (LoRA 4-bit trên sherif) — hạng 3 NAKBA · Apache 2.0 · ĐÃ HỌC Omar train/test",
+    "ketaba16": "Ketaba-OCR, model nền fp16 (KHÔNG nén 4-bit) + cùng adapter — nhanh hơn trên T4 · Apache 2.0",
     "sherif": "sherif gốc (Ketaba tắt LoRA) · Apache 2.0",
     "trocr": "ArTrOCR-HTR (TrOCR, KHATT) · Apache 2.0",
     "dots": "dots.mocr chế độ 'Chỉ chữ' — model đang dùng cho bố cục + khối đánh máy (mốc so sánh)",
 }
-CONG_BO = {"baseer": "7,9% / 24,4%", "ketaba": "9,4% / 30,0%"}  # CER/WER corpus, 2.671 dòng blind_test (bảng NAKBA)
+CONG_BO = {"baseer": "7,9% / 24,4%", "ketaba": "9,4% / 30,0%", "ketaba16": "9,4% / 30,0% (bản 4-bit)"}  # CER/WER corpus, 2.671 dòng blind_test (bảng NAKBA)
 
 
 def bench_dir(tag: str = "") -> str:
@@ -56,6 +57,8 @@ def write_benchmark(root: Path, models: list[str], n: int, note: str, tag: str =
         csv_f = root / ds["out"] / "chi_tiet.csv"
         if csv_f.exists():
             tong[k] = sum(1 for _ in open(csv_f, encoding="utf-8-sig")) - 1
+
+    models = list(dict.fromkeys([*models, *(m for r in res.values() for m in r)]))  # cả model đã chấm ở lần chạy trước
 
     def cell(key, m, field):
         s = res[key].get(m)

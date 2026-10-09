@@ -22,6 +22,7 @@ import gradio as gr
 from PIL import Image, ImageDraw
 
 from .lines import assign_to_blocks, crop_poly, kraken_page, split_lines
+from .xuat_docx import xuat_docx
 from .models import ArTrOCR, BaseerNakba, KetabaOCR, free_cuda
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -206,7 +207,25 @@ def run_page(file, page_no, models, dots_mode, seg_method, progress=gr.Progress(
     f = Path(tempfile.mkdtemp(prefix="htr_")) / "ket_qua.json"
     f.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     (f.parent / "ket_qua.txt").write_text(txt, encoding="utf-8")
-    return draw_img, out_html, txt, [str(f), str(f.parent / "ket_qua.txt")]
+    files = [str(f), str(f.parent / "ket_qua.txt")]
+    # DOCX: chữ tay = model chữ tay chọn ĐẦU TIÊN; tô vàng chỗ model chọn THỨ HAI (không có thì dots) đọc khác
+    per = {m: {bi: "\n".join(res[m][n] for n, j in enumerate(jobs) if j[0] == bi) for bi in range(len(blocks))}
+           for m in models}
+    chinh = models[0]
+    if len(models) > 1:
+        ten_phu, phu = models[1], per[models[1]]
+    elif dots_mode == DOTS_FULL:
+        ten_phu, phu = "dots", {bi: b.get("text") or "" for bi, b in enumerate(blocks)}
+    else:
+        ten_phu, phu = None, {}
+    try:
+        st = xuat_docx(f.parent / "ket_qua_chu_tay.docx", blocks, per[chinh], phu, chinh, ten_phu, image=img)
+        files.append(str(f.parent / "ket_qua_chu_tay.docx"))
+        out_html = (f"<p class=meta>DOCX: chữ tay = {html.escape(chinh)}; tô vàng {st['từ_ngờ']}/{st['từ']} từ "
+                    f"({html.escape(ten_phu or 'không có bộ đọc thứ hai')} đọc khác)</p>") + out_html
+    except Exception as e:  # noqa: BLE001 — DOCX lỗi không được làm mất kết quả so sánh
+        out_html = f"<p class=meta>DOCX lỗi: {html.escape(str(e))}</p>" + out_html
+    return draw_img, out_html, txt, files
 
 
 def run_line(image, models):

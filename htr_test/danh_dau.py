@@ -16,9 +16,9 @@ from docx.enum.text import WD_COLOR_INDEX
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
-_HARAKAT = re.compile(r"[ً-ْٰـ]")
+_HARAKAT = re.compile(r"[\u064B-\u0652\u0670\u0640]")
 _ALEF = str.maketrans({"أ": "ا", "إ": "ا", "آ": "ا", "ٱ": "ا", "ى": "ي", "ة": "ه"})
-_PUNCT = re.compile(r"[\s\.\,\:\;\!\?\(\)\[\]\"'«»،؛؟\-–—]+")
+_PUNCT = re.compile(r"[\s\.\,\:\;\!\?\(\)\[\]\"'«»،؛؟\-–—#\*_|]+")  # + dấu Markdown của dots
 
 
 def _key(w: str) -> str:

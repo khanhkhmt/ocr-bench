@@ -7,7 +7,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 ## Hàng đợi chủ đề (mỗi lần kiểm tra ~25 phút làm 1 chủ đề)
 1. ✅ Tách DÒNG chữ tay trong khối dots (hiện: chiếu ngang — thô) → model / thuật toán tốt hơn?
 2. ✅ Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
-3. Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
+3. ✅ Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
 5. Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
 6. Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
@@ -46,3 +46,19 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
       (Amiri Typewriter…) + bộ chữ in công khai (medyas 500k, CC BY-SA); kiểm định chéo theo NGUỒN (giữ hẳn 1 nguồn ra).
 - Nguồn: http://www.jatit.org/volumes/Vol102No10/3Vol102No10.pdf ·
   https://www.primaresearch.org/www/assets/papers/PR2013_Zagoris_BagOfVisualWords.pdf · https://arxiv.org/pdf/2503.17213
+
+### 2026-10-09 14:50 ICT — Chủ đề 3: phát hiện chữ bịa / đọc sai bằng SO KHỚP 2 model
+- Thử trên 240 dòng Omar blind_test mà cả Baseer và Ketaba đã đọc (có nhãn thật):
+  - Hai model GẦN NHƯ TRÙNG (lệch ≤ 3% ký tự, 87 dòng = 36%): Baseer đúng TB **98,7%**; khi lệch: 91,2%.
+  - Đánh dấu dòng có lệch > 5%: bắt **100%** dòng Baseer sai > 10% (48/48), đánh dấu 50% số dòng (40% là sai thật).
+    Lệch > 12%: bắt 67%, đánh dấu 17% số dòng (78% là sai thật).
+  - Mức TỪ: đánh dấu từ Baseer đọc mà Ketaba không có → bắt **78% từ sai**, 65% từ bị đánh dấu là sai thật,
+    chỉ đánh dấu 22% tổng số từ.
+- Tài liệu cùng hướng: ROVER / bỏ phiếu nhiều hệ (2 đội NAKBA dùng bỏ phiếu ký tự/từ); đọc nhiều biến thể ảnh + căn
+  chỉnh Needleman-Wunsch → độ tin cậy (arXiv 2509.09722); đầu dò trạng thái ẩn để từ chối (2511.19806); huấn luyện
+  model biết từ chối khi ảnh mờ (Seeing is Believing, NeurIPS 2025, 2506.20168); bài Uruguay (2607.24077) đề xuất
+  kết hợp nhiều hệ vì VLM thay tên/ngày mà CER không thấy.
+- **Đề xuất áp dụng vào luồng chính** (rẻ, có số chứng minh): mỗi dòng chữ tay đọc bằng 2 model ĐỘC LẬP (vd. Ketaba +
+  dots, hoặc Ketaba + Baseer khi được phép); dòng trùng → tin; từ lệch → TÔ VÀNG trong DOCX A (người kiểm chỉ cần xem
+  ~1/5 số từ, bắt ~4/5 lỗi). Cần đo lại với cặp có dots khi benchmark dots xong (dots khác họ model → có thể bắt lỗi tốt hơn).
+  Chưa thử: độ tự tin theo token (xác suất trong generate) — để chủ đề sau.

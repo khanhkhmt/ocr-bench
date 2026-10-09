@@ -14,7 +14,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 7. ✅ Khối công chứng Hebrew
 8. ✅ Ghép kết quả chữ tay vào DOCX A/B
 9. ✅ Tách dòng bằng Kraken + model Muharaf trong htr_test/lines.py (cắt theo đa giác) — làm code, thử trên máy
-10. Gắn danh_dau vào web / DOCX A: khối viết tay = model chữ tay + dots đọc song song → tô vàng chỗ lệch
+10. ✅ Gắn danh_dau vào web / DOCX A: khối viết tay = model chữ tay + dots đọc song song → tô vàng chỗ lệch
 11. [cần GPU] Ứng viên THƯƠNG MẠI chạy sẵn: Qari-OCR 0.4 (Qwen3-VL-4B, Apache) trên Omar + Muharaf
 12. [cần GPU] dots trên 30 dòng Hebrew tự tạo (so với Kraken 99,6%); chồng dấu giả → đo lọc màu (chủ đề 6)
 
@@ -139,3 +139,11 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
   ngang; trên trang thật (dòng cong / nghiêng, giấy kẻ) cách biệt dự kiến lớn hơn (xem chủ đề 1).
   Lỗi còn lại của Kraken: dòng ngắn / dòng đã cắt sẵn bị tách đôi (trang MG1_045_02v: 8 dòng → 14).
 - cai_kraken.sh: venv riêng, torch CPU, tải model; khoi_phuc.sh tự gọi khi dựng lại server.
+
+### 2026-10-09 17:40 ICT — Chủ đề 10: web xuất DOCX chữ tay có tô vàng (làm code, commit aab815a)
+- Web (trang tài liệu) tải thêm `ket_qua_chu_tay.docx`: khối chữ = model chữ tay chọn ĐẦU TIÊN; so với bộ đọc thứ hai
+  (model chữ tay thứ hai, không có thì dots) → từ lệch tô vàng + chú thích; bảng = dots; logo / chữ ký / dấu = ảnh cắt.
+- Hạn chế: dots đọc cả khối nên khi dots là bộ đọc thứ hai, so cả khối (không theo dòng); với chữ tay giấy cũ dots đọc
+  rất kém (Muharaf: 46/240 dòng rỗng) → gần như mọi từ bị tô vàng. ⇒ Với chữ tay nên chọn HAI model chữ tay; dots làm
+  bộ đọc thứ hai cho khối ĐÁNH MÁY.
+- Chưa thử trên GPU (server ngắt): cần chạy 1 trang thật trên web để kiểm tra đầu-cuối.

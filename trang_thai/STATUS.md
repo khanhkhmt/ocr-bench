@@ -1,26 +1,39 @@
-# Trạng thái server — 2026-10-09 07:26 UTC
+# Trạng thái server — 2026-10-09 07:47 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `30e5ec664f3a` · up 5 hours, 29 minutes
+- máy: `30e5ec664f3a` · up 5 hours, 49 minutes
 - ngrok (SSH): tcp://6.tcp.ngrok.io:18183
 - code: `4380c7f htr_test: Ketaba nền fp16 — bỏ qua kiểm tra torchao của peft (Colab có torchao 0.10 cũ → ImportError)` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: overlay         113G   59G   55G  52% /
+- ổ /kaggle/working: overlay         113G   65G   49G  58% /
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
 ```
-Tesla T4, 0 MiB, 15360 MiB, 0 %
-(không có tiến trình)
+Tesla T4, 8825 MiB, 15360 MiB, 40 %
+154882, 8822 MiB, /kaggle/working/venvs/dots/bin/python
 ```
 
 ## Phiên tmux
 ```
 hop_thu: 1 windows (created Fri Oct  9 06:26:44 2026)
 htr: 1 windows (created Fri Oct  9 04:01:05 2026)
+htr_bench: 1 windows (created Fri Oct  9 07:37:33 2026)
 ```
 
-## htr_chan_doan_ketaba_fp16.log (sửa 6 phút trước)
+## htr_bench_n500.log (sửa 0 phút trước)
+```
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+```
+
+## htr_chan_doan_ketaba_fp16.log (sửa 26 phút trước)
 ```
 - **nhãn**: انهم يوافقون على قوة دولية ولا يستبدلون بالقوات الانكليزي المراقبين دوليين
   - fp16:1:fp16: أنهم لا يوافقون على قوة دولية ولا يستبدلون بالقوات الانكليزى المراقبين ووليين
@@ -32,7 +45,7 @@ htr: 1 windows (created Fri Oct  9 04:01:05 2026)
   - fp16:1:fp16: جسدها ويعترف بقتله من كل ناحية وصوب ويشعر أنه بلغ كل ما يشتهي.
 ```
 
-## htr_chan_doan_ketaba.log (sửa 39 phút trước)
+## htr_chan_doan_ketaba.log (sửa 59 phút trước)
 ```
   File "/usr/local/lib/python3.13/dist-packages/peft/tuners/lora/torchao.py", line 160, in dispatch_torchao
     if not is_torchao_available():
@@ -44,19 +57,7 @@ htr: 1 windows (created Fri Oct  9 04:01:05 2026)
 ImportError: Found an incompatible version of torchao. Found version 0.10.0, but only versions above 0.16.0 are supported
 ```
 
-## htr_bench_n500.log (sửa 64 phút trước)
-```
-   ketaba: 176/500 · 25.56 s/dòng
-✔ GITHUB: đã đẩy lên nhánh results-htr/htr_eval_n500 (commit 13c49d0) — đang chấm ketaba 176/500
-   ketaba: 192/500 · 25.77 s/dòng
-   ketaba: 208/500 · 25.52 s/dòng
-✔ GITHUB: đã đẩy lên nhánh results-htr/htr_eval_n500 (commit 8c050f6) — đang chấm ketaba 208/500
-   ketaba: 224/500 · 25.44 s/dòng
-   ketaba: 240/500 · 25.35 s/dòng
-✔ GITHUB: đã đẩy lên nhánh results-htr/htr_eval_n500 (commit 41e1d5a) — đang chấm ketaba 240/500
-```
-
-## htr_bench_lo1.log (sửa 204 phút trước)
+## htr_bench_lo1.log (sửa 224 phút trước)
 ```
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
 I0000 00:00:1791518552.124373   58405 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
@@ -68,7 +69,7 @@ I0000 00:00:1791518554.975189   58405 cudart_stub.cc:31] Could not find cuda dri
 The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
 ```
 
-## htr_chan_doan.log (sửa 248 phút trước)
+## htr_chan_doan.log (sửa 268 phút trước)
 ```
 - **nhãn**: النواب استقالت واذا نالتها تربعت في الحكم وباشرت اعمالها في حزم ورصانة اما ان الملك يطلع
   - fp16:16: الناس تربعت في الحكم وما شرت أعمالها في حرب ورحصات أما أن الملك يعلم

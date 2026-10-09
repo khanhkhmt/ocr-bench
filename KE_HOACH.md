@@ -19,6 +19,9 @@ Bảng BENCHMARK_HTR.md: % đúng ký tự của baseer, ketaba (hoặc ketaba16
    (log /kaggle/working/htr_bench_n500.log). Thứ tự: dots×Muharaf → dots×Omar (~8,9 s/dòng, ~2,5 giờ) → ketaba×Muharaf
    → ketaba×Omar (tiếp từ 240/500; ~25–34 s/dòng, ~6 giờ).
    Sập/tmux chết → chạy lại ĐÚNG lệnh trên (tự khôi phục từ GitHub).
+2b. ⚠ 14:50–14:55 COLAB NGẮT (dots×Muharaf 240/500 đã lên GitHub). Khi người dùng mở lại + cho địa chỉ ngrok
+    mới: sửa Host colab trong ~/.ssh/config, rồi `ssh colab 'bash -s' < ~/ocr-bench-htr/htr_test/khoi_phuc.sh`
+    (lấy code, hộp thư, venv, chạy tiếp benchmark từ GitHub).
 3. Khi "XONG TẤT CẢ": kiểm tra results-htr/htr_benchmark_n500/BENCHMARK_HTR.md, báo người dùng.
    Nếu quá lâu: có thể dừng sau ketaba×Muharaf (Ketaba×Omar đã có 240 dòng ≈ Baseer).
 

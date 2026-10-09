@@ -38,6 +38,8 @@ for _ in $(seq 1 90); do
 done
 grep -q "== Mở web" "$W/htr.log" || { echo "✘ start.sh chưa xong sau 15 phút — xem $W/htr.log"; exit 1; }
 grep "torch .* | transformers" "$W/htr.log" | tail -1
+echo "== Kraken + model tách dòng Muharaf (CPU, chạy nền)"
+tmux has-session -t cai_kraken 2>/dev/null || tmux new -d -s cai_kraken "cd $REPO && bash htr_test/cai_kraken.sh 2>&1 | tee $W/cai_kraken.log"
 if [ -n "$BENCH_ARGS" ] && ! tmux has-session -t htr_bench 2>/dev/null; then
   tmux new -d -s htr_bench "cd $REPO && $W/venvs/dots/bin/python -m htr_test.benchmark $BENCH_ARGS 2>&1 | tee -a $W/htr_bench_n500.log"
   echo "== benchmark: $BENCH_ARGS"

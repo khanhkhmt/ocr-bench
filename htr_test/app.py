@@ -21,7 +21,7 @@ from pathlib import Path
 import gradio as gr
 from PIL import Image, ImageDraw
 
-from .lines import split_lines
+from .lines import assign_to_blocks, crop_poly, kraken_page, split_lines
 from .models import ArTrOCR, BaseerNakba, KetabaOCR, free_cuda
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +130,13 @@ def run_page(file, page_no, models, dots_mode, seg_method, progress=gr.Progress(
     # gom mọi dòng của mọi khối chữ → mỗi model đọc một lượt (theo lô)
     jobs = []  # (chỉ số khối, hộp dòng trong trang, ảnh dòng)
     seg_used = set()
+    page_lines = None
+    if seg_method == "kraken_muharaf":  # tách dòng trên CẢ trang rồi gán vào khối dots
+        progress(0.2, desc="Kraken (model Muharaf) đang tách dòng cả trang…")
+        page_lines = kraken_page(img)
+        text_boxes = {bi: tuple(int(round(v)) for v in b["bbox"]) for bi, b in enumerate(blocks)
+                      if b.get("category") in TEXT_CATS and len(b.get("bbox") or []) == 4}
+        by_block = assign_to_blocks(page_lines, text_boxes) if page_lines else {}
     for bi, b in enumerate(blocks):
         bb = b.get("bbox")
         if not bb or len(bb) != 4:
@@ -139,8 +146,15 @@ def run_page(file, page_no, models, dots_mode, seg_method, progress=gr.Progress(
         dr.text((x0 + 4, y0 + 2), str(bi + 1), fill=(30, 90, 220))
         if b.get("category") not in TEXT_CATS or x1 - x0 < 8 or y1 - y0 < 8:
             continue
+        if page_lines and by_block.get(bi):  # khối Kraken không thấy dòng nào → chiếu ngang
+            seg_used.add("kraken_muharaf")
+            for L in by_block.get(bi, []):
+                dr.polygon(L["poly"] or [(L["box"][0], L["box"][1]), (L["box"][2], L["box"][3])],
+                           outline=(220, 40, 40), width=2)
+                jobs.append((bi, L["box"], crop_poly(img, L)))
+            continue
         crop = img.crop((x0, y0, x1, y1))
-        lines, used = split_lines(crop, seg_method)
+        lines, used = split_lines(crop, "chieu_ngang" if seg_method == "kraken_muharaf" else seg_method)
         seg_used.add(used)
         for lx0, ly0, lx1, ly1 in lines:
             box = (x0 + lx0, y0 + ly0, x0 + lx1, y0 + ly1)
@@ -219,8 +233,9 @@ def build() -> gr.Blocks:
                     page = gr.Number(value=1, precision=0, label="Trang (PDF)")
                     models = gr.CheckboxGroup(ALL_MODELS, value=[M_BASEER, M_KETABA], label="Model đọc chữ")
                     dmode = gr.Radio([DOTS_FULL, DOTS_LAYOUT], value=DOTS_FULL, label="dots")
-                    seg = gr.Radio([("Chiếu ngang (nhanh)", "chieu_ngang"), ("Kraken (nếu đã cài)", "kraken")],
-                                   value="chieu_ngang", label="Tách dòng")
+                    seg = gr.Radio([("Kraken + model Muharaf, cả trang (tốt nhất cho chữ tay)", "kraken_muharaf"),
+                                    ("Chiếu ngang (nhanh, thô)", "chieu_ngang"), ("Kraken mặc định, từng khối", "kraken")],
+                                   value="kraken_muharaf", label="Tách dòng (không có Kraken → tự dùng chiếu ngang)")
                     go = gr.Button("Chạy", variant="primary")
                     free = gr.Button("Giải phóng model đọc dòng (VRAM)")
                     msg = gr.Markdown()

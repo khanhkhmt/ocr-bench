@@ -46,8 +46,22 @@ class KetabaOCR:
         self.quant4, self.device, self.max_new_tokens, self.dtype = quant4, device, max_new_tokens, dtype
         self.model = self.processor = None
 
+    @staticmethod
+    def _peft_khong_torchao() -> None:
+        """Colab có sẵn torchao 0.10 (cũ); peft gắn adapter lên lớp KHÔNG nén thì gọi is_torchao_available() và NÉM
+        ImportError ("only versions above 0.16.0") thay vì bỏ qua. Ketaba không dùng torchao → báo peft là không có."""
+        try:
+            import peft.import_utils as iu
+            iu.is_torchao_available = lambda: False
+            import peft.tuners.lora.torchao as lt
+            lt.is_torchao_available = lambda: False
+        except Exception:  # noqa: BLE001 — bản peft khác bố cục: không cần vá
+            pass
+
     def load(self):
         from peft import PeftModel
+
+        self._peft_khong_torchao()
         from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
 
         t = time.time()

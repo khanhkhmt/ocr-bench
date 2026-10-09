@@ -14,13 +14,13 @@ Bảng BENCHMARK_HTR.md: % đúng ký tự của baseer, ketaba (hoặc ketaba16
   for fast kernel → slower implementation")
 
 ## Các bước
-1. [đang làm] Chẩn đoán Ketaba 32 dòng. q4 XONG: 91,0% đúng ký tự, 33,7 s/dòng, 0 sót/lặp. fp16 đang chạy lại
-   (tmux htr_cd, kết quả /kaggle/working/htr_chan_doan_ketaba_fp16.md) sau khi sửa lỗi torchao (commit 4380c7f).
-   14:12: fp16 vẫn chạy sau 9 phút → cũng chậm (DoRA tính lại chuẩn mỗi bước). Khi có số: áp quy tắc bước 2, VÀ chọn
-   bản nhanh hơn trong hai bản đạt chuẩn.
-2. Quy tắc (so với q4 = 91,0%): nếu fp16 ≥ 90,5% đúng ký tự VÀ dòng dài/ngắn không nhiều hơn → benchmark --tag n500 --n 500
-   --models ketaba16,dots --push. Ngược lại → --models ketaba,dots (chậm, ~6 giờ).
-3. Khi "XONG TẤT CẢ": kiểm tra htr_benchmark_n500/BENCHMARK_HTR.md trên GitHub, báo người dùng.
+1. ✅ Chẩn đoán Ketaba (32 dòng): q4 (như tác giả) 91,0% · 33,7 s/dòng; nền fp16 85,6% · 32 s/dòng → giữ q4.
+2. [đang chạy từ 14:40 ICT] tmux htr_bench: benchmark --tag n500 --n 500 --models dots,ketaba --datasets muharaf,omar --push
+   (log /kaggle/working/htr_bench_n500.log). Thứ tự: dots×Muharaf → dots×Omar (~8,9 s/dòng, ~2,5 giờ) → ketaba×Muharaf
+   → ketaba×Omar (tiếp từ 240/500; ~25–34 s/dòng, ~6 giờ).
+   Sập/tmux chết → chạy lại ĐÚNG lệnh trên (tự khôi phục từ GitHub).
+3. Khi "XONG TẤT CẢ": kiểm tra results-htr/htr_benchmark_n500/BENCHMARK_HTR.md, báo người dùng.
+   Nếu quá lâu: có thể dừng sau ketaba×Muharaf (Ketaba×Omar đã có 240 dòng ≈ Baseer).
 
 ## Luật cứng
 Token chỉ qua biến môi trường/header, không in · không pkill -f, chỉ dừng phiên do mình mở · không cài/gỡ torch/CUDA/

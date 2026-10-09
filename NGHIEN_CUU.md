@@ -5,7 +5,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 (đánh máy + Ruq'ah viết tay, giấy ố, con dấu / chữ ký đè chữ, khối công chứng Hebrew). Ưu tiên: đọc ĐÚNG, không bịa.
 
 ## Hàng đợi chủ đề (mỗi lần kiểm tra ~25 phút làm 1 chủ đề)
-1. Tách DÒNG chữ tay trong khối dots (hiện: chiếu ngang — thô) → model / thuật toán tốt hơn?
+1. ✅ Tách DÒNG chữ tay trong khối dots (hiện: chiếu ngang — thô) → model / thuật toán tốt hơn?
 2. Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
 3. Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
@@ -15,3 +15,17 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 8. Ghép kết quả chữ tay vào DOCX A/B
 
 ## Kết quả
+
+### 2026-10-09 13:45 ICT — Chủ đề 1: tách dòng chữ tay
+- **Kraken + model tách dòng Muharaf** (Zenodo 14295555, CC BY 4.0, 5 MB, `muharaf_seg_best.mlmodel`) — huấn luyện trên
+  1.600 trang Muharaf (thư từ, giấy tờ pháp lý viết tay, giấy cũ). Thử trên MÁY NGƯỜI DÙNG (CPU, ~34 s/trang) với trang
+  viết tay giấy kẻ của khách: 34 dòng, mỗi dòng thân văn bản đúng 1 vùng, đường bao ôm sát dòng cong/nghiêng; bỏ qua chữ ký.
+- Kraken mặc định (blla): 41 dòng — thân văn bản tốt, thêm mẩu chữ ký / chữ rời.
+- Chiếu ngang (web đang dùng): 33 dải — bám ĐƯỜNG KẺ GIẤY, nhiều dải cắt ngang chữ → kém nhất.
+- Khác: YOLOv5 tách dòng cho bản thảo Ả Rập (ACM 2025, doi 10.1145/3744243); Athar Segmentation v4 (Kraken, RASAM,
+  giấy phép "other"); tuỳ chọn `-r` (bỏ đường kẻ ngang) của Kraken giúp với chữ Ả Rập.
+- **Đề xuất áp dụng**: tách dòng bằng Kraken + model Muharaf trên CẢ TRANG, gán dòng vào khối dots theo phần chồng lấn;
+  cắt ảnh dòng theo ĐA GIÁC (nền ngoài đa giác tô trắng) thay vì hình chữ nhật → bớt chữ dòng trên/dưới lọt vào.
+  Chưa có số đo (không có nhãn tách dòng cho trang của khách) — đo gián tiếp bằng % đúng của model đọc sau khi tách.
+- Nguồn: https://zenodo.org/records/14295555 · https://kraken.re/main/advanced/segmentation.html ·
+  https://huggingface.co/factlogic/athar-segmentation-v4 · https://dl.acm.org/doi/10.1145/3744243

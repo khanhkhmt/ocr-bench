@@ -6,7 +6,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 
 ## Hàng đợi chủ đề (mỗi lần kiểm tra ~25 phút làm 1 chủ đề)
 1. ✅ Tách DÒNG chữ tay trong khối dots (hiện: chiếu ngang — thô) → model / thuật toán tốt hơn?
-2. Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
+2. ✅ Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
 3. Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
 5. Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
@@ -29,3 +29,20 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
   Chưa có số đo (không có nhãn tách dòng cho trang của khách) — đo gián tiếp bằng % đúng của model đọc sau khi tách.
 - Nguồn: https://zenodo.org/records/14295555 · https://kraken.re/main/advanced/segmentation.html ·
   https://huggingface.co/factlogic/athar-segmentation-v4 · https://dl.acm.org/doi/10.1145/3744243
+
+### 2026-10-09 14:12 ICT — Chủ đề 2: phân biệt khối đánh máy / viết tay
+- Không model bố cục sẵn nào có nhãn "viết tay": PP-DocLayout (23 loại, có "seal" nhưng không có handwriting),
+  DocLayout-YOLO, Surya đều không; dots cũng không (11 loại).
+- Tài liệu: phân biệt in/tay ở mức khối bằng bag-of-visual-words + SVM (Zagoris 2013); CNN nhận cả chữ viết (Ả Rập/Latin)
+  lẫn kiểu (in/tay) — JATIT Vol.102 No.10 (KHATT, IAM); chưa thấy công trình 2024–2025 cho KHỐI tài liệu Ả Rập.
+- Thử nhanh trên máy (numpy, 7 đặc trưng hình học: độ lệch chân dòng, đỉnh chiếu ngang, độ đều nét, dao động đỉnh chữ…;
+  hồi quy logistic). Huấn luyện: 300 dòng tay Omar + 300 dòng IN tự tạo (phông nhóm A, nền ố, mờ, nhiễu, JPEG).
+  Thử: chữ in phông CHƯA thấy → nhận đúng 98,3%; dòng tay Muharaf (giấy màu, người viết khác) → chỉ 65,0%.
+  ⇒ đặc trưng hình học KHÔNG đủ tin cậy với nét / giấy lạ.
+- **Đề xuất áp dụng** (xếp theo chi phí):
+  (a) không cần phân loại: đọc MỌI khối chữ bằng dots, khối nào dots đọc kém tự tin (xác suất token thấp) hoặc dots và
+      model chữ tay lệch nhau nhiều → gửi model chữ tay / đánh dấu cần người xem (gộp với chủ đề 3);
+  (b) bộ phân loại học sâu nhỏ trên ẢNH DÒNG: tay = Omar + Muharaf + KHATT, in = chữ in tự tạo với phông kiểu máy chữ
+      (Amiri Typewriter…) + bộ chữ in công khai (medyas 500k, CC BY-SA); kiểm định chéo theo NGUỒN (giữ hẳn 1 nguồn ra).
+- Nguồn: http://www.jatit.org/volumes/Vol102No10/3Vol102No10.pdf ·
+  https://www.primaresearch.org/www/assets/papers/PR2013_Zagoris_BagOfVisualWords.pdf · https://arxiv.org/pdf/2503.17213

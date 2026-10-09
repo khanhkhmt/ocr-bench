@@ -11,7 +11,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
 5. ✅ Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
 6. ✅ Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
-7. Khối công chứng Hebrew
+7. ✅ Khối công chứng Hebrew
 8. Ghép kết quả chữ tay vào DOCX A/B
 
 ## Kết quả
@@ -101,3 +101,18 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 - Nguồn: https://link.springer.com/content/pdf/10.1007/978-3-642-45062-4_75.pdf ·
   https://www.sciencedirect.com/science/article/abs/pii/S0045790624006657 · https://dl.acm.org/doi/10.1145/3772128.3772162 ·
   https://arxiv.org/html/2604.10077v2 · https://arxiv.org/abs/2307.07887
+
+### 2026-10-09 16:15 ICT — Chủ đề 7: khối công chứng tiếng Hebrew
+- Chưa nguồn nào công bố điểm tiếng Hebrew của dots.ocr (bài dots có XDocParse 126 ngôn ngữ nhưng không thấy bảng theo
+  ngôn ngữ) hay của các VLM OCR mới; GlotOCR Bench: model OCR vẫn yếu ngoài vài hệ chữ phổ biến.
+- **Kraken + kraken-ppocrv6-medium** (Apache 2.0, 64 MB, 44 ngôn ngữ, Hebrew học từ HTR-School-Vienna/2025-hebrew):
+  thử trên MÁY (CPU, ~3,6 s/dòng) với 30 dòng Hebrew IN tự tạo (câu kiểu công chứng TỰ VIẾT, 4 phông Noto/Liberation,
+  nền ố, mờ, nhiễu, JPEG): **đúng 99,6% ký tự, 28/30 dòng đúng hoàn toàn** (lỗi: ו/מ, ר/ד).
+  ⚠ Ở chế độ đọc dòng rời (`ocr -s`) Kraken trả chữ theo THỨ TỰ HIỂN THỊ (ngược) → phải đảo lại (dòng thuần Hebrew;
+  dòng lẫn số cần thuật toán bidi).
+- **Đề xuất áp dụng**: khối nào dots trả về có chữ Hebrew (dải Unicode U+0590–U+05FF) hoặc nằm trong vùng con dấu →
+  đọc thêm bằng Kraken ppocrv6, so khớp với dots (chủ đề 3) → chỗ lệch tô vàng. Nội dung công chứng rất khuôn mẫu
+  ("אימות חתימה", "נוטריון", "מאשר", số tiền, ngày) → có thể sửa theo từ điển cụm cố định.
+  Kiểm chứng khi server sống lại: dots trên cùng 30 dòng Hebrew tự tạo (so với Kraken 99,6%).
+- Nguồn: https://huggingface.co/small-models-for-glam/kraken-ppocrv6-medium · https://arxiv.org/pdf/2512.02498 ·
+  https://arxiv.org/pdf/2604.12978

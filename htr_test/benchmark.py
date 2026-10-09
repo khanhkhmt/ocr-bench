@@ -120,6 +120,7 @@ def main() -> int:
     ap.add_argument("--omar-data", default=None, help="thư mục Omar đã tách (mặc định: tải thẳng từ HF)")
     ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"])
     ap.add_argument("--model-batch", type=int, default=1, help="1 = đúng (lô > 1 làm Baseer/Ketaba dừng sớm)")
+    ap.add_argument("--ketaba-mode", default="q4", choices=["q4", "fp16"])
     ap.add_argument("--tag", default="", help="hậu tố thư mục kết quả (vd. fp32) → lần chạy mới, KHÔNG dùng lại kết quả cũ")
     ap.add_argument("--push", action="store_true")
     a = ap.parse_args()
@@ -136,7 +137,7 @@ def main() -> int:
         sync.restore()
 
     def publish(note: str) -> None:
-        md = write_benchmark(root, models, a.n, f"{note} · dtype {a.dtype} · lô model {a.model_batch}", a.tag)
+        md = write_benchmark(root, models, a.n, f"{note} · dtype {a.dtype} · lô model {a.model_batch} · ketaba {a.ketaba_mode}", a.tag)
         print(f"✔ BENCHMARK: {md} — {note}", flush=True)
         if sync:
             sync.push(note)
@@ -153,7 +154,7 @@ def main() -> int:
             data = (str(root / ds["data"]) if ds["data"] else a.omar_data)
             cmd = [sys.executable, "-m", "htr_test.eval_lines", "--out", str(root / ds["out"]), "--models", m,
                    "--split", ds["split"], "--n", str(a.n), "--gpu", str(a.gpu), "--dtype", a.dtype,
-                   "--model-batch", str(a.model_batch)]
+                   "--model-batch", str(a.model_batch), "--ketaba-mode", a.ketaba_mode]
             if data:
                 cmd += ["--data", data]
             if a.push:

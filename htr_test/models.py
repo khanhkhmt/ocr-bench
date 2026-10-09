@@ -40,6 +40,9 @@ class KetabaOCR:
     PROMPT = "اقرأ النص الموجود في الصورة:"
 
     def __init__(self, quant4: bool = True, device: str = "cuda:0", max_new_tokens: int = 512, dtype: str = "auto"):
+        """quant4=True: như tác giả (nền 4-bit NF4 + DoRA) — trên T4 ~25 s/dòng (DoRA trên lớp 4-bit giải nén + tính lại
+        chuẩn mỗi bước). quant4=False: nền fp16 + cùng adapter DoRA (KHÔNG gộp: thử gộp trên model thu nhỏ cho logits
+        lệch tới ~0,08 → bỏ) — nhanh hơn, phải đo độ chính xác bằng htr_test.chan_doan trước khi dùng."""
         self.quant4, self.device, self.max_new_tokens, self.dtype = quant4, device, max_new_tokens, dtype
         self.model = self.processor = None
 

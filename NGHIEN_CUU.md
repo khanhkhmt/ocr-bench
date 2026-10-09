@@ -8,11 +8,15 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 1. ✅ Tách DÒNG chữ tay trong khối dots (hiện: chiếu ngang — thô) → model / thuật toán tốt hơn?
 2. ✅ Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
 3. ✅ Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
-4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
+4. [cần GPU] Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
 5. ✅ Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
 6. ✅ Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
 7. ✅ Khối công chứng Hebrew
-8. Ghép kết quả chữ tay vào DOCX A/B
+8. ✅ Ghép kết quả chữ tay vào DOCX A/B
+9. Tách dòng bằng Kraken + model Muharaf trong htr_test/lines.py (cắt theo đa giác) — làm code, thử trên máy
+10. Gắn danh_dau vào web / DOCX A: khối viết tay = model chữ tay + dots đọc song song → tô vàng chỗ lệch
+11. [cần GPU] Ứng viên THƯƠNG MẠI chạy sẵn: Qari-OCR 0.4 (Qwen3-VL-4B, Apache) trên Omar + Muharaf
+12. [cần GPU] dots trên 30 dòng Hebrew tự tạo (so với Kraken 99,6%); chồng dấu giả → đo lọc màu (chủ đề 6)
 
 ## Kết quả
 
@@ -116,3 +120,13 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
   Kiểm chứng khi server sống lại: dots trên cùng 30 dòng Hebrew tự tạo (so với Kraken 99,6%).
 - Nguồn: https://huggingface.co/small-models-for-glam/kraken-ppocrv6-medium · https://arxiv.org/pdf/2512.02498 ·
   https://arxiv.org/pdf/2604.12978
+
+### 2026-10-09 16:40 ICT — Chủ đề 8: đưa kết quả chữ tay + chữ đáng ngờ vào DOCX
+- Làm code: `htr_test/danh_dau.py` (commit 3b17057, có test): so khớp từ giữa bộ đọc chính và phụ (bỏ qua hamza/alef,
+  ى/ي, ة/ه, dấu nguyên âm, dấu câu) → từ lệch TÔ VÀNG + mỗi cụm lệch một CHÚ THÍCH Word "<bộ phụ> đọc: …"
+  (python-docx 1.2 add_comment; Word và Google Docs đều đọc được tô màu + chú thích).
+- Đo trên 240 dòng Omar (Baseer chính, Ketaba phụ): tô vàng 22% số từ, bắt 80% từ sai, 64% từ tô vàng là sai thật.
+  Ví dụ "لا" thêm vào làm đổi nghĩa → bị tô vàng, chú thích "Ketaba đọc: (không có)".
+- DOCX mẫu (dữ liệu công khai Omar) đã gửi người dùng.
+- **Đề xuất áp dụng**: DOCX A — khối viết tay = chữ model chữ tay, tô vàng chỗ lệch với bộ đọc thứ hai; DOCX B — giữ
+  nguyên bố cục, cùng tô vàng (chú thích có thể bỏ để không lệch bố cục). Gắn vào web: chủ đề 10.

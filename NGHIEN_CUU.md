@@ -9,7 +9,7 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
 2. ✅ Phân biệt khối đánh máy vs viết tay (để biết khối nào gửi model chữ tay)
 3. ✅ Phát hiện chữ bịa / đổi nghĩa: so khớp nhiều model, điểm tin cậy theo token
 4. Giấy cũ màu: tiền xử lý (xám, phóng, lề, làm nét) — kiểm chứng trên Muharaf
-5. Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
+5. ✅ Fine-tune model chữ tay dùng được thương mại (Ketaba Apache + Omar CC BY + làm cũ ảnh)
 6. Con dấu / chữ ký đè chữ: tách lớp, hay để model tự xử lý
 7. Khối công chứng Hebrew
 8. Ghép kết quả chữ tay vào DOCX A/B
@@ -62,3 +62,22 @@ dòng → model chữ tay đọc từng dòng → ghép DOCX (A sửa được, 
   dots, hoặc Ketaba + Baseer khi được phép); dòng trùng → tin; từ lệch → TÔ VÀNG trong DOCX A (người kiểm chỉ cần xem
   ~1/5 số từ, bắt ~4/5 lỗi). Cần đo lại với cặp có dots khi benchmark dots xong (dots khác họ model → có thể bắt lỗi tốt hơn).
   Chưa thử: độ tự tin theo token (xác suất trong generate) — để chủ đề sau.
+
+### 2026-10-09 15:25 ICT — Chủ đề 5: model chữ tay dùng được THƯƠNG MẠI (chủ đề 4 cần GPU — để khi server sống lại)
+- ⚠ **Giấy phép model nền**: Qwen2.5-VL-**3B**-Instruct = **"qwen-research"** (không thương mại). sherif, Ketaba (tự ghi
+  Apache-2.0) và Baseer-Nakba đều xây trên Qwen2.5-VL-3B → nhiều khả năng vẫn chịu giấy phép gốc (cần đọc kỹ
+  https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct/blob/main/LICENSE; không phải tư vấn pháp lý).
+  Nền Apache-2.0: Qwen3-VL-2B / 4B, Qwen2.5-VL-7B, PaddleOCR-VL, Qari-OCR 0.4 (Qwen3-VL-4B + LoRA). dots.ocr: giấy phép riêng.
+- Bằng chứng làm được: một đội NAKBA fine-tune **Qwen3-VL-4B** trên Omar: CER 8,59% (val) / 11,0% (blind) — gần Baseer
+  (7,9%) / Ketaba (9,4%). Công thức đội thắng (Misraj): bước 1 chỉ decoder trên Muharaf (ảnh xám) → bước 2 mở cả encoder,
+  LR riêng (encoder 9e-6, decoder 1e-4) → trộn SLERP 2 checkpoint; tăng cường ảnh: méo đàn hồi, ăn mòn, đổi tương phản, nhiễu.
+- Dữ liệu dùng thương mại: Omar (CC BY 4.0, ~18k dòng) + dòng tự tạo (phông Ả Rập + làm cũ: nền ố, mờ, JPEG, con dấu giả)
+  + làm cũ chính ảnh Omar (Augraphy). KHÔNG dùng được: Muharaf (NC-SA), Baseer (NC-SA); KHATT: điều khoản gốc chỉ nghiên cứu.
+- T4: QLoRA 4-bit + gradient checkpointing chạy được với model 3–4B (tiền lệ: math-ocr / MJSynth trên Qwen2.5-VL-3B);
+  T4 không có bf16 → fp16 + adapter fp32. Colab hay ngắt → lưu checkpoint thường xuyên (lên HF/GitHub, đẩy như benchmark).
+- **Đề xuất áp dụng**: (1) báo khách / người dùng rủi ro giấy phép của Ketaba–Baseer; (2) ứng viên thương mại: fine-tune
+  **Qwen3-VL-4B** (hoặc thử trước Qari-OCR 0.4 sẵn có, cùng nền) trên Omar + dữ liệu làm cũ; đánh giá bằng đúng benchmark
+  hiện có (Omar blind_test + Muharaf test). Model CTC nhỏ (Kraken / PP-OCRv5 rec) huấn luyện trên Omar làm "người đọc
+  thứ hai" độc lập cho so khớp (chủ đề 3) — không bịa câu trôi chảy, chạy CPU được.
+- Nguồn: Qwen LICENSE (link trên) · https://aclanthology.org/2026.nakbanlp-1.7/ · https://huggingface.co/Misraj/Baseer__Nakba
+  · https://huggingface.co/ericmrib/math-ocr · https://huggingface.co/NAMAA-Space/Qari-OCR-0.4.0-VL-4B-Instruct

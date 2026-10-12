@@ -1,8 +1,8 @@
-# Huấn luyện ft4 — 2026-10-12 23:21 UTC
+# Huấn luyện ft4 — 2026-10-12 23:31 UTC
 
-Trạng thái: bước 1750/2000 · loss 0.3253
+Trạng thái: bước 1800/2000 · loss 0.2403
 
-Bước 1750/2000 · loss 0.3253 · 12.7 s/bước · lr 4.21e-06
+Bước 1800/2000 · loss 0.2403 · 12.13 s/bước · lr 2.71e-06
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

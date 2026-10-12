@@ -7,6 +7,7 @@
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
   oracle               trần: CER nếu sửa HOÀN HẢO mọi từ trong tầm chốt chặn
   vote                 đồng thuận: chỉ nhận sửa nhiều lượt chạy (khác prompt / khác model) cùng đề xuất
+  make-shots           tạo ví dụ few-shot THẬT từ trang dev ngoài tập chấm (cho biến thể +rs)
   refilter             áp lại chốt chặn (ngưỡng khác) lên đầu ra thô đã lưu, không cần GPU
   analyze              tín hiệu nào khoanh đúng từ sai-gần-đúng (dots ngần ngừ / LM ngạc nhiên) + trần ứng viên
   eval                 so các lượt chạy với đáp án: CER/WER trước-sau, sửa đúng / sửa nhầm, KTC bootstrap
@@ -85,19 +86,22 @@ def load_ocr_pages(ocr_dir: Path, ids: list[str]) -> list[PageText]:
     return pages
 
 
-def parse_variant(v: str) -> tuple[str, str | None, bool, str]:
-    """Cú pháp biến thể: CHIẾN_LƯỢC[=TÍN_HIỆU][@KIỂU][+fs]. Vd. "A", "B+fs", "C=nll_sum", "C=dots_lp+nll_sum+fs", "A@assert".
-    +fs = thêm ví dụ few-shot; =TÍN_HIỆU chỉ dùng cho C (xem detect.SIGNALS); @KIỂU = cons (mặc định) | assert."""
-    fs = v.endswith("+fs")
-    core = v[:-3] if fs else v
-    core, _, style = core.partition("@")
+def parse_variant(v: str) -> tuple[str, str | None, str, str]:
+    """Cú pháp biến thể: CHIẾN_LƯỢC[=TÍN_HIỆU][@KIỂU][+fs|+rs]. Vd. "A", "B+fs", "C=nll_sum", "C=dots_lp+nll_sum+fs", "A@assert+rs".
+    +fs = ví dụ few-shot TỔNG HỢP; +rs = ví dụ THẬT trong miền (--shots-file); =TÍN_HIỆU chỉ dùng cho C (xem detect.SIGNALS);
+    @KIỂU = cons (mặc định) | assert. Trả về (chiến lược, tín hiệu, "" | "fs" | "rs", kiểu)."""
+    shots = ""
+    for suffix in ("+fs", "+rs"):
+        if v.endswith(suffix):
+            shots, v = suffix[1:], v[:-3]
+    core, _, style = v.partition("@")
     strategy, _, signal = core.partition("=")
     if strategy not in ("A", "B", "C") or style not in ("", "cons", "assert"):
         raise ValueError(f"biến thể không hợp lệ: {v!r}")
-    return strategy, (canon_signal(signal) if signal else None), fs, style or "cons"
+    return strategy, (canon_signal(signal) if signal else None), shots, style or "cons"
 
 
-def _run_variant(backend, a, ids: list[str], st: Settings, out: Path) -> None:
+def _run_variant(backend, a, ids: list[str], st: Settings, out: Path, shots: list[dict] | None = None) -> None:
     out.mkdir(parents=True, exist_ok=True)
     pages = load_ocr_pages(Path(a.ocr), [i for i in ids if not (out / f"{i}.json").exists()])
     print(f"[{st.tag or st.strategy}] {len(ids)} trang thuộc phần này, cần chạy {len(pages)} "
@@ -111,7 +115,7 @@ def _run_variant(backend, a, ids: list[str], st: Settings, out: Path) -> None:
         grp = pages[g:g + a.group]
         s0 = (backend.stats.seconds, backend.stats.prompt_tokens, backend.stats.new_tokens)
         t = time.perf_counter()
-        results = correct_pages(grp, backend, st)
+        results = correct_pages(grp, backend, st, shots)
         dt = time.perf_counter() - t
         for r in results:
             (out / f"{r['id']}.json").write_text(json.dumps(r, ensure_ascii=False), encoding="utf-8")
@@ -146,12 +150,18 @@ def cmd_correct_cache(a):
     print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {getattr(backend, 'load_seconds', 0):.0f}s", flush=True)
     for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model
         st = settings_from(a)
-        st.strategy, signal, st.fewshot, st.style = parse_variant(v)
+        st.strategy, signal, shots_mode, st.style = parse_variant(v)
+        st.fewshot, st.real_shots = shots_mode == "fs", shots_mode == "rs"
+        if st.real_shots:
+            if not a.shots_file:
+                raise SystemExit("biến thể +rs cần --shots-file (tạo bằng: python -m postcorrect make-shots ...)")
+            st.shots_tag = Path(a.shots_file).name
         if signal:
             st.flag_signal = signal
         st.tag = v
         tag_dir = v.replace("=", "_").replace("+", "_").replace("@", "_")
-        _run_variant(backend, a, ids, st, Path(f"{a.out}__{tag_dir}") if a.variants else Path(a.out))
+        _run_variant(backend, a, ids, st, Path(f"{a.out}__{tag_dir}") if a.variants else Path(a.out),
+                     json.loads(Path(a.shots_file).read_text(encoding="utf-8")) if st.real_shots else None)
     backend.close()
 
 
@@ -272,6 +282,22 @@ def cmd_analyze(a):
         print(f"\nTrần ứng viên từ phương án của dots: trong {oracle['near']} từ sai-gần-đúng, thay MỘT token bằng phương án top-3 "
               f"cho đúng từ đáp án ở {oracle['covered']} từ ({oracle['covered'] / oracle['near']:.1%}); chỉ riêng phương án thứ 2: "
               f"{oracle['covered_top2']} ({oracle['covered_top2'] / oracle['near']:.1%}).")
+
+# ---------------------------------------------------------------- make-shots
+def cmd_make_shots(a):
+    """Tạo ví dụ few-shot THẬT từ các trang dev KHÔNG nằm trong tập đang chấm (--skip: bỏ N trang dev đầu tiên)."""
+    from .ocr_cache import load_manifest
+    from .shots import make_shots
+
+    rows = [r for r in load_manifest(Path(a.manifest)) if r.get("split") == a.split]
+    pool = rows[a.skip:]
+    shots = make_shots(Path(a.ocr), {r["id"]: r["gt"] for r in pool}, [r["id"] for r in pool], a.n_fix, a.n_clean,
+                       a.max_chars, a.min_fix)
+    Path(a.out).write_text(json.dumps(shots, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"{len(shots)} ví dụ từ {len(pool)} trang {a.split} (bỏ {a.skip} trang đầu để chống rò rỉ) → {a.out}")
+    for s in shots:
+        print(f"  {s['id']}: {len(s['src'])} ký tự, {len(s['fixes'])} sửa: {s['fixes'][:6]}")
+
 
 # ---------------------------------------------------------------- refilter
 def cmd_refilter(a):
@@ -438,7 +464,8 @@ def main(argv=None):
     p.add_argument("--device", type=int, default=0)
     p.add_argument("--shard", default="0/1")
     p.add_argument("--group", type=int, default=8)
-    p.add_argument("--variants", help="vd. A,B,C,A+fs — chạy lần lượt trong một tiến trình; kết quả ở <out>__<biến thể>")
+    p.add_argument("--variants", help="vd. A,B,C=nll_sum@assert,A+rs — chạy lần lượt trong một tiến trình; kết quả ở <out>__<biến thể>")
+    p.add_argument("--shots-file", help="JSON ví dụ THẬT trong miền (cho biến thể +rs), tạo bằng make-shots")
     add_model_args(p)
     p.set_defaults(func=cmd_correct_cache)
 
@@ -464,6 +491,18 @@ def main(argv=None):
     p.add_argument("--boot", type=int, default=2000)
     p.add_argument("--json")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("make-shots")
+    p.add_argument("--ocr", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--split", choices=["dev", "holdout"], default="dev")
+    p.add_argument("--skip", type=int, default=24, help="bỏ N trang đầu của split (chính là tập đang chấm) khỏi nguồn ví dụ")
+    p.add_argument("--n-fix", type=int, default=2)
+    p.add_argument("--n-clean", type=int, default=1)
+    p.add_argument("--max-chars", type=int, default=320)
+    p.add_argument("--min-fix", type=int, default=3)
+    p.add_argument("--out", required=True)
+    p.set_defaults(func=cmd_make_shots)
 
     p = sub.add_parser("refilter")
     p.add_argument("--run", required=True)

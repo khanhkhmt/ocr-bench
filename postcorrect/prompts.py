@@ -10,6 +10,8 @@ tài liệu này: từ địa phương / chính tả cũ KHÔNG phải lỗi OCR
 
 from __future__ import annotations
 
+from .text import words_with_spans
+
 _RULES_KEEP = (
     "Keep everything else EXACTLY as written: dialect words, old-fashioned spellings, names of people and places, "
     "numbers, dates, abbreviations, punctuation and line breaks. Do NOT standardize or modernize the language, do NOT "
@@ -95,10 +97,37 @@ def user_content(text: str) -> str:
     return f"<input>{text}</input>"
 
 
-def messages(strategy: str, text: str, fewshot: bool = False, style: str = "cons") -> list[dict]:
-    """Danh sách thông điệp chat cho một chunk. `text` của chiến lược C phải là văn bản đã đánh dấu [[ ]]."""
+def _mark_shot(src: str, fixes: list[list[str]], k_decoy: int = 2) -> str:
+    """Ví dụ thật cho chiến lược C: đánh dấu [[ ]] các từ cần sửa + vài từ ĐÚNG làm mồi (phải giữ nguyên)."""
+    ws = words_with_spans(src)
+    bad = {a for a, _ in fixes}
+    marked, decoys = set(), 0
+    for i, (w, _, _) in enumerate(ws):
+        if w in bad and w not in {ws[j][0] for j in marked}:
+            marked.add(i)
+    for i, (w, _, _) in enumerate(ws):
+        if decoys < k_decoy and w not in bad and len(w) >= 4 and i % 3 == 1:
+            marked.add(i)
+            decoys += 1
+    return mark_words(ws, src, marked)
+
+
+def messages(strategy: str, text: str, fewshot: bool = False, style: str = "cons", shots: list[dict] | None = None) -> list[dict]:
+    """Danh sách thông điệp chat cho một chunk. `text` của chiến lược C phải là văn bản đã đánh dấu [[ ]].
+    shots: ví dụ THẬT trong miền (shots.make_shots) — thay cho ví dụ tổng hợp khi có."""
     msgs = [{"role": "system", "content": STYLES[style][strategy]}]
-    if fewshot:
+    if shots:
+        import json
+
+        for sh in shots:
+            if strategy == "A":
+                u, a = sh["src"], f"<output>{sh['tgt']}</output>"
+            elif strategy == "C":
+                u, a = _mark_shot(sh["src"], sh["fixes"]), f"<output>{sh['tgt']}</output>"
+            else:
+                u, a = sh["src"], json.dumps([{"word": f, "fix": t} for f, t in sh["fixes"]], ensure_ascii=False)
+            msgs += [{"role": "user", "content": user_content(u)}, {"role": "assistant", "content": a}]
+    elif fewshot:
         for (src, dst, fixes), marks in zip(_EX, _EX_MARKS):
             if strategy == "A":
                 u, a = src, f"<output>{dst}</output>"

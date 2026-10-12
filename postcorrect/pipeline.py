@@ -54,6 +54,8 @@ class Settings:
     strategy: str = "A"               # A viết lại | B khoanh từ lỗi (JSON) | C viết lại có đánh dấu từ nghi lỗi
     chunk_chars: int = 700
     fewshot: bool = False
+    real_shots: bool = False          # dùng ví dụ THẬT trong miền (shots.py) thay cho ví dụ tổng hợp
+    shots_tag: str = ""               # nguồn ví dụ (để ghi vào kết quả cho truy vết)
     style: str = "cons"               # kiểu prompt: cons (bảo thủ) | assert (quyết đoán, nói rõ mật độ lỗi cao)
     guard: GuardConfig = field(default_factory=GuardConfig)
     flag_signal: str = "nll_sum"      # C: nll_sum | nll_max (LM) | dots_lp (độ ngần ngừ của dots) | dots_lp+nll_sum | dots_lp+nll_max (hạng TB)
@@ -140,7 +142,9 @@ def refilter_result(res: dict, guard: GuardConfig) -> dict:
     return out
 
 
-def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
+def correct_pages(pages: list[PageText], backend, st: Settings, shots: list[dict] | None = None) -> list[dict]:
+    if st.real_shots and not shots:
+        raise ValueError("real_shots cần danh sách ví dụ (shots)")
     strategy = st.strategy
     tasks: list[_Task] = []
     for pi, p in enumerate(pages):
@@ -171,7 +175,7 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
         text = t.chunk.text
         if strategy == "C":
             text = mark_words(words_with_spans(t.chunk.text), t.chunk.text, set(t.flagged))
-        t.prompt = backend.build_prompt(messages(strategy, text, st.fewshot, st.style))
+        t.prompt = backend.build_prompt(messages(strategy, text, st.fewshot, st.style, shots if st.real_shots else None))
         t.max_new = 320 if strategy == "B" else min(3000, int(st.max_new_factor * backend.n_tokens(t.chunk.text)) + 48)
     if todo:
         for t, raw in zip(todo, backend.generate([t.prompt for t in todo], [t.max_new for t in todo])):

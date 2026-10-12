@@ -1,15 +1,14 @@
-# Dòng chữ viết tay Omar Al-Saleh — test (500 dòng)
+# Dòng chữ viết tay Muharaf — test (500 dòng)
 
-Cập nhật: 2026-10-12 09:07 UTC — XONG tất cả
+Cập nhật: 2026-10-12 10:33 UTC — đang chấm baseer_ft1_s075 16/500
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | baseer_ft1 | 500/500 | **89.1%** | **74.6%** | 12.1% | 29.1% | 10.9% | 25.4% | 11.2% | 1.02 | 3 | 1 |
 | baseer_ft2 | 500/500 | **87.3%** | **71.6%** | 13.9% | 31.9% | 12.7% | 28.4% | 11.0% | 1.00 | 2 | 2 |
+| baseer_ft1_s075 | 16/500 | **86.7%** | **68.0%** | 14.7% | 36.4% | 13.3% | 32.0% | 12.7% | 1.00 | 0 | 0 |
 | baseer | 500/500 | **79.1%** | **55.0%** | 23.6% | 53.3% | 20.9% | 45.0% | 22.3% | 1.01 | 2 | 9 |
 | ketaba | 500/500 | **75.8%** | **41.8%** | 27.0% | 65.9% | 24.2% | 58.2% | 22.3% | 0.98 | 2 | 11 |
 | dots | 240/500 | **0.0%** | **0.0%** | 173.7% | 273.6% | 153.4% | 236.6% | 133.7% | 1.50 | 15 | 62 |
 
 đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).
-
-Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% · baseline Qwen3-VL-8B LoRA 36,8% / 69,1%.

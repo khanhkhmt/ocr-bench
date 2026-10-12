@@ -1,8 +1,8 @@
-# Huấn luyện ft3 — 2026-10-12 21:13 UTC
+# Huấn luyện ft3 — 2026-10-12 21:25 UTC
 
-Trạng thái: đánh giá bước 1200: đúng ký tự 91.0%
+Trạng thái: bước 1260/2000 · loss 0.2997
 
-Bước 1200/2000 · loss 0.2353 · 11.96 s/bước · lr 3.77e-05
+Bước 1260/2000 · loss 0.2997 · 11.39 s/bước · lr 3.30e-05
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

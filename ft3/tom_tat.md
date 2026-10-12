@@ -1,8 +1,8 @@
-# Huấn luyện ft3 — 2026-10-12 18:18 UTC
+# Huấn luyện ft3 — 2026-10-12 18:29 UTC
 
-Trạng thái: đánh giá bước 400: đúng ký tự 88.5%
+Trạng thái: bước 450/2000 · loss 0.3406
 
-Bước 400/2000 · loss 0.4053 · 11.67 s/bước · lr 9.40e-05
+Bước 450/2000 · loss 0.3406 · 11.82 s/bước · lr 9.19e-05
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

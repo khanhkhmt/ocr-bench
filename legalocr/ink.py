@@ -56,3 +56,20 @@ def suppress_red(crop):
     paper = np.median(a[light].reshape(-1, 3), 0) if light.any() else np.array([255.0, 255.0, 255.0])
     a[red] = paper
     return Image.fromarray(a.astype(np.uint8))
+
+
+def blueness(crop) -> float | None:
+    """(B − R) trung bình của MỰC trừ đi (B − R) của nền. Ảnh dòng của legalocr đã tô TRẮNG ngoài đa giác nên nền ≈ trắng
+    và số đo thực chất là sắc độ của chính mực: đo trên 5 trang hồ sơ 1970s (ảnh WhatsApp nén, mực xanh nhạt màu nên độ
+    bão hoà không dùng được) — chữ máy chữ cũ (mực ngả nâu, vd. RGB 97,92,77) −17…−25; bút bi xanh (vd. 123,116,130)
+    −1…+8; chữ in đen trung tính ~0. GIỚI HẠN: mực đen trung tính trên trang viết máy mà Tesseract đọc kém cũng sẽ bị
+    coi như bút bi → chỉ là một điều kiện kèm độ tin cậy Tesseract thấp, không phải bộ phân loại chữ tay.
+    None = dòng quá ít mực / không có nền."""
+    a = np.asarray(crop.convert("RGB")).astype(np.float32)
+    gray = a.mean(2)
+    bg = float(np.percentile(gray, 90))
+    ink, paper = gray < 0.7 * bg, gray > 0.95 * bg
+    if ink.sum() < 20 or paper.sum() < 20:
+        return None
+    d = a[..., 2] - a[..., 0]
+    return float(d[ink].mean() - d[paper].mean())

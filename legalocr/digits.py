@@ -314,3 +314,14 @@ def merge_affixes(tess_token: str, digit_text: str) -> str:
 
     pre, _core, suf = split_affixes(tess_token)
     return pre + digit_text.strip(SYMBOLS) + suf
+
+
+def plausible_number(text: str, max_len: int = 14, max_sym: float = 0.34) -> bool:
+    """Chuỗi số có hình dạng hợp lý (số, ngày, số tiền). Trên dòng chữ tay / ô công chứng Hebrew bộ đọc từng nét số
+    từng ra "٨.٥.٩٣.٦.٢--٠.٠١-.١٢..٣٤" — không bỏ phiếu chuỗi như vậy."""
+    core = text.strip(SYMBOLS)
+    if not core or len(core) > max_len:
+        return False
+    if sum(c in SYMBOLS for c in core) > max_sym * len(core):
+        return False
+    return not any(a in SYMBOLS and b in SYMBOLS for a, b in zip(core, core[1:]))

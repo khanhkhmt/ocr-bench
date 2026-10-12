@@ -71,7 +71,12 @@ class LegalOCRAdapter(Adapter):
         "digit_weight": 1.2,
         "handwriting": None,            # null | hatformer | vlm:<model_id>
         "handwriting_device": "cpu",
-        "hard_conf": 0.55,              # dòng chữ Ả Rập có độ tin cậy Tesseract < ngưỡng → gửi engine chữ tay
+        "hard_conf": 0.55,              # dòng chữ Ả Rập có độ tin cậy Tesseract < ngưỡng ...
+        # ... VÀ mực trông như bút bi (ink.blueness > hand_blue, hoặc xanh hơn trung vị trang ≥ hand_blue_rel) → gửi
+        # engine chữ tay. Chỉ theo độ tin cậy thì dòng ĐÁNH MÁY mờ cũng bị gửi: HATFormer làm công văn 1972 CER
+        # 17,4% → 27,6%. null = bỏ điều kiện màu mực.
+        "hand_blue": -8.0,
+        "hand_blue_rel": 12.0,
         "max_hard_lines": 60,
         # dòng có engine chữ tay mà Tesseract < ngưỡng → bỏ phiếu Tesseract: trên 6 dòng chữ tay (hợp đồng 1972) HATFormer
         # một mình CER 35,9%, bỏ phiếu chung với Tesseract 45,9%
@@ -254,6 +259,11 @@ class LegalOCRAdapter(Adapter):
         scripts, out = {}, {e.name: {} for e in self.arabic}
         hard = []
         hebrew_lines = self._hebrew_lines(lines, raw, heb)
+        blue = {}
+        if self.hand is not None and p["hand_blue"] is not None:
+            from .ink import blueness
+
+            blue = {ln.id: blueness(crops[ln.id]) for ln in lines}
         for ln in lines:
             a = max(_mean_conf(raw[e.name][ln.id]) for e in self.arabic)
             h = _mean_conf(heb.get(ln.id))
@@ -270,7 +280,7 @@ class LegalOCRAdapter(Adapter):
             scripts[ln.id] = "ar"
             for e in self.arabic:
                 out[e.name][ln.id] = raw[e.name][ln.id]
-            if a < p["hard_conf"]:
+            if a < p["hard_conf"] and self._looks_handwritten(ln.id, crops, blue):
                 hard.append((a, ln.id))
         if self.hand is not None and hard:
             hard = sorted(hard)[: p["max_hard_lines"]]
@@ -282,6 +292,19 @@ class LegalOCRAdapter(Adapter):
                         out[e.name].pop(i, None)
                     scripts[i] = "ar_hand"
         return out, scripts
+
+    def _looks_handwritten(self, lid: str, crops: dict, blue: dict) -> bool:
+        p = self.params
+        if self.hand is None:
+            return False
+        if p["hand_blue"] is None:
+            return True
+        v = blue.get(lid)
+        if v is None:
+            return False
+        vals = sorted(x for x in blue.values() if x is not None)
+        med = vals[len(vals) // 2] if vals else v
+        return v > p["hand_blue"] or v - med >= p["hand_blue_rel"]
 
     def _hebrew_lines(self, lines: list[Line], raw: dict, heb: dict) -> set[str]:
         """Dòng nào là Hebrew. Độ tin cậy `heb` của dòng Hebrew thật (ô công chứng: 0,45–0,79) và của dòng chữ tay Ả Rập
@@ -323,7 +346,7 @@ class LegalOCRAdapter(Adapter):
         names = [e.name for e in self.arabic]
 
         def hook(page: Page) -> None:
-            from .digits import merge_affixes, read_tokens
+            from .digits import merge_affixes, plausible_number, read_tokens
 
             jobs, keys = [], []  # ảnh từ; (line_id, engine, chỉ số token trong dòng của engine, chữ token)
             for ln in page.lines:
@@ -359,7 +382,7 @@ class LegalOCRAdapter(Adapter):
                             continue
                         pos[e] = k + 1
                         tok, d = queue[k]
-                        if d.text:
+                        if d.text and plausible_number(d.text):
                             add_token_reading(w, "digits", merge_affixes(tok, d.text), d.confidence, fc)
                             w.features["digits_conf"] = round(d.confidence, 3)
                             w.features["digits_from"] = e

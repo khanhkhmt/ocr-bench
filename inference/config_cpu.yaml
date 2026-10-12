@@ -1,10 +1,11 @@
-# Web demo trên máy KHÔNG có GPU (thay cho dots.mocr). Ba model:
+# Web demo trên máy KHÔNG có GPU (thay cho dots.mocr). Các model:
 #   legalocr  (khuyên dùng cho hồ sơ pháp lý / hành chính tiếng Ả Rập) — kraken tách dòng như model kraken, nhưng mỗi
 #             dòng đọc bằng NHIỀU Tesseract (ara fast + best + script/Arabic, heb cho dòng Hebrew) rồi bỏ phiếu; bộ đọc
 #             chữ số riêng cho số Ả Rập-Ấn; thứ tự đọc theo cột; giữ và đọc dòng trong vùng chữ ký / con dấu; chỗ chưa
 #             chắc in từ[؟] / [؟]. Cần: venv kraken + tessdata_best (python -c "from legalocr.engines import
 #             fetch_tessdata; fetch_tessdata('/kaggle/working/tessdata_best')"). Xem legalocr/README.md.
 #             ocrbench serve --config inference/config_cpu.yaml --model legalocr --ocr-all
+#             (legalocr_handwriting: thêm HATFormer cho dòng viết tay — chậm, giấy phép phi thương mại; xem dưới)
 #   kraken    — kraken tách dòng (hợp chữ viết tay Ả Rập) + chữ ký / con dấu / vân tay + Tesseract đọc
 #             từng dòng. Cài một lần: bash inference/setup_kraken.sh. Xem ocrbench/adapters/kraken_layout.py.
 #             ocrbench serve --config inference/config_cpu.yaml --model kraken --ocr-all
@@ -27,7 +28,13 @@ models:
   params: {seg_height: 1400, recognizer: tesseract, lang: ara+eng, pictures: true, signatures: true}
 - name: legalocr
   adapter: legalocr
-  # đo trên 2 trang có đáp án (công văn 1972 có watermark; hợp đồng số hoá): CER 29,0% → 17,2% (cách đọc tốt nhất),
-  # 1,5% → 1,5%; rác Latin 47 → 0 ký tự. handwriting: hatformer → dòng chữ tay gửi thêm HATFormer (CPU, chậm,
-  # giấy phép CC-BY-NC-SA); vlm:<model_id> khi có GPU.
-  params: {seg_height: 1400, handwriting: null}
+  # đo trên 2 trang có đáp án (công văn 1972 có watermark; hợp đồng số hoá): CER 29,0% → 17,4% (cách đọc tốt nhất),
+  # 1,5% → 1,5% (hiển thị); rác Latin 47 → 0 ký tự; cờ [؟] bắt 48/48 từ sai của công văn. ~45–100 giây/trang CPU.
+  params: {seg_height: 1400}
+# legalocr + HATFormer cho dòng VIẾT TAY (Tesseract kém + mực kiểu bút bi): hợp đồng viết tay 1972, 6 dòng đầu:
+# CER 72,6% → 35,9%. Chậm (~4 phút/trang viết tay trên CPU; GPU: thêm handwriting_device: cuda). Trọng số HATFormer
+# (Archatext/hatformer-arams28k) giấy phép CC-BY-NC-SA-4.0 — PHI THƯƠNG MẠI. Đọc chữ tay một model nên mọi từ của
+# dòng đó đều mang [؟]; HATFormer có thể bịa văn kiểu bản thảo tôn giáo ("الله عليه وسلم") ở dòng chỉ có số.
+- name: legalocr_handwriting
+  adapter: legalocr
+  params: {seg_height: 1400, handwriting: hatformer}

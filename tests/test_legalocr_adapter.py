@@ -43,6 +43,10 @@ def test_digit_decode_uses_one_system_per_number():
     assert D._decode(P, "lat")[0] == "191"
     assert D.merge_affixes("18/04/2024.", ".18/04/2024") == "18/04/2024."   # dấu chấm cuối câu về đúng chỗ
     assert D.merge_affixes("(١٩٧٢)", "١٩٧٢") == "(١٩٧٢)"
+    for ok in ("١٩٧٢/٧/١٢", "713,000.00", "٦", "24725"):
+        assert D.plausible_number(ok), ok
+    for bad in ("٨.٥.٩٣.٦.٢--٠.٠١-.١٢..٣٤", "٠.٠.٠.", "-/.", "١٢٣٤٥٦٧٨٩٠١٢٣٤٥"):
+        assert not D.plausible_number(bad), bad
 
 
 def test_digit_components_left_to_right():
@@ -164,3 +168,26 @@ def test_hebrew_needs_strong_neighbour():
     ad = _adapter([ara], heb)
     _, scripts = ad._read(lines, _crops(["l000", "l001", "l002"]))
     assert scripts == {"l000": "he", "l001": "he", "l002": "ar"}  # dòng yếu đứng riêng (chữ tay Ả Rập) không thành Hebrew
+
+
+def test_blueness_separates_ballpoint_from_typewriter_ink():
+    from legalocr.ink import blueness
+
+    def line(ink, paper=(255, 255, 255)):  # ảnh dòng của legalocr: ngoài đa giác đã tô trắng
+        im = Image.new("RGB", (300, 40), paper)
+        ImageDraw.Draw(im).rectangle([10, 12, 290, 28], fill=ink)
+        return im
+
+    assert blueness(line((97, 92, 77))) < -8          # màu mực đo thật: công văn máy chữ 1972 (ngả nâu)
+    assert blueness(line((123, 116, 130))) > -8       # màu mực đo thật: hợp đồng viết tay bút bi xanh
+
+
+def test_handwriting_gate_uses_ink_colour():
+    ad = _adapter([])
+    ad.hand = object()
+    blue = {"a": -20.0, "b": -18.0, "c": 2.0, "d": -4.0}
+    assert not ad._looks_handwritten("a", {}, blue)
+    assert ad._looks_handwritten("c", {}, blue)      # trên ngưỡng tuyệt đối
+    assert ad._looks_handwritten("d", {}, blue)      # xanh hơn trung vị trang ≥ 12
+    ad.hand = None
+    assert not ad._looks_handwritten("c", {}, blue)  # không có engine chữ tay thì không gửi

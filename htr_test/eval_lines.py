@@ -144,7 +144,7 @@ def _thumb(im) -> str:
     return base64.b64encode(buf.getvalue()).decode()
 
 
-def write_details(out: Path, lines: list, names: list[str], html_too: bool) -> None:
+def write_details(out: Path, lines: list, names: list[str], html_too: bool, bo: str = "Omar Al-Saleh") -> None:
     """chi_tiet.csv: MỖI DÒNG một hàng — nhãn, chữ từng model đọc, % đúng ký tự / từ. xem_ket_qua.html: kèm ảnh."""
     import html as H
     names = all_models(out, names)
@@ -191,7 +191,7 @@ def write_details(out: Path, lines: list, names: list[str], html_too: bool) -> N
     summary = (out / "tom_tat.md").read_text(encoding="utf-8") if (out / "tom_tat.md").exists() else ""
     (out / "xem_ket_qua.html").write_text(
         f"<!doctype html><meta charset=utf-8><title>Kết quả từng dòng</title><style>{css}</style>"
-        f"<h1>Kết quả từng dòng — chữ viết tay Omar Al-Saleh</h1><pre>{H.escape(summary)}</pre>"
+        f"<h1>Kết quả từng dòng — chữ viết tay {H.escape(bo)}</h1><pre>{H.escape(summary)}</pre>"
         "<p>Mỗi hàng: ảnh dòng + nhãn thật (xanh lá) · chữ từng model đọc + % đúng (xanh ≥ 95%, vàng ≥ 80%, đỏ &lt; 80%; "
         "đã chuẩn hoá hamza / dấu nguyên âm).</p>"
         f"<table><tr><th>dòng · nhãn</th>{head}</tr>{''.join(body)}</table>", encoding="utf-8")
@@ -214,7 +214,15 @@ def all_models(out: Path, names: list[str]) -> list[str]:
     return list(dict.fromkeys([*names, *sorted(f.stem.split(".shard")[0] for f in out.glob("*.jsonl"))]))
 
 
-def write_summary(out: Path, lines: list, names: list[str], split: str, note: str = "") -> str:
+def ten_bo(data: str | None) -> str:
+    """Tên bộ dữ liệu cho tiêu đề bảng: không --data = Omar Al-Saleh (HF); có --data → theo tên thư mục."""
+    if not data:
+        return "Omar Al-Saleh"
+    n = Path(data).name.lower()
+    return "Muharaf" if "muharaf" in n else "Omar Al-Saleh" if "omar" in n else Path(data).name
+
+
+def write_summary(out: Path, lines: list, names: list[str], split: str, note: str = "", bo: str = "Omar Al-Saleh") -> str:
     """Bảng kết quả từ mọi .jsonl hiện có (chấm dở cũng ghi — cột "đã chấm" cho biết bao nhiêu dòng)."""
     names = all_models(out, names)
     summary = {}
@@ -224,7 +232,7 @@ def write_summary(out: Path, lines: list, names: list[str], split: str, note: st
         if pairs:
             summary[name] = score(pairs)
             summary[name]["so_dong"] = len(pairs)
-    rows = ["# Dòng chữ viết tay Omar Al-Saleh — " + split + f" ({len(lines)} dòng)", "",
+    rows = [f"# Dòng chữ viết tay {bo} — " + split + f" ({len(lines)} dòng)", "",
             f"Cập nhật: {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}" + (f" — {note}" if note else ""), "",
             "| Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |",
             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
@@ -235,9 +243,10 @@ def write_summary(out: Path, lines: list, names: list[str], split: str, note: st
                     f"{100 * c['cer']:.1f}% | {100 * c['wer']:.1f}% | {100 * c['cer_dong']:.1f}% | {d['tb']:.2f} | "
                     f"{d['dai_x1_5']} | {d['ngan_x0_5']} |")
     rows += ["", "đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. "
-             "Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).",
-             "", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
-             "· baseline Qwen3-VL-8B LoRA 36,8% / 69,1%."]
+             "Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh)."]
+    if bo == "Omar Al-Saleh":  # số công bố của NAKBA chỉ đúng cho bộ Omar
+        rows += ["", "Tham chiếu công bố (cả 2.671 dòng, CER/WER theo corpus): Baseer-Nakba 7,9% / 24,4% · Ketaba 9,4% / 30,0% "
+                 "· baseline Qwen3-VL-8B LoRA 36,8% / 69,1%."]
     (out / "tom_tat.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
     (out / "tom_tat.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
     return "\n".join(rows)
@@ -280,8 +289,8 @@ def main() -> int:
 
     def checkpoint(note: str, force: bool = False) -> None:
         if sync and (force or sync.due()):
-            write_summary(out, lines, names, a.split, note)
-            write_details(out, lines, names, html_too=force)  # html (có ảnh, vài MB) chỉ khi xong một model
+            write_summary(out, lines, names, a.split, note, ten_bo(a.data))
+            write_details(out, lines, names, html_too=force, bo=ten_bo(a.data))  # html (có ảnh, vài MB) chỉ khi xong một model
             sync.push(note)
 
     for name in names:
@@ -309,8 +318,8 @@ def main() -> int:
         from htr_test.models import free_cuda
         free_cuda()
         checkpoint(f"xong {name}", force=True)
-    print(write_summary(out, lines, names, a.split, "xong"))
-    write_details(out, lines, names, html_too=True)
+    print(write_summary(out, lines, names, a.split, "xong", ten_bo(a.data)))
+    write_details(out, lines, names, html_too=True, bo=ten_bo(a.data))
     print(f"Từng dòng: {out / 'chi_tiet.csv'}  ·  {out / 'xem_ket_qua.html'}")
     checkpoint("XONG tất cả", force=True)
     return 0

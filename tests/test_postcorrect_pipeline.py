@@ -68,3 +68,30 @@ def test_many_pages_one_batch_keeps_pages_separate():
     rs = correct_pages(pages, be, Settings(strategy="A"))
     assert len(be.calls) == 2  # mỗi trang một chunk, sinh trong cùng một lượt
     assert all(r["corrected"].count("المحترم") == 1 for r in rs)
+
+
+def test_strategy_c_with_dots_signal_flags_hesitant_word():
+    from types import SimpleNamespace
+
+    p = page()
+    words = p.text.split()
+    p.dots = [SimpleNamespace(lp_min=-3.0 if w == "المحتزم" else -0.05) for w in words]
+    be = DummyBackend(fixes=FIX, suspicious={"اني"})  # NLL chỉ nghi "اني", nhưng tín hiệu được chọn là dots
+    r = correct_pages([p], be, Settings(strategy="C", flag_signal="dots", flag_frac=0.2, flag_min_dots=0.5))[0]
+    assert [f["word"] for f in r["flags"]] == ["المحتزم"]
+    assert [e["to"] for e in r["edits"]] == ["المحترم"]
+    # combo: trung bình hạng của hai tín hiệu; từ nào cũng có cả hai
+    r2 = correct_pages([p], be, Settings(strategy="C", flag_signal="combo", flag_frac=0.2))[0]
+    assert {f["word"] for f in r2["flags"]} <= {"المحتزم", "اني"} and r2["flags"]
+    # không có dots → "dots" không đánh dấu gì, không gọi LLM
+    p.dots = None
+    be2 = DummyBackend(fixes=FIX)
+    assert correct_pages([p], be2, Settings(strategy="C", flag_signal="dots"))[0]["flags"] == [] and be2.calls == []
+
+
+def test_rank_scores_ties_get_average_rank():
+    from postcorrect.detect import combine_ranks, rank_scores
+
+    assert rank_scores([1.0, 1.0, 1.0, 5.0]) == [1 / 3, 1 / 3, 1 / 3, 1.0]
+    assert rank_scores([None, 2.0, 1.0]) == [None, 1.0, 0.0]
+    assert combine_ranks([1.0, 2.0], [None, 3.0])[0] is None

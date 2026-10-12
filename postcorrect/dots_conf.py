@@ -12,6 +12,8 @@ import json
 import re
 from dataclasses import dataclass
 
+from .text import TEXT_CATS
+
 
 def _byte_decoder() -> dict[str, int]:
     bs = list(range(ord("!"), ord("~") + 1)) + list(range(ord("¡"), ord("¬") + 1)) + list(range(ord("®"), ord("ÿ") + 1))
@@ -61,6 +63,8 @@ class WordConf:
     lp_mean: float
     margin_min: float   # lề top1−top2 nhỏ nhất (nhỏ = dots phân vân giữa hai chữ)
     ent_max: float      # entropy lớn nhất
+    span: tuple[int, int] = (0, 0)       # [đầu, cuối) trong chuỗi response (đã thoát JSON)
+    tokens: tuple[int, ...] = ()         # chỉ số các token phủ từ
 
 
 def _escaped(s: str) -> str:
@@ -81,7 +85,7 @@ def word_confidences(response: str, token_stats: dict, cells: list[dict], catego
         t = c.get("text") or ""
         if not t.strip() or (categories is not None and c.get("category") not in categories):
             continue
-        t = re.sub(r"^#{1,6}\s+", "", t.strip()) if c.get("category") in ("Section-header", "Title") else t
+        t = re.sub(r"^#{1,6}\s+", "", t.strip())  # giống page_text_from_cells
         words = t.split()
         row: list[WordConf | None] = []
         cur = cursor
@@ -100,7 +104,17 @@ def word_confidences(response: str, token_stats: dict, cells: list[dict], catego
                 continue
             lp = [token_stats["lp"][i] for i in ids]
             row.append(WordConf(w, min(lp), sum(lp) / len(lp), min(token_stats["margin"][i] for i in ids),
-                                max(token_stats["ent"][i] for i in ids)))
+                                max(token_stats["ent"][i] for i in ids), (a, b), tuple(ids)))
         out[ci] = row
         cursor = max(cursor, cur)
     return out
+
+
+def page_word_conf(rec: dict, categories=TEXT_CATS) -> list[WordConf | None]:
+    """WordConf cho từng từ của văn bản trang (cùng thứ tự / số lượng với split_words(page.text)); None nếu không định vị được."""
+    conf = word_confidences(rec["response"], rec["token_stats"], rec["cells"], categories) if rec.get("token_stats") else {}
+    flat: list[WordConf | None] = []
+    for ci, c in enumerate(rec.get("cells") or []):
+        if c.get("category") in categories and (c.get("text") or "").strip():
+            flat += conf.get(ci, [None] * len(re.sub(r"^#{1,6}\s+", "", c["text"].strip()).split()))
+    return flat

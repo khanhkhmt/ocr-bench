@@ -5,6 +5,7 @@
   correct-cache        sửa hàng loạt từ cache OCR  (một tiến trình mỗi GPU: --device i --shard i/n)
   correct-text         sửa một văn bản (file hoặc stdin) → JSON
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
+  analyze              tín hiệu nào khoanh đúng từ sai-gần-đúng (dots ngần ngừ / LM ngạc nhiên) + trần ứng viên
   eval                 so các lượt chạy với đáp án: CER/WER trước-sau, sửa đúng / sửa nhầm, KTC bootstrap
 
 JSON kết quả mỗi trang: {id, original, corrected, edits:[{index, span, from, to, chunk, block}], flags, rejected, chunks,
@@ -21,6 +22,7 @@ from pathlib import Path
 
 from .guard import GuardConfig
 from .pipeline import PageText, Settings, correct_pages, page_text_from_cells
+from .text import split_words
 
 
 def add_model_args(ap):
@@ -30,6 +32,8 @@ def add_model_args(ap):
                     help="A viết lại chunk | B khoanh từ lỗi (JSON) | C viết lại, chỉ đổi từ NLL cao")
     ap.add_argument("--fewshot", action="store_true")
     ap.add_argument("--chunk-chars", type=int, default=700)
+    ap.add_argument("--flag-signal", choices=["nll", "dots", "combo"], default="nll")
+    ap.add_argument("--flag-min-dots", type=float, default=0.5)
     ap.add_argument("--flag-frac", type=float, default=0.3)
     ap.add_argument("--flag-min-nll", type=float, default=3.0)
     ap.add_argument("--max-char-edit", type=int, default=2)
@@ -40,13 +44,17 @@ def add_model_args(ap):
 
 def settings_from(a) -> Settings:
     return Settings(strategy=a.strategy, chunk_chars=a.chunk_chars, fewshot=a.fewshot, flag_frac=a.flag_frac,
-                    flag_min_nll=a.flag_min_nll, tag=a.tag,
+                    flag_min_nll=a.flag_min_nll, flag_signal=a.flag_signal, flag_min_dots=a.flag_min_dots, tag=a.tag,
                     guard=GuardConfig(max_char_edit=a.max_char_edit, max_edit_ratio=a.max_edit_ratio))
 
 
 def load_backend(a, device: int):
-    from .backend import HFBackend
+    from .backend import DummyBackend, HFBackend
 
+    if a.model == "dummy":  # chạy khô luồng dữ liệu, không model: không sửa gì, mọi từ NLL thấp
+        b = DummyBackend()
+        b.load_seconds = 0.0
+        return b
     return HFBackend(a.model, device=device, quant=a.quant, max_batch=a.max_batch)
 
 
@@ -62,32 +70,26 @@ def load_ocr_pages(ocr_dir: Path, ids: list[str]) -> list[PageText]:
             continue
         p = page_text_from_cells(rec["id"], rec["cells"])
         if p.text.strip():
+            try:
+                from .dots_conf import page_word_conf
+
+                conf = page_word_conf(rec)
+                p.dots = conf if len(conf) == len(split_words(p.text)) else None
+            except Exception:  # thiếu / hỏng thống kê token → vẫn sửa được, chỉ không có tín hiệu dots
+                p.dots = None
             pages.append(p)
     return pages
 
 
-def cmd_correct_cache(a):
-    from .ocr_cache import load_manifest
-
-    rows = load_manifest(Path(a.manifest))
-    if a.split:
-        rows = [r for r in rows if r.get("split") == a.split]
-    ids = [r["id"] for r in rows]
-    if a.limit:
-        ids = ids[:a.limit]
-    si, sn = (int(x) for x in a.shard.split("/"))
-    ids = [i for k, i in enumerate(ids) if k % sn == si]
-    out = Path(a.out)
+def _run_variant(backend, a, ids: list[str], st: Settings, out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
-    pages = [p for p in load_ocr_pages(Path(a.ocr), [i for i in ids if not (out / f"{i}.json").exists()])]
-    print(f"[shard {a.shard}] {len(ids)} trang thuộc phần này, cần chạy {len(pages)} (còn lại đã có kết quả / OCR lỗi)", flush=True)
+    pages = load_ocr_pages(Path(a.ocr), [i for i in ids if not (out / f"{i}.json").exists()])
+    print(f"[{st.tag or st.strategy}] {len(ids)} trang thuộc phần này, cần chạy {len(pages)} "
+          f"(còn lại đã có kết quả / OCR lỗi) → {out}", flush=True)
     if not pages:
         return
-    st = settings_from(a)
-    backend = load_backend(a, a.device)
-    print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {backend.load_seconds:.0f}s", flush=True)
     meta = {"model": a.model, "quant": a.quant, "device": a.device, "shard": a.shard, "settings": st.as_dict(),
-            "load_seconds": round(backend.load_seconds, 1), "groups": [], "pages_done": 0}
+            "load_seconds": round(getattr(backend, "load_seconds", 0.0), 1), "groups": [], "pages_done": 0}
     t_all = time.perf_counter()
     for g in range(0, len(pages), a.group):
         grp = pages[g:g + a.group]
@@ -105,9 +107,29 @@ def cmd_correct_cache(a):
         meta["wall_seconds"] = round(time.perf_counter() - t_all, 1)
         meta["oom_retries"] = backend.stats.oom_retries
         (out / f"run_meta_{a.shard.replace('/', 'of')}.json").write_text(json.dumps(meta, indent=1), encoding="utf-8")
-        n_e = sum(len(r["edits"]) for r in results)
-        print(f"  {meta['pages_done']}/{len(pages)} trang | {dt:.0f}s | {n_e} sửa nhận / "
-              f"{sum(len(r['rejected']) for r in results)} từ chối", flush=True)
+        print(f"  [{st.tag or st.strategy}] {meta['pages_done']}/{len(pages)} trang | {dt:.0f}s | "
+              f"{sum(len(r['edits']) for r in results)} sửa nhận / {sum(len(r['rejected']) for r in results)} từ chối",
+              flush=True)
+
+
+def cmd_correct_cache(a):
+    from .ocr_cache import load_manifest
+
+    rows = load_manifest(Path(a.manifest))
+    if a.split:
+        rows = [r for r in rows if r.get("split") == a.split]
+    ids = [r["id"] for r in rows]
+    if a.limit:
+        ids = ids[:a.limit]
+    si, sn = (int(x) for x in a.shard.split("/"))
+    ids = [i for k, i in enumerate(ids) if k % sn == si]
+    variants = [v.strip() for v in a.variants.split(",")] if a.variants else [a.strategy + ("+fs" if a.fewshot else "")]
+    backend = load_backend(a, a.device)
+    print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {getattr(backend, 'load_seconds', 0):.0f}s", flush=True)
+    for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model: A, B, C, A+fs (few-shot)...
+        st = settings_from(a)
+        st.strategy, st.fewshot, st.tag = v.split("+")[0], v.endswith("+fs"), v
+        _run_variant(backend, a, ids, st, Path(f"{a.out}__{v}") if a.variants else Path(a.out))
     backend.close()
 
 
@@ -137,6 +159,81 @@ def cmd_correct_image(a):
     res["ocr"] = {"seconds": round(ocr_s, 1), "flags": {k: v for k, v in ocr["extra"].items() if k != "blocks"}}
     print(json.dumps(res, ensure_ascii=False, indent=1))
 
+
+
+# ---------------------------------------------------------------- analyze
+def cmd_analyze(a):
+    """Tín hiệu nào khoanh đúng từ sai-gần-đúng? (dots ngần ngừ / LM ngạc nhiên) + trần ứng viên từ phương án của dots."""
+    from collections import Counter, defaultdict
+
+    from .analysis import alt_oracle, auroc, bootstrap_auroc, word_rows
+    from .chunking import chunk_text
+    from .ocr_cache import load_manifest
+    from .text import split_words
+
+    man = {r["id"]: r for r in load_manifest(Path(a.manifest)) if not a.split or r.get("split") == a.split}
+    recs = {}
+    for i in man:
+        f = Path(a.ocr) / f"{i}.json"
+        if f.exists():
+            r = json.loads(f.read_text(encoding="utf-8"))
+            if not r.get("error") and r.get("cells"):
+                recs[i] = r
+    rows_by_page, oracle = {}, Counter()
+    for i, rec in recs.items():
+        page, rows = word_rows(rec, man[i]["gt"], a.max_char_edit)
+        rows_by_page[i] = (page, rows)
+        oracle.update(alt_oracle(rec, man[i]["gt"], a.max_char_edit))
+    if a.model:
+        backend = load_backend(a, a.device)
+        for i, (page, rows) in rows_by_page.items():
+            for ch in chunk_text(page.text, a.chunk_chars):
+                for k, w in enumerate(backend.nll_words(ch.text)):
+                    rows[ch.first_word + k].signals["nll_max"] = w.max
+                    rows[ch.first_word + k].signals["nll_sum"] = w.total
+        backend.close()
+    sigs = sorted({k for _, rows in rows_by_page.values() for r in rows for k in r.signals})
+    if len(sigs) > 1:  # tín hiệu gộp: trung bình hạng phân vị trong trang của dots_lp và nll_max (nếu có cả hai)
+        for page, rows in rows_by_page.values():
+            for k in ("dots_lp", "nll_max"):
+                have = [r for r in rows if k in r.signals]
+                for rank, r in enumerate(sorted(have, key=lambda r: r.signals[k])):
+                    r.signals[f"_r_{k}"] = rank / max(1, len(have) - 1)
+            for r in rows:
+                if "_r_dots_lp" in r.signals and "_r_nll_max" in r.signals:
+                    r.signals["combo_rank"] = (r.signals["_r_dots_lp"] + r.signals["_r_nll_max"]) / 2
+        sigs = sorted({k for _, rows in rows_by_page.values() for r in rows for k in r.signals if not k.startswith("_")})
+    cnt = Counter(r.label for _, rows in rows_by_page.values() for r in rows)
+    n = sum(cnt.values())
+    print(f"# Phân tích tín hiệu — {len(rows_by_page)} trang, {n} từ OCR: đúng {cnt['ok']} ({cnt['ok'] / n:.1%}), "
+          f"sai-gần-đúng (≤{a.max_char_edit} ký tự) {cnt['near']} ({cnt['near'] / n:.1%}), sai-xa {cnt['far']}, thừa {cnt['extra']}\n")
+    print("Phân biệt từ SAI-GẦN-ĐÚNG (dương) với từ ĐÚNG (âm); từ sai-xa / thừa bỏ khỏi bài toán này.\n")
+    print("| tín hiệu | AUROC [KTC 95%] | recall khi đánh dấu 20% từ | precision@20% | recall @30% | precision @30% |")
+    print("|---|---|---|---|---|---|")
+    for k in sigs:
+        by_page = defaultdict(list)
+        for pid, (_, rows) in rows_by_page.items():
+            for r in rows:
+                if k in r.signals and r.label in ("ok", "near"):
+                    by_page[pid].append((r.signals[k], int(r.label == "near")))
+        flat = [x for v in by_page.values() for x in v]
+        if not flat:
+            continue
+        pos = [s for s, y in flat if y]
+        neg = [s for s, y in flat if not y]
+        lo, hi = bootstrap_auroc(by_page, n=a.boot)
+        cells = []
+        for frac in (0.2, 0.3):
+            top = sorted(flat, key=lambda x: -x[0])[: int(frac * len(flat))]
+            tp = sum(y for _, y in top)
+            cells += [f"{tp / max(1, len(pos)):.2f}", f"{tp / max(1, len(top)):.2f}"]
+        print(f"| {k} | {auroc(pos, neg):.3f} [{lo:.3f}, {hi:.3f}] | {cells[0]} | {cells[1]} | {cells[2]} | {cells[3]} |")
+    base = cnt["near"] / max(1, cnt["near"] + cnt["ok"])
+    print(f"\n(Tỉ lệ nền: {base:.1%} số từ xét là sai-gần-đúng → precision ngẫu nhiên = {base:.2f}, AUROC ngẫu nhiên = 0.5)")
+    if oracle["near"]:
+        print(f"\nTrần ứng viên từ phương án của dots: trong {oracle['near']} từ sai-gần-đúng, thay MỘT token bằng phương án top-3 "
+              f"cho đúng từ đáp án ở {oracle['covered']} từ ({oracle['covered'] / oracle['near']:.1%}); chỉ riêng phương án thứ 2: "
+              f"{oracle['covered_top2']} ({oracle['covered_top2'] / oracle['near']:.1%}).")
 
 # ---------------------------------------------------------------- eval
 def _label_path(s: str) -> tuple[str, Path]:
@@ -181,15 +278,15 @@ def cmd_eval(a):
         sb = summarize(base_rows, name)
         print(f"## Chuẩn hoá {name}  (CER/WER OCR gốc: {sb['cer_before']:.3f} / {sb['wer_before']:.3f}; "
               f"{sb['ref_words']} từ đáp án; từ OCR sai trong tầm với của chốt chặn: {sb['reach_frac_of_err']:.1%})\n")
-        print("| lượt chạy | CER sau | ΔCER (điểm %) [KTC 95%] | WER sau | số sửa | chính xác | sửa nhầm (từ đúng bị đổi) | "
-              "sửa đúng hẳn | giây/trang |")
-        print("|---|---|---|---|---|---|---|---|---|")
+        print("| lượt chạy | CER sau | ΔCER (điểm %) [KTC 95%] | WER sau | số sửa | precision | sửa nhầm (từ đúng bị đổi) | "
+              "sửa đúng hẳn | recall (trong tầm với / tất cả lỗi) | giây GPU/trang |")
+        print("|---|---|---|---|---|---|---|---|---|---|")
         for lab, rows in table.items():
             s = summarize(rows, name)
             meta = _meta_seconds(Path(dict(map(_label_path, a.runs))[lab]), len(runs[lab]))
             print(f"| {lab} | {s['cer_after']:.4f} | {s['cer_delta'] * 100:+.2f} {fmt_ci(rows, lambda x: x['cer_delta'], name)} | "
                   f"{s['wer_after']:.4f} | {s['edits']} | {s['precision']:.2f} | {s['harm_rate'] * 100:.2f}% ({s['harm']}) | "
-                  f"{s['fixed']} | {meta} |")
+                  f"{s['fixed']} | {s['fix_rate_of_reach']:.1%} / {s['recall_all']:.1%} | {meta} |")
             out.setdefault(lab, {})[name] = s
         print()
     print("## Theo mức nhiễu của OCR (strict): ΔCER điểm % / số sửa đúng hẳn / số từ đúng bị đổi\n")
@@ -205,8 +302,8 @@ def cmd_eval(a):
         print(f"| {lab} | " + " | ".join(cells) + " |")
     print()
     for lab, rows in table.items():
-        if "flag_precision" in summarize(rows):
-            s = summarize(rows)
+        s = summarize(rows)
+        if s.get("flags"):
             print(f"- Cờ nghi lỗi của {lab}: {s['flags']} từ, precision {s['flag_precision']:.2f}, recall {s['flag_recall']:.2f}")
         why = Counter(x["reason"] for r in runs[lab].values() for x in r["rejected"])
         cr = Counter(c["chunk_reason"] for r in runs[lab].values() for c in r["chunks"] if c["chunk_reason"])
@@ -240,6 +337,7 @@ def main(argv=None):
     p.add_argument("--device", type=int, default=0)
     p.add_argument("--shard", default="0/1")
     p.add_argument("--group", type=int, default=8)
+    p.add_argument("--variants", help="vd. A,B,C,A+fs — chạy lần lượt trong một tiến trình; kết quả ở <out>__<biến thể>")
     add_model_args(p)
     p.set_defaults(func=cmd_correct_cache)
 
@@ -266,6 +364,16 @@ def main(argv=None):
     p.add_argument("--json")
     p.set_defaults(func=cmd_eval)
 
+    p = sub.add_parser("analyze")
+    p.add_argument("--ocr", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--split", choices=["dev", "holdout"])
+    p.add_argument("--device", type=int, default=0)
+    p.add_argument("--boot", type=int, default=300)
+    p.add_argument("--no-model", dest="model_off", action="store_true", help="chỉ tín hiệu của dots, không nạp LLM")
+    add_model_args(p)
+    p.set_defaults(func=cmd_analyze)
+
     p = sub.add_parser("ocr")
     p.set_defaults(func=None)
     p = sub.add_parser("dataset")
@@ -282,6 +390,8 @@ def main(argv=None):
         return m(rest)
     if rest:
         ap.error(f"tham số lạ: {rest}")
+    if getattr(a, "model_off", False):
+        a.model = None
     a.func(a)
 
 

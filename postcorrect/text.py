@@ -9,6 +9,8 @@ from __future__ import annotations
 import re
 import unicodedata
 
+# Loại khối dots có chữ để sửa. Bảng / công thức / hình / đầu-chân trang KHÔNG đưa cho LLM (số liệu, mã, rác Latin).
+TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote"}
 _WORD = re.compile(r"\S+")
 # tashkeel + dấu Quran nhỏ + chữ alef nhỏ + tatweel (khớp ocrbench.normalize, viết bằng mã để khỏi lẫn ký tự vô hình)
 _MARKS = re.compile("[ؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۨ-ۭـ]")

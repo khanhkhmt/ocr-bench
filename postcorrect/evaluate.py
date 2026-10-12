@@ -189,6 +189,7 @@ def summarize(rows: list[dict], name: str = "strict") -> dict:
         "harm_rate": es["harm_words"] / es["ok_words"] if es["ok_words"] else float("nan"),
         "fix_rate_of_reach": es["fixed_words"] / es["reach_words"] if es["reach_words"] else float("nan"),
         "reach_frac_of_err": es["reach_words"] / es["err_words"] if es["err_words"] else float("nan"),
+        "recall_all": es["fixed_words"] / es["err_words"] if es["err_words"] else float("nan"),
     }
     s["cer_delta"] = s["cer_after"] - s["cer_before"]
     s["wer_delta"] = s["wer_after"] - s["wer_before"]

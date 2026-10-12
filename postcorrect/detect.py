@@ -1,8 +1,10 @@
 """Khoanh từ nghi lỗi TRƯỚC khi nhờ LLM sinh chữ (detect-then-correct).
 
-Tín hiệu hiện có: NLL của LM (một lượt forward, ~0.4–0.5 s/chunk 600 ký tự trên T4). Bài đo nhỏ trên văn bản tổng hợp:
-khoanh 20% số từ có NLL token lớn nhất bắt được 87–95% từ lỗi chèn giả (AUROC 0.93–0.95). Chưa biết với chữ viết tay thật —
-đó là việc của bước đánh giá. (Tín hiệu thứ hai, độ tin cậy token của dots, được ghi lúc OCR; xem dots_logprob.py.)
+Hai tín hiệu, cùng quy ước "điểm CAO = đáng nghi hơn":
+  - NLL của LM (một lượt forward, ~0.4–0.5 s/chunk 600 ký tự trên T4): token đắt nhất của từ.
+  - độ ngần ngừ của dots (−log-prob thấp nhất của token trong từ), ghi sẵn lúc OCR — tín hiệu duy nhất "nhìn thấy ảnh".
+Bài đo nhỏ trên văn bản tổng hợp: khoanh 20% số từ có NLL cao nhất bắt được 87–95% từ lỗi chèn giả. Với chữ viết tay thật phải
+đo lại — xem `python -m postcorrect analyze`.
 """
 
 from __future__ import annotations
@@ -11,13 +13,37 @@ from .backend import WordNLL
 from .text import is_protected
 
 
-def select_flags(words: list[str], nll: list[WordNLL], frac: float, min_nll: float,
+def nll_scores(nll: list[WordNLL]) -> list[float | None]:
+    return [w.max if w.n_tok > 0 else None for w in nll]
+
+
+def rank_scores(scores: list[float | None]) -> list[float | None]:
+    """Điểm → hạng phân vị trong chunk (0..1). Điểm BẰNG NHAU nhận hạng trung bình (không để vị trí từ quyết định hạng).
+    None giữ nguyên."""
+    have = sorted((s, i) for i, s in enumerate(scores) if s is not None)
+    out: list[float | None] = [None] * len(scores)
+    a = 0
+    while a < len(have):
+        b = a
+        while b + 1 < len(have) and have[b + 1][0] == have[a][0]:
+            b += 1
+        for k in range(a, b + 1):
+            out[have[k][1]] = ((a + b) / 2) / max(1, len(have) - 1)
+        a = b + 1
+    return out
+
+
+def combine_ranks(a: list[float | None], b: list[float | None]) -> list[float | None]:
+    ra, rb = rank_scores(a), rank_scores(b)
+    return [None if x is None or y is None else (x + y) / 2 for x, y in zip(ra, rb)]
+
+
+def select_flags(words: list[str], scores: list[float | None], frac: float, min_score: float,
                  min_core_len: int = 2) -> dict[int, float]:
-    """Chỉ số từ nghi lỗi → điểm (max NLL token). Bỏ từ được bảo vệ (số, Latin, chữ đơn). Lấy top `frac` số từ
-    còn lại theo điểm, và chỉ nhận từ có điểm ≥ min_nll (văn bản dễ đoán thì không đánh dấu gì)."""
-    cand = [(nll[i].max, i) for i, w in enumerate(words) if not is_protected(w, min_core_len) and nll[i].n_tok > 0]
+    """Chỉ số từ nghi lỗi → điểm. Bỏ từ được bảo vệ (số, Latin, chữ đơn) và từ không có điểm. Lấy top `frac` số từ còn
+    lại theo điểm, và chỉ nhận từ có điểm ≥ min_score (văn bản dễ đoán thì không đánh dấu gì)."""
+    cand = [(s, i) for i, (w, s) in enumerate(zip(words, scores)) if s is not None and not is_protected(w, min_core_len)]
     if not cand:
         return {}
     k = max(1, round(frac * len(cand)))
-    top = sorted(cand, reverse=True)[:k]
-    return {i: s for s, i in top if s >= min_nll}
+    return {i: s for s, i in sorted(cand, key=lambda x: (-x[0], x[1]))[:k] if s >= min_score}

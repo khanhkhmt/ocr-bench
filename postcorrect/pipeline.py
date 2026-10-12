@@ -11,15 +11,13 @@ import re
 from dataclasses import asdict, dataclass, field
 
 from .chunking import chunk_text
-from .detect import select_flags
+from .detect import combine_ranks, nll_scores, select_flags
 from .diff import Edit, apply_edits_text
 from .guard import GuardConfig, filter_edits
 from .parse import parse_flags, parse_rewrite
 from .prompts import mark_words, messages
-from .text import split_words, words_with_spans
+from .text import TEXT_CATS, split_words, words_with_spans
 
-# Loại khối có chữ để sửa. Bảng / công thức / hình / đầu-chân trang KHÔNG đưa cho LLM (số liệu, mã, rác Latin).
-TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote"}
 _HASHES = re.compile(r"^#{1,6}\s+")
 
 
@@ -28,6 +26,7 @@ class PageText:
     id: str
     text: str
     blocks: list[dict] = field(default_factory=list)  # {block, category, start, end, first_word, n_words}
+    dots: list | None = None  # WordConf (độ tin cậy dots) cho từng từ, hoặc None — để chiến lược C chọn từ đánh dấu
 
 
 def page_text_from_cells(page_id: str, cells: list[dict] | None, categories=TEXT_CATS) -> PageText:
@@ -56,8 +55,10 @@ class Settings:
     chunk_chars: int = 700
     fewshot: bool = False
     guard: GuardConfig = field(default_factory=GuardConfig)
+    flag_signal: str = "nll"          # C: chọn từ đánh dấu bằng "nll" (LM) | "dots" (độ ngần ngừ của dots) | "combo" (trung bình hạng)
     flag_frac: float = 0.3            # C: tỉ lệ từ được đánh dấu (sau khi bỏ từ bảo vệ)
     flag_min_nll: float = 3.0         # C: điểm NLL tối thiểu để được đánh dấu
+    flag_min_dots: float = 0.5        # C: −log-prob tối thiểu của dots để được đánh dấu (tín hiệu "dots")
     max_new_factor: float = 1.4
     tag: str = ""
 
@@ -93,8 +94,17 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
 
     if strategy == "C":  # khoanh trước: chunk không có từ nghi lỗi thì khỏi gọi LLM
         for t in tasks:
-            nll = backend.nll_words(t.chunk.text)
-            t.flagged = select_flags(t.words, nll, st.flag_frac, st.flag_min_nll, st.guard.min_core_len)
+            lo, hi = t.chunk.first_word, t.chunk.first_word + t.chunk.n_words
+            dots = pages[t.page].dots
+            d_scores = [(-wc.lp_min if wc is not None else None) for wc in dots[lo:hi]] if dots and len(dots) >= hi else None
+            n_scores = nll_scores(backend.nll_words(t.chunk.text)) if st.flag_signal in ("nll", "combo") else None
+            if st.flag_signal == "dots":
+                scores, floor = d_scores or [None] * t.chunk.n_words, st.flag_min_dots
+            elif st.flag_signal == "combo" and d_scores:
+                scores, floor = combine_ranks(n_scores, d_scores), 0.0
+            else:  # "nll", hoặc "combo" khi trang này không có tín hiệu dots
+                scores, floor = n_scores, st.flag_min_nll
+            t.flagged = select_flags(t.words, scores, st.flag_frac, floor, st.guard.min_core_len)
 
     todo = [t for t in tasks if strategy != "C" or t.flagged]
     for t in todo:

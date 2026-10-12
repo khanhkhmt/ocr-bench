@@ -85,6 +85,61 @@ def _block_of(page: PageText, word_index: int):
     return None
 
 
+def process_raw(strategy: str, words: list[str], raw: str, guard: GuardConfig, allowed: set[int] | None) -> dict:
+    """Đầu ra thô của LLM cho MỘT chunk → trạng thái, sửa được nhận / từ chối (theo chốt chặn `guard`).
+    Tách riêng để quét ngưỡng chốt chặn trên đầu ra đã lưu mà không cần chạy lại LLM (refilter_result)."""
+    out = {"status": "", "chunk_reason": None, "filtered": None, "flags": []}
+    if strategy == "B":
+        items, status = parse_flags(raw)
+        out["status"] = f"B:{status}"
+        fix = {}
+        for it in items:
+            fix.setdefault(it["word"], it["fix"])
+        hyp = [x for w in (fix.get(w, w) for w in words) for x in w.split()]
+        out["flags"] = [(i, w, fix[w]) for i, w in enumerate(words) if w in fix]
+    else:
+        text, status = parse_rewrite(raw)
+        out["status"] = f"rewrite:{status}"
+        hyp = split_words(text.replace("[[", "").replace("]]", "")) if text is not None else None
+    if hyp is None:
+        out["chunk_reason"] = "unparsable"
+        return out
+    out["filtered"] = filter_edits(words, hyp, guard, allowed)
+    out["chunk_reason"] = out["filtered"].chunk_reason
+    return out
+
+
+def refilter_result(res: dict, guard: GuardConfig) -> dict:
+    """Áp lại chốt chặn khác lên đầu ra thô đã lưu của một trang (không chạy lại LLM). Trả bản sao đã cập nhật."""
+    out = {**res, "edits": [], "rejected": [], "chunks": []}
+    words = split_words(res["original"])
+    strategy = res["strategy"]
+    flagged = {f["index"] for f in res["flags"]} if strategy == "C" else None
+    for info in res["chunks"]:
+        info = dict(info)
+        if "raw" not in info:  # chunk không gọi LLM (C không có từ nghi lỗi)
+            out["chunks"].append(info)
+            continue
+        lo, n = info["first_word"], info["n_words"]
+        allowed = {i - lo for i in flagged if lo <= i < lo + n} if flagged is not None else None
+        pr = process_raw(strategy, words[lo:lo + n], info["raw"], guard, allowed)
+        info["chunk_reason"], info["n_edits"], info["n_rejected"] = pr["chunk_reason"], 0, 0
+        f = pr["filtered"]
+        if f is not None:
+            info["n_edits"], info["n_rejected"] = len(f.accepted), len(f.rejected)
+            for e in f.accepted:
+                g = Edit(lo + e.index, e.src, e.dst)
+                out["edits"].append({**g.as_json(), "chunk": info["i"], "block": None})
+            for e, why in f.rejected:
+                out["rejected"].append({"index": lo + e.index, "from": e.from_, "to": e.to, "reason": why})
+        out["chunks"].append(info)
+    out["edits"].sort(key=lambda e: e["index"])
+    eds = [Edit(e["index"], tuple(e["from"].split()), tuple(e["to"].split())) for e in out["edits"]]
+    out["corrected"] = apply_edits_text(res["original"], eds)
+    out["settings"] = {**res["settings"], "guard": asdict(guard)}
+    return out
+
+
 def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
     strategy = st.strategy
     tasks: list[_Task] = []
@@ -133,29 +188,15 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
             res["chunks"].append(info)
             continue
         info["raw"] = t.raw
-        hyp = None
-        if strategy == "B":
-            items, status = parse_flags(t.raw)
-            info["status"] = f"B:{status}"
-            fix = {}
-            for it in items:
-                fix.setdefault(it["word"], it["fix"])
-            hyp = [fix.get(w, w) for w in t.words]
-            hyp = [x for w in hyp for x in w.split()]
-            res["flags"] += [{"index": t.chunk.first_word + i, "word": w, "fix": fix[w]}
-                             for i, w in enumerate(t.words) if w in fix]
-        else:
-            text, status = parse_rewrite(t.raw)
-            info["status"] = f"rewrite:{status}"
-            if text is not None:
-                hyp = split_words(text.replace("[[", "").replace("]]", ""))
-        if hyp is None:
-            info["chunk_reason"] = "unparsable"
+        pr = process_raw(strategy, t.words, t.raw, st.guard, set(t.flagged) if strategy == "C" else None)
+        info["status"] = pr["status"]
+        info["chunk_reason"] = pr["chunk_reason"]
+        if pr["flags"]:
+            res["flags"] += [{"index": t.chunk.first_word + i, "word": w, "fix": f} for i, w, f in pr["flags"]]
+        if pr["filtered"] is None:
             res["chunks"].append(info)
             continue
-        allowed = set(t.flagged) if strategy == "C" else None
-        f = filter_edits(t.words, hyp, st.guard, allowed)
-        info["chunk_reason"] = f.chunk_reason
+        f = pr["filtered"]
         info["n_edits"], info["n_rejected"] = len(f.accepted), len(f.rejected)
         for e in f.accepted:
             g = Edit(t.chunk.first_word + e.index, e.src, e.dst)

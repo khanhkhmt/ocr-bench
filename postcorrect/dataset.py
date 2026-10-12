@@ -94,6 +94,39 @@ def build_muharaf(out: Path, n: int = 100, seed: int = 13, min_mp: float = 2.0, 
     return {"pages": len(chosen), **count, "words": words}
 
 
+def build_khatt(out: Path, n: int = 24, seed: int = 13) -> dict:
+    """Đoạn văn viết tay hiện đại (KHATT, bản KITAB-Bench): chữ rõ hơn Muharaf, tiếng Ả Rập chuẩn. Phiên âm TRUNG THÀNH
+    (giữ cả lỗi chính tả của người viết) → cũng là phép thử "LLM sửa quá tay". Không có mã người viết → chia dev/holdout xen kẽ."""
+    from datasets import Image as HFImage
+    from datasets import load_dataset
+    from PIL import Image
+
+    ds = load_dataset("ahmedheakl/arocrbench_khattparagraph", split="train").cast_column("image", HFImage(decode=False))
+    idx = list(range(len(ds)))
+    random.Random(seed).shuffle(idx)
+    (out / "images").mkdir(parents=True, exist_ok=True)
+    chosen = []
+    for i in idx[:n]:
+        row = ds[i]
+        data = row["image"]["bytes"]
+        im = Image.open(io.BytesIO(data))
+        ext = (im.format or "JPEG").lower().replace("jpeg", "jpg")
+        name = f"k{len(chosen):04d}.{ext}"
+        (out / "images" / name).write_bytes(data)
+        chosen.append({"id": f"khatt_{len(chosen):04d}", "image": f"images/{name}", "category": "handwriting_ar_modern",
+                       "gt": row["answer"].strip(), "gt_type": "text", "lang": "ar", "doc_id": f"khatt_{i}",
+                       "split": "dev" if len(chosen) % 2 == 0 else "holdout",
+                       "meta": {"source_index": i, "width": im.size[0], "height": im.size[1]}})
+    with open(out / "manifest.jsonl", "w", encoding="utf-8") as f:
+        for r in chosen:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    (out / "DATASET_CARD.md").write_text(
+        f"# Bộ đánh giá KHATT-paragraph (công khai)\n\n- Nguồn: `ahmedheakl/arocrbench_khattparagraph` (KITAB-Bench; KHATT gốc có "
+        f"điều khoản riêng, chỉ dùng nghiên cứu, KHÔNG phân phối lại).\n- {len(chosen)} đoạn, seed {seed}, chia dev/holdout xen kẽ "
+        "(không có mã người viết).\n- Đáp án là phiên âm trung thành, có cả lỗi chính tả của người viết.\n", encoding="utf-8")
+    return {"pages": len(chosen), "words": sum(len(r["gt"].split()) for r in chosen)}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -101,9 +134,15 @@ def main(argv=None):
     m.add_argument("--out", required=True)
     m.add_argument("--n", type=int, default=100)
     m.add_argument("--seed", type=int, default=13)
+    k = sub.add_parser("khatt")
+    k.add_argument("--out", required=True)
+    k.add_argument("--n", type=int, default=24)
+    k.add_argument("--seed", type=int, default=13)
     a = ap.parse_args(argv)
     if a.cmd == "muharaf":
         print(build_muharaf(Path(a.out), a.n, a.seed))
+    elif a.cmd == "khatt":
+        print(build_khatt(Path(a.out), a.n, a.seed))
 
 
 if __name__ == "__main__":

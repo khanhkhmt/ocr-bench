@@ -95,3 +95,23 @@ def test_rank_scores_ties_get_average_rank():
     assert rank_scores([1.0, 1.0, 1.0, 5.0]) == [1 / 3, 1 / 3, 1 / 3, 1.0]
     assert rank_scores([None, 2.0, 1.0]) == [None, 1.0, 0.0]
     assert combine_ranks([1.0, 2.0], [None, 3.0])[0] is None
+
+
+def test_refilter_reapplies_guard_to_saved_raw_output_without_llm():
+    from postcorrect.guard import GuardConfig
+    from postcorrect.pipeline import refilter_result
+
+    be = DummyBackend(fixes=FIX)
+    res = correct_pages([page()], be, Settings(strategy="A"))[0]
+    assert [e["to"] for e in res["edits"]] == ["المحترم"] and any(x["reason"] == "too_far" for x in res["rejected"])
+    same = refilter_result(res, GuardConfig())
+    assert same["edits"] == [{**e, "block": None} for e in res["edits"]] and same["corrected"] == res["corrected"]
+    loose = refilter_result(res, GuardConfig(max_char_ratio=0.8))   # "اني" → "إنني" (2 ký tự / 3) nay được nhận
+    assert {e["to"] for e in loose["edits"]} == {"المحترم", "إنني"}
+    assert "إنني" in loose["corrected"] and loose["settings"]["guard"]["max_char_ratio"] == 0.8
+    strict = refilter_result(res, GuardConfig(max_char_edit=0))     # không cho sửa ký tự nào
+    assert strict["edits"] == [] and strict["corrected"] == res["original"]
+    # chiến lược C: chỉ từ được đánh dấu mới được sửa, kể cả sau refilter
+    be2 = DummyBackend(fixes=FIX, suspicious={"المحتزم"})
+    rc = correct_pages([page()], be2, Settings(strategy="C", flag_frac=0.5))[0]
+    assert [e["to"] for e in refilter_result(rc, GuardConfig(max_char_ratio=0.8))["edits"]] == ["المحترم"]

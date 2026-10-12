@@ -5,6 +5,7 @@
   correct-cache        sửa hàng loạt từ cache OCR  (một tiến trình mỗi GPU: --device i --shard i/n)
   correct-text         sửa một văn bản (file hoặc stdin) → JSON
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
+  refilter             áp lại chốt chặn (ngưỡng khác) lên đầu ra thô đã lưu, không cần GPU
   analyze              tín hiệu nào khoanh đúng từ sai-gần-đúng (dots ngần ngừ / LM ngạc nhiên) + trần ứng viên
   eval                 so các lượt chạy với đáp án: CER/WER trước-sau, sửa đúng / sửa nhầm, KTC bootstrap
 
@@ -235,6 +236,26 @@ def cmd_analyze(a):
               f"cho đúng từ đáp án ở {oracle['covered']} từ ({oracle['covered'] / oracle['near']:.1%}); chỉ riêng phương án thứ 2: "
               f"{oracle['covered_top2']} ({oracle['covered_top2'] / oracle['near']:.1%}).")
 
+# ---------------------------------------------------------------- refilter
+def cmd_refilter(a):
+    """Áp lại chốt chặn (ngưỡng khác) lên đầu ra thô đã lưu → thư mục kết quả mới. Không cần GPU."""
+    from .pipeline import refilter_result
+
+    src, dst = Path(a.run), Path(a.out)
+    dst.mkdir(parents=True, exist_ok=True)
+    guard = GuardConfig(max_char_edit=a.max_char_edit, max_char_ratio=a.max_char_ratio, max_edit_ratio=a.max_edit_ratio,
+                        max_drift=a.max_drift, allow_split_merge=not a.no_split_merge)
+    n = 0
+    for f in sorted(src.glob("*.json")):
+        if f.name.startswith("run_meta"):
+            (dst / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+            continue
+        res = refilter_result(json.loads(f.read_text(encoding="utf-8")), guard)
+        (dst / f.name).write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
+        n += 1
+    print(f"đã áp lại chốt chặn cho {n} trang → {dst}")
+
+
 # ---------------------------------------------------------------- eval
 def _label_path(s: str) -> tuple[str, Path]:
     return tuple(s.split("=", 1)) if "=" in s else (Path(s).name, Path(s))  # type: ignore[return-value]
@@ -363,6 +384,16 @@ def main(argv=None):
     p.add_argument("--boot", type=int, default=2000)
     p.add_argument("--json")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("refilter")
+    p.add_argument("--run", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--max-char-edit", type=int, default=2)
+    p.add_argument("--max-char-ratio", type=float, default=0.5)
+    p.add_argument("--max-edit-ratio", type=float, default=0.35)
+    p.add_argument("--max-drift", type=float, default=0.10)
+    p.add_argument("--no-split-merge", action="store_true")
+    p.set_defaults(func=cmd_refilter)
 
     p = sub.add_parser("analyze")
     p.add_argument("--ocr", required=True)

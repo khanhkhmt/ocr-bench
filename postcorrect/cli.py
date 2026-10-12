@@ -5,6 +5,7 @@
   correct-cache        sửa hàng loạt từ cache OCR  (một tiến trình mỗi GPU: --device i --shard i/n)
   correct-text         sửa một văn bản (file hoặc stdin) → JSON
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
+  lm-prefer            chẩn đoán: cho SẴN từ đúng, LM có nhận ra không (cận trên của 'ứng viên + chấm LM')
   oracle               trần: CER nếu sửa HOÀN HẢO mọi từ trong tầm chốt chặn
   vote                 đồng thuận: chỉ nhận sửa nhiều lượt chạy (khác prompt / khác model) cùng đề xuất
   make-shots           tạo ví dụ few-shot THẬT từ trang dev ngoài tập chấm (cho biến thể +rs)
@@ -338,6 +339,33 @@ def cmd_vote(a):
     print(f"đồng thuận {a.min_votes}/{len(dirs)} cho {len(ids)} trang chung → {dst}")
 
 
+# ---------------------------------------------------------------- lm-prefer
+def cmd_lm_prefer(a):
+    """Chẩn đoán: cho SẴN từ đúng, LM có chấm văn bản chứa từ đúng tốt hơn văn bản chứa từ OCR không? (cận trên của 'ứng viên + chấm LM')"""
+    from .lm_prefer import collect, roc_table
+    from .ocr_cache import load_manifest
+
+    man = [r for r in load_manifest(Path(a.manifest)) if not a.split or r.get("split") == a.split][: a.limit_pages or None]
+    recs, gts = {}, {}
+    for r in man:
+        f = Path(a.ocr) / f"{r['id']}.json"
+        if f.exists():
+            rec = json.loads(f.read_text(encoding="utf-8"))
+            if not rec.get("error") and rec.get("cells"):
+                recs[r["id"]], gts[r["id"]] = rec, r["gt"]
+    backend = load_backend(a, a.device)
+    pos, neg = collect(backend, recs, gts, a.n, a.n, a.seed, a.max_char_edit)
+    backend.close()
+    pm = sum(pos) / max(1, len(pos))
+    print(f"# LM có nhận ra từ đúng không? — {a.model}, {len(recs)} trang, {len(pos)} từ sai-gần-đúng + {len(neg)} đối chứng\n")
+    print(f"- LM thích văn bản chứa TỪ ĐÚNG hơn văn bản chứa từ OCR ở {sum(1 for d in pos if d > 0) / max(1, len(pos)):.1%} số từ sai-gần-đúng "
+          f"(Δ trung bình {pm:+.2f} nat).")
+    print(f"- Đối chứng: LM thích từ đúng gốc hơn bản bị làm nhiễu ở {sum(1 for d in neg if d < 0) / max(1, len(neg)):.1%} số từ đúng.\n")
+    print("| ngưỡng τ (nat) | nhận đúng (TPR) | nhận nhầm từ đúng (FPR) | precision |\n|---|---|---|---|")
+    for t, tpr, fpr, prec in roc_table(pos, neg):
+        print(f"| {t:.0f} | {tpr:.1%} | {fpr:.1%} | {prec:.1%} |")
+
+
 # ---------------------------------------------------------------- oracle
 def cmd_oracle(a):
     """Trần: CER sau khi sửa HOÀN HẢO mọi từ trong tầm chốt chặn (k ký tự). Cho biết nới chốt chặn có đáng không."""
@@ -387,9 +415,17 @@ def cmd_eval(a):
             r = json.loads(f.read_text(encoding="utf-8"))
             if r["id"] in man and (not a.split or man[r["id"]].get("split") == a.split):
                 runs[lab][r["id"]] = r
+    if a.subset != "all":  # tách nhóm trang dots "đọc thật" khỏi nhóm dots BỊA (tashkeel dày): hiệu quả sửa rất khác nhau
+        from .guard import diacritic_ratio
+        from .text import split_words
+
+        want_suspect = a.subset == "suspect"
+        for lab in runs:
+            runs[lab] = {i: r for i, r in runs[lab].items()
+                         if (diacritic_ratio(split_words(r["original"])) > 0.10) == want_suspect}
     common = sorted(set.intersection(*(set(v) for v in runs.values()))) if runs else []
     print(f"# Đánh giá — {len(common)} trang chung của {len(runs)} lượt chạy"
-          f"{' (' + a.split + ')' if a.split else ''}\n")
+          f"{' (' + a.split + ')' if a.split else ''}{' · nhóm ' + a.subset if a.subset != 'all' else ''}\n")
     if not common:
         return
     table = {}
@@ -493,6 +529,8 @@ def main(argv=None):
     p.add_argument("--runs", nargs="+", required=True, help="thư mục kết quả, dạng nhãn=đường_dẫn")
     p.add_argument("--split", choices=["dev", "holdout"])
     p.add_argument("--boot", type=int, default=2000)
+    p.add_argument("--subset", choices=["all", "clean", "suspect"], default="all",
+                   help="clean = trang có tashkeel ≤ 10% (dots đọc thật); suspect = tashkeel > 10% (nghi dots bịa)")
     p.add_argument("--json")
     p.set_defaults(func=cmd_eval)
 
@@ -519,6 +557,17 @@ def main(argv=None):
     p.add_argument("--no-block-convention", action="store_true", help="cho phép sửa chỉ khác quy ước (hamza, ى/ي, ة/ه)")
     p.add_argument("--max-diacritic-ratio", type=float, default=0.05, help="bỏ chunk có tashkeel dày hơn mức này (0 = tắt)")
     p.set_defaults(func=cmd_refilter)
+
+    p = sub.add_parser("lm-prefer")
+    p.add_argument("--ocr", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--split", choices=["dev", "holdout"])
+    p.add_argument("--limit-pages", type=int)
+    p.add_argument("--n", type=int, default=400, help="số từ dương và số đối chứng")
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--device", type=int, default=0)
+    add_model_args(p)
+    p.set_defaults(func=cmd_lm_prefer)
 
     p = sub.add_parser("oracle")
     p.add_argument("--ocr", required=True)

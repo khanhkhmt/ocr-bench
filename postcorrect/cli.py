@@ -23,6 +23,7 @@ import sys
 import time
 from pathlib import Path
 
+from .detect import canon_signal
 from .guard import GuardConfig
 from .pipeline import PageText, Settings, correct_pages, page_text_from_cells
 from .text import split_words
@@ -35,10 +36,10 @@ def add_model_args(ap):
                     help="A viết lại chunk | B khoanh từ lỗi (JSON) | C viết lại, chỉ đổi từ NLL cao")
     ap.add_argument("--fewshot", action="store_true")
     ap.add_argument("--chunk-chars", type=int, default=700)
-    ap.add_argument("--flag-signal", choices=["nll", "dots", "combo"], default="nll")
-    ap.add_argument("--flag-min-dots", type=float, default=0.5)
+    ap.add_argument("--flag-signal", default="nll_sum", help="nll_sum | nll_max | dots_lp | dots_lp+nll_sum | dots_lp+nll_max")
     ap.add_argument("--flag-frac", type=float, default=0.3)
-    ap.add_argument("--flag-min-nll", type=float, default=3.0)
+    ap.add_argument("--flag-min", type=float, help="điểm tối thiểu để được đánh dấu (mặc định theo tín hiệu)")
+    ap.add_argument("--nll-cache", help="thư mục cache NLL từng chunk (dùng lại giữa các lần chạy)")
     ap.add_argument("--max-char-edit", type=int, default=2)
     ap.add_argument("--max-edit-ratio", type=float, default=0.35)
     ap.add_argument("--tag", default="")
@@ -47,7 +48,7 @@ def add_model_args(ap):
 
 def settings_from(a) -> Settings:
     return Settings(strategy=a.strategy, chunk_chars=a.chunk_chars, fewshot=a.fewshot, flag_frac=a.flag_frac,
-                    flag_min_nll=a.flag_min_nll, flag_signal=a.flag_signal, flag_min_dots=a.flag_min_dots, tag=a.tag,
+                    flag_min=a.flag_min, flag_signal=canon_signal(a.flag_signal), tag=a.tag,
                     guard=GuardConfig(max_char_edit=a.max_char_edit, max_edit_ratio=a.max_edit_ratio))
 
 
@@ -58,7 +59,7 @@ def load_backend(a, device: int):
         b = DummyBackend()
         b.load_seconds = 0.0
         return b
-    return HFBackend(a.model, device=device, quant=a.quant, max_batch=a.max_batch)
+    return HFBackend(a.model, device=device, quant=a.quant, max_batch=a.max_batch, nll_cache=getattr(a, "nll_cache", None))
 
 
 # ---------------------------------------------------------------- correct-cache
@@ -212,17 +213,16 @@ def cmd_analyze(a):
                     rows[ch.first_word + k].signals["nll_max"] = w.max
                     rows[ch.first_word + k].signals["nll_sum"] = w.total
         backend.close()
-    sigs = sorted({k for _, rows in rows_by_page.values() for r in rows for k in r.signals})
-    if len(sigs) > 1:  # tín hiệu gộp: trung bình hạng phân vị trong trang của dots_lp và nll_max (nếu có cả hai)
-        for page, rows in rows_by_page.values():
-            for k in ("dots_lp", "nll_max"):
-                have = [r for r in rows if k in r.signals]
-                for rank, r in enumerate(sorted(have, key=lambda r: r.signals[k])):
-                    r.signals[f"_r_{k}"] = rank / max(1, len(have) - 1)
-            for r in rows:
-                if "_r_dots_lp" in r.signals and "_r_nll_max" in r.signals:
-                    r.signals["combo_rank"] = (r.signals["_r_dots_lp"] + r.signals["_r_nll_max"]) / 2
-        sigs = sorted({k for _, rows in rows_by_page.values() for r in rows for k in r.signals if not k.startswith("_")})
+    for page, rows in rows_by_page.values():  # tổ hợp: trung bình hạng phân vị (trong trang) của hai tín hiệu
+        for k in ("dots_lp", "nll_max", "nll_sum"):
+            have = [r for r in rows if k in r.signals]
+            for rank, r in enumerate(sorted(have, key=lambda r: r.signals[k])):
+                r.signals[f"_r_{k}"] = rank / max(1, len(have) - 1)
+        for r in rows:
+            for other in ("nll_max", "nll_sum"):
+                if "_r_dots_lp" in r.signals and f"_r_{other}" in r.signals:
+                    r.signals[f"dots_lp+{other}"] = (r.signals["_r_dots_lp"] + r.signals[f"_r_{other}"]) / 2
+    sigs = sorted({k for _, rows in rows_by_page.values() for r in rows for k in r.signals if not k.startswith("_")})
     cnt = Counter(r.label for _, rows in rows_by_page.values() for r in rows)
     n = sum(cnt.values())
     print(f"# Phân tích tín hiệu — {len(rows_by_page)} trang, {n} từ OCR: đúng {cnt['ok']} ({cnt['ok'] / n:.1%}), "

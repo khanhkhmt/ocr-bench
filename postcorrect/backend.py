@@ -9,9 +9,12 @@ DummyBackend: "LLM" giả xác định để test logic pipeline trên CPU.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from .text import words_with_spans
 
@@ -34,12 +37,15 @@ class WordNLL:
 
 class HFBackend:
     def __init__(self, model_id: str, device: int = 0, quant: str = "nf4", max_batch: int = 8,
-                 max_batch_tokens: int = 6000):
+                 max_batch_tokens: int = 6000, nll_cache: str | None = None):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
         self.torch, self.model_id, self.device, self.quant = torch, model_id, device, quant
         self.max_batch, self.max_batch_tokens = max_batch, max_batch_tokens
+        self.nll_cache = Path(nll_cache) / re.sub(r"[^A-Za-z0-9_.-]+", "_", model_id) if nll_cache else None
+        if self.nll_cache:
+            self.nll_cache.mkdir(parents=True, exist_ok=True)
         self.tok = AutoTokenizer.from_pretrained(model_id)
         if self.tok.pad_token is None:
             self.tok.pad_token = self.tok.eos_token
@@ -110,11 +116,15 @@ class HFBackend:
 
     # --- chấm NLL từng từ ---
     def nll_words(self, text: str) -> list[WordNLL]:
-        """NLL của mỗi từ (theo words_with_spans) khi LM đọc cả `text`. Một lượt forward, không sinh gì."""
+        """NLL của mỗi từ (theo words_with_spans) khi LM đọc cả `text`. Một lượt forward, không sinh gì. Có thể cache ra đĩa
+        (khoá = băm của văn bản; mỗi model một thư mục) vì thí nghiệm lặp lại trên cùng văn bản OCR."""
         torch, tok = self.torch, self.tok
         spans = [(a, b) for _, a, b in words_with_spans(text)]
         if not spans:
             return []
+        cache_file = self.nll_cache / (hashlib.sha1(text.encode("utf-8")).hexdigest() + ".json") if self.nll_cache else None
+        if cache_file is not None and cache_file.exists():
+            return [WordNLL(*x) for x in json.loads(cache_file.read_text(encoding="utf-8"))]
         enc = tok(text, return_offsets_mapping=True, return_tensors="pt")
         ids = enc["input_ids"].to(self.model.device)
         with torch.inference_mode():
@@ -136,7 +146,10 @@ class HFBackend:
             tot[wi] += nll[t - 1]
             mx[wi] = max(mx[wi], nll[t - 1])
             cnt[wi] += 1
-        return [WordNLL(a, b, c) for a, b, c in zip(tot, mx, cnt)]
+        out = [WordNLL(a, b, c) for a, b, c in zip(tot, mx, cnt)]
+        if cache_file is not None:
+            cache_file.write_text(json.dumps([[w.total, w.max, w.n_tok] for w in out]), encoding="utf-8")
+        return out
 
     def close(self):
         del self.model

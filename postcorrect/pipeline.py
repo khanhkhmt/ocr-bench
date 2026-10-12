@@ -11,7 +11,7 @@ import re
 from dataclasses import asdict, dataclass, field
 
 from .chunking import chunk_text
-from .detect import combine_ranks, nll_scores, select_flags
+from .detect import DEFAULT_MIN, canon_signal, combine_ranks, nll_scores, select_flags
 from .diff import Edit, apply_edits_text
 from .guard import GuardConfig, filter_edits
 from .parse import parse_flags, parse_rewrite
@@ -55,10 +55,9 @@ class Settings:
     chunk_chars: int = 700
     fewshot: bool = False
     guard: GuardConfig = field(default_factory=GuardConfig)
-    flag_signal: str = "nll"          # C: chọn từ đánh dấu bằng "nll" (LM) | "dots" (độ ngần ngừ của dots) | "combo" (trung bình hạng)
+    flag_signal: str = "nll_sum"      # C: nll_sum | nll_max (LM) | dots_lp (độ ngần ngừ của dots) | dots_lp+nll_sum | dots_lp+nll_max (hạng TB)
     flag_frac: float = 0.3            # C: tỉ lệ từ được đánh dấu (sau khi bỏ từ bảo vệ)
-    flag_min_nll: float = 3.0         # C: điểm NLL tối thiểu để được đánh dấu
-    flag_min_dots: float = 0.5        # C: −log-prob tối thiểu của dots để được đánh dấu (tín hiệu "dots")
+    flag_min: float | None = None     # C: điểm tuyệt đối tối thiểu để được đánh dấu (None = mặc định theo tín hiệu; tổ hợp hạng: không có)
     max_new_factor: float = 1.4
     tag: str = ""
 
@@ -152,13 +151,18 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
             lo, hi = t.chunk.first_word, t.chunk.first_word + t.chunk.n_words
             dots = pages[t.page].dots
             d_scores = [(-wc.lp_min if wc is not None else None) for wc in dots[lo:hi]] if dots and len(dots) >= hi else None
-            n_scores = nll_scores(backend.nll_words(t.chunk.text)) if st.flag_signal in ("nll", "combo") else None
-            if st.flag_signal == "dots":
-                scores, floor = d_scores or [None] * t.chunk.n_words, st.flag_min_dots
-            elif st.flag_signal == "combo" and d_scores:
-                scores, floor = combine_ranks(n_scores, d_scores), 0.0
-            else:  # "nll", hoặc "combo" khi trang này không có tín hiệu dots
-                scores, floor = n_scores, st.flag_min_nll
+            parts = canon_signal(st.flag_signal).split("+")
+            nll = backend.nll_words(t.chunk.text) if any(x.startswith("nll") for x in parts) else None
+            by = {"dots_lp": d_scores, "nll_max": nll_scores(nll, "max") if nll else None,
+                  "nll_sum": nll_scores(nll, "sum") if nll else None}
+            have = [x for x in parts if by[x] is not None]  # trang không có tín hiệu dots → dùng phần còn lại (nếu có)
+            if not have:
+                scores, floor = [None] * t.chunk.n_words, 0.0
+            elif len(have) == 1:
+                scores = by[have[0]]
+                floor = st.flag_min if st.flag_min is not None else DEFAULT_MIN[have[0]]
+            else:
+                scores, floor = combine_ranks(by[have[0]], by[have[1]]), 0.0
             t.flagged = select_flags(t.words, scores, st.flag_frac, floor, st.guard.min_core_len)
 
     todo = [t for t in tasks if strategy != "C" or t.flagged]

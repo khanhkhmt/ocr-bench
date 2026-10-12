@@ -42,13 +42,13 @@ def test_strategy_b_flags_and_edits():
 
 def test_strategy_c_only_touches_flagged_words_and_skips_unflagged_chunks():
     be = DummyBackend(fixes=FIX, suspicious={"المحتزم"})
-    r = correct_pages([page()], be, Settings(strategy="C", flag_frac=0.5, flag_min_nll=3.0))[0]
+    r = correct_pages([page()], be, Settings(strategy="C", flag_signal="nll_max", flag_frac=0.5, flag_min=3.0))[0]
     assert [f["word"] for f in r["flags"]] == ["المحتزم"]
     assert [e["to"] for e in r["edits"]] == ["المحترم"]
     assert {x["reason"] for x in r["rejected"]} <= {"outside_flag", "protected"}
     # không có từ nghi lỗi nào → không gọi LLM
     be2 = DummyBackend(fixes=FIX, suspicious=set())
-    r2 = correct_pages([page()], be2, Settings(strategy="C"))[0]
+    r2 = correct_pages([page()], be2, Settings(strategy="C", flag_signal="nll_max"))[0]
     assert be2.calls == [] and r2["edits"] == [] and r2["chunks"][0]["status"] == "no_flags"
     assert r2["corrected"] == r2["original"]
 
@@ -77,16 +77,16 @@ def test_strategy_c_with_dots_signal_flags_hesitant_word():
     words = p.text.split()
     p.dots = [SimpleNamespace(lp_min=-3.0 if w == "المحتزم" else -0.05) for w in words]
     be = DummyBackend(fixes=FIX, suspicious={"اني"})  # NLL chỉ nghi "اني", nhưng tín hiệu được chọn là dots
-    r = correct_pages([p], be, Settings(strategy="C", flag_signal="dots", flag_frac=0.2, flag_min_dots=0.5))[0]
+    r = correct_pages([p], be, Settings(strategy="C", flag_signal="dots_lp", flag_frac=0.2, flag_min=0.5))[0]
     assert [f["word"] for f in r["flags"]] == ["المحتزم"]
     assert [e["to"] for e in r["edits"]] == ["المحترم"]
     # combo: trung bình hạng của hai tín hiệu; từ nào cũng có cả hai
-    r2 = correct_pages([p], be, Settings(strategy="C", flag_signal="combo", flag_frac=0.2))[0]
+    r2 = correct_pages([p], be, Settings(strategy="C", flag_signal="dots_lp+nll_max", flag_frac=0.2))[0]
     assert {f["word"] for f in r2["flags"]} <= {"المحتزم", "اني"} and r2["flags"]
     # không có dots → "dots" không đánh dấu gì, không gọi LLM
     p.dots = None
     be2 = DummyBackend(fixes=FIX)
-    assert correct_pages([p], be2, Settings(strategy="C", flag_signal="dots"))[0]["flags"] == [] and be2.calls == []
+    assert correct_pages([p], be2, Settings(strategy="C", flag_signal="dots_lp"))[0]["flags"] == [] and be2.calls == []
 
 
 def test_rank_scores_ties_get_average_rank():
@@ -113,7 +113,7 @@ def test_refilter_reapplies_guard_to_saved_raw_output_without_llm():
     assert strict["edits"] == [] and strict["corrected"] == res["original"]
     # chiến lược C: chỉ từ được đánh dấu mới được sửa, kể cả sau refilter
     be2 = DummyBackend(fixes=FIX, suspicious={"المحتزم"})
-    rc = correct_pages([page()], be2, Settings(strategy="C", flag_frac=0.5))[0]
+    rc = correct_pages([page()], be2, Settings(strategy="C", flag_signal="nll_max", flag_frac=0.5))[0]
     assert [e["to"] for e in refilter_result(rc, GuardConfig(max_char_ratio=0.8))["edits"]] == ["المحترم"]
 
 
@@ -129,3 +129,16 @@ def test_vote_keeps_only_edits_proposed_by_enough_runs():
     assert both["corrected"] == r1["original"].replace("المحتزم", "المحترم")
     assert len(vote_results([r1, r2, r3], 1)["edits"]) == 3      # hợp: mọi sửa ≥ 1 phiếu
     assert [e["votes"] for e in vote_results([r1, r2, r3], 3)["edits"]] == [3]
+
+
+def test_flag_signal_names_default_and_aliases():
+    import pytest
+
+    from postcorrect.detect import canon_signal
+
+    assert Settings().flag_signal == "nll_sum"
+    assert canon_signal("nll") == "nll_max" and canon_signal("dots") == "dots_lp" and canon_signal("combo") == "dots_lp+nll_max"
+    with pytest.raises(ValueError):
+        canon_signal("khong_co")
+    r = correct_pages([page()], DummyBackend(fixes=FIX, suspicious={"المحتزم"}), Settings(strategy="C", flag_frac=0.2))[0]
+    assert [f["word"] for f in r["flags"]] == ["المحتزم"]   # mặc định nll_sum, ngưỡng tối thiểu 4,0

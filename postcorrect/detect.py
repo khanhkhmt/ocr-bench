@@ -13,8 +13,22 @@ from .backend import WordNLL
 from .text import is_protected
 
 
-def nll_scores(nll: list[WordNLL]) -> list[float | None]:
-    return [w.max if w.n_tok > 0 else None for w in nll]
+# Tín hiệu khoanh từ nghi lỗi (đo trên dev Muharaf, AUROC tách từ sai-gần-đúng khỏi từ đúng):
+#   nll_sum 0,74 · dots_lp 0,745 · nll_max 0,62 (token đắt nhất; trên văn bản tổng hợp thì ngang nhau, trên chữ tay thật thì kém)
+SIGNALS = ("nll_sum", "nll_max", "dots_lp", "dots_lp+nll_sum", "dots_lp+nll_max")
+DEFAULT_MIN = {"nll_max": 3.0, "nll_sum": 4.0, "dots_lp": 0.5}  # ngưỡng tuyệt đối tối thiểu; tổ hợp hạng không có ngưỡng
+_ALIASES = {"nll": "nll_max", "dots": "dots_lp", "combo": "dots_lp+nll_max"}
+
+
+def canon_signal(name: str) -> str:
+    name = _ALIASES.get(name, name)
+    if name not in SIGNALS:
+        raise ValueError(f"flag_signal phải là một trong {SIGNALS}")
+    return name
+
+
+def nll_scores(nll: list[WordNLL], kind: str = "max") -> list[float | None]:
+    return [(w.max if kind == "max" else w.total) if w.n_tok > 0 else None for w in nll]
 
 
 def rank_scores(scores: list[float | None]) -> list[float | None]:

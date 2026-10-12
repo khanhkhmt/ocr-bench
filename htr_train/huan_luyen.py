@@ -27,8 +27,13 @@ import sys
 import time
 from pathlib import Path
 
-import torch
-from PIL import Image
+import os
+
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")  # chống phân mảnh VRAM (T4 15 GB)
+os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True")
+
+import torch  # noqa: E402
+from PIL import Image  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -43,6 +48,20 @@ P_LAM_CU = {"omar": 1.0, "khatt": 1.0, "muharaf": 0.3, "arams": 0.5}  # nhân v�
 
 def doc_jsonl(f: Path) -> list[dict]:
     return [json.loads(x) for x in f.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+
+def loss_tra_loi(model, enc: dict) -> tuple[torch.Tensor, int]:
+    """Loss CHỈ trên token câu trả lời — cùng giá trị với loss mặc định của transformers (trung bình cross-entropy trên
+    các vị trí có nhãn ≠ -100), nhưng không tạo ma trận xác suất (chuỗi × 151.936 từ) cho cả token ẢNH và prompt
+    → tránh hết VRAM (bản cũ cấp 2,37 GB riêng cho bước này với lô 4). → (loss, số token câu trả lời)."""
+    labels = enc["labels"]
+    inp = {k: v for k, v in enc.items() if k != "labels"}
+    base = model.get_base_model()
+    h = base.model(**inp, use_cache=False, return_dict=True).last_hidden_state  # (lô, chuỗi, ẩn)
+    tgt = labels[:, 1:]
+    chon = tgt != -100
+    logits = base.lm_head(h[:, :-1][chon]).float()  # chỉ các vị trí dự đoán token câu trả lời
+    return torch.nn.functional.cross_entropy(logits, tgt[chon]), int(chon.sum())
 
 
 def danh_sach_mau(items: list[dict], trong_so: dict[str, float], max_mau: int, rng: random.Random) -> list[int]:
@@ -182,8 +201,8 @@ def main(argv=None, nap=nap_model) -> int:
     ap.add_argument("--vision", type=int, default=1, help="1 = LoRA cả phần ảnh")
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--lr-vision", type=float, default=2e-5)
-    ap.add_argument("--batch", type=int, default=4)
-    ap.add_argument("--accum", type=int, default=4)
+    ap.add_argument("--batch", type=int, default=2)
+    ap.add_argument("--accum", type=int, default=8, help="lô × tích luỹ = 16 mẫu / bước cập nhật")
     ap.add_argument("--warmup", type=int, default=100)
     ap.add_argument("--max-steps", type=int, default=0, help="0 = hết 1 epoch (theo --max-mau)")
     ap.add_argument("--max-mau", type=int, default=0, help="giới hạn số mẫu / epoch (0 = hết)")
@@ -270,7 +289,7 @@ def main(argv=None, nap=nap_model) -> int:
             vi_tri += a.batch
             enc = {k: v.to(dev) for k, v in gom(batch).items()}
             with torch.autocast("cuda", dtype=torch.float16, enabled=amp):
-                loss = model(**enc).loss / a.accum
+                loss = loss_tra_loi(model, enc)[0] / a.accum
             scaler.scale(loss).backward()
             lo_mat.append(loss.item() * a.accum)
         scaler.unscale_(opt)
@@ -281,8 +300,10 @@ def main(argv=None, nap=nap_model) -> int:
         buoc += 1
         if buoc % 10 == 0 or buoc == 1:
             rec = {"buoc": buoc, "loss": round(sum(lo_mat) / len(lo_mat), 4), "lr": sch.get_last_lr()[0],
-                   "s_buoc": round((time.time() - t_buoc) / max(1, len(lo_mat) // a.accum), 2)}
-            print(f"   bước {buoc}/{buoc_toi_da} · loss {rec['loss']} · {rec['s_buoc']} s/bước", flush=True)
+                   "s_buoc": round((time.time() - t_buoc) / max(1, len(lo_mat) // a.accum), 2),
+                   "vram_gb": round(torch.cuda.max_memory_allocated(dev) / 2**30, 1) if dev != "cpu" else 0}
+            print(f"   bước {buoc}/{buoc_toi_da} · loss {rec['loss']} · {rec['s_buoc']} s/bước · VRAM đỉnh {rec['vram_gb']} GB",
+                  flush=True)
             nk.write(json.dumps(rec) + "\n")
             nk.flush()
             t_buoc, lo_mat = time.time(), []

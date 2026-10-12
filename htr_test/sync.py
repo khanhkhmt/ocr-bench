@@ -20,12 +20,12 @@ FILES = ("*.jsonl", "tom_tat.md", "tom_tat.json", "chi_tiet.csv", "xem_ket_qua.h
 
 
 class Sync:
-    def __init__(self, out: Path, branch: str = "results-htr", every_min: float = 10):
+    def __init__(self, out: Path, branch: str = "results-htr", every_min: float = 10, repo_suffix: str = ""):
         if "real_docs" in str(out):
             raise SystemExit("Không đồng bộ kết quả real_docs lên GitHub (dữ liệu khách hàng).")
         self.out, self.branch, self.every = Path(out), branch, every_min * 60
         self.sub = self.out.name  # thư mục con trên nhánh = tên thư mục kết quả
-        self.repo = self.out.parent / f".{self.branch}-repo"
+        self.repo = self.out.parent / f".{self.branch}-repo{repo_suffix}"  # mỗi tiến trình song song một bản sao git
         self.remote = _git_out("remote", "get-url", "origin")
         self.last = 0.0
         self.ok = bool(self.remote) and github_token() is not None

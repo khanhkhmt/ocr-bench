@@ -47,3 +47,15 @@ export HF_TOKEN=...   # tài khoản đã bấm đồng ý điều khoản bộ 
 ```
 Chấm trên Muharaf (giấy cũ màu, gần hình thức tài liệu của khách hơn): tải `--splits test` rồi thêm `--data <thư mục> --split test --out /kaggle/working/htr_eval_muharaf`.
 Chạy lại = đi tiếp (kể cả khi Colab mất ổ: `--push` tự kéo phần đã chấm từ nhánh `results-htr` về). `--push` đẩy jsonl + bảng tạm lên nhánh GitHub `results-htr` mỗi 10 phút và khi xong mỗi model (cần GITHUB_TOKEN). Kết quả: `tom_tat.md` (cả tập: **% đúng ký tự / từ**, CER/WER gốc và chuẩn hoá, tỉ lệ độ dài, số dòng dài/ngắn bất thường), `chi_tiet.csv` (**từng dòng**: nhãn, chữ mỗi model đọc, % đúng — mở bằng Excel), `xem_ket_qua.html` (như csv, kèm ảnh dòng).
+
+## Chạy song song 2 GPU (Kaggle 2× T4) — vd. Ketaba trên Muharaf, cùng 500 dòng với benchmark n500
+```bash
+O=/kaggle/working/htr_eval_muharaf_n500; D=/kaggle/working/du_lieu_muharaf; PY=/kaggle/working/venvs/dots/bin/python
+A="-m htr_test.eval_lines --out $O --data $D --split test --n 500 --models ketaba --push"
+tmux new -d -s k0 "cd /kaggle/working/ocr-bench && $PY $A --shard 0/2 --gpu 0 2>&1 | tee -a /kaggle/working/k0.log"
+tmux new -d -s k1 "cd /kaggle/working/ocr-bench && $PY $A --shard 1/2 --gpu 1 2>&1 | tee -a /kaggle/working/k1.log"
+# xong cả hai → gộp bảng / chi tiết của thư mục này (không chấm gì thêm) và đẩy lên results-htr:
+cd /kaggle/working/ocr-bench && $PY $A
+# bảng benchmark gộp 2 bộ (cần đủ kết quả cả Omar + Muharaf ở máy chạy): python -m htr_test.benchmark --tag n500 --n 500 --chi-bang --push
+```
+Mỗi phần ghi `<model>.shard<i>of<k>.jsonl`; bảng / chi tiết tự gộp mọi phần; chạy lại = đi tiếp.

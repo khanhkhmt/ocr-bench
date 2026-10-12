@@ -192,18 +192,20 @@ def write_details(out: Path, lines: list, names: list[str], html_too: bool) -> N
 
 
 def read_done(f: Path) -> dict[str, str]:
+    """Dòng đã chấm của một model: <tên>.jsonl + mọi phần chạy song song <tên>.shard*.jsonl (--shard)."""
     done = {}
-    if f.exists():
-        for ln in f.read_text(encoding="utf-8").splitlines():
-            if ln.strip():
-                d = json.loads(ln)
-                done[d["id"]] = d["doan"]
+    for g in [f, *sorted(f.parent.glob(f"{f.stem}.shard*.jsonl"))]:
+        if g.exists():
+            for ln in g.read_text(encoding="utf-8").splitlines():
+                if ln.strip():
+                    d = json.loads(ln)
+                    done[d["id"]] = d["doan"]
     return done
 
 
 def all_models(out: Path, names: list[str]) -> list[str]:
     """Model đang chấm + mọi model đã có <tên>.jsonl trong thư mục (benchmark gọi eval_lines cho TỪNG model một)."""
-    return list(dict.fromkeys([*names, *sorted(f.stem for f in out.glob("*.jsonl"))]))
+    return list(dict.fromkeys([*names, *sorted(f.stem.split(".shard")[0] for f in out.glob("*.jsonl"))]))
 
 
 def write_summary(out: Path, lines: list, names: list[str], split: str, note: str = "") -> str:
@@ -250,16 +252,19 @@ def main() -> int:
                     help="số ảnh model đọc cùng lúc (baseer/ketaba). 1 = đúng; >1 làm Qwen2.5-VL dừng sớm (xem models.py)")
     ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"],
                     help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
+    ap.add_argument("--shard", default="", help="i/k: chạy song song k phần (vd. 0/2 trên --gpu 0, 1/2 trên --gpu 1); "
+                    "mỗi phần ghi <model>.shard<i>of<k>.jsonl, bảng / chi tiết tự gộp mọi phần")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
     ap.add_argument("--push-every", type=float, default=10, help="phút giữa 2 lần đẩy khi đang chấm")
     a = ap.parse_args()
+    shard_i, shard_k = (int(x) for x in a.shard.split("/")) if a.shard else (0, 1)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     names = [m.strip() for m in a.models.split(",") if m.strip()]
     sync = None
     if a.push:
         from htr_test.sync import Sync
-        sync = Sync(out, every_min=a.push_every)
+        sync = Sync(out, every_min=a.push_every, repo_suffix=f"-s{shard_i}" if a.shard else "")
         sync.restore()  # Colab mất ổ khi khởi động lại → lấy lại phần đã chấm từ GitHub
     lines = load_lines(a.data, a.split)
     if a.n:
@@ -273,11 +278,12 @@ def main() -> int:
             sync.push(note)
 
     for name in names:
-        f = out / f"{name}.jsonl"
-        done = read_done(f)
-        todo = [x for x in lines if x[0] not in done]
+        done = read_done(out / f"{name}.jsonl")
+        f = out / (f"{name}.shard{shard_i}of{shard_k}.jsonl" if a.shard else f"{name}.jsonl")
+        # --shard i/k: chỉ chấm dòng có thứ tự ≡ i (mod k) — k tiến trình (k GPU) cùng chấm một mẫu, không trùng dòng
+        todo = [x for n, x in enumerate(lines) if n % shard_k == shard_i and x[0] not in done]
         if not todo:
-            print(f"== {name}: đã chấm đủ {len(lines)} dòng", flush=True)
+            print(f"== {name}: phần này đã chấm xong ({len(done)}/{len(lines)} dòng cả mẫu)", flush=True)
             continue
         t0 = time.time()
         read = make_reader(name, a.gpu, a.dtype, a.model_batch, a.ketaba_mode)

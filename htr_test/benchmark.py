@@ -126,6 +126,7 @@ def main() -> int:
     ap.add_argument("--ketaba-mode", default="q4", choices=["q4", "fp16"])
     ap.add_argument("--tag", default="", help="hậu tố thư mục kết quả (vd. fp32) → lần chạy mới, KHÔNG dùng lại kết quả cũ")
     ap.add_argument("--push", action="store_true")
+    ap.add_argument("--chi-bang", action="store_true", help="KHÔNG chấm gì: chỉ dựng lại BENCHMARK_HTR.md từ kết quả đã có")
     a = ap.parse_args()
     if a.tag:
         for ds in DATASETS.values():
@@ -145,6 +146,10 @@ def main() -> int:
         if sync:
             sync.push(note)
 
+    if a.chi_bang:
+        publish("dựng lại bảng từ kết quả đã có")
+        print((root / bench_dir(a.tag) / "BENCHMARK_HTR.md").read_text(encoding="utf-8"))
+        return 0
     if "muharaf" in dsets and not (root / "du_lieu_muharaf" / "danh_sach.csv").exists():
         print("== tải Muharaf test", flush=True)
         r = subprocess.run([sys.executable, "-m", "htr_test.tai_muharaf", str(root / "du_lieu_muharaf"), "--splits", "test"],

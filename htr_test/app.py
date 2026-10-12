@@ -27,12 +27,16 @@ from .models import ArTrOCR, BaseerNakba, KetabaOCR, free_cuda
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}
-M_FT1 = "Baseer ft1 — huấn luyện tiếp, giấy cũ (khuyên dùng)"
+M_FT1 = "Baseer ft1 độ mạnh 0,5 — huấn luyện tiếp (khuyên dùng)"
 M_FT2 = "Baseer ft2 — bản thứ hai, để kiểm chéo"
 M_BASEER = "Baseer-Nakba gốc"
 M_KETABA, M_SHERIF, M_TROCR = "Ketaba-OCR (LoRA)", "sherif gốc (tắt LoRA)", "ArTrOCR"
 # thứ tự = ưu tiên: model chọn ĐẦU TIÊN là bộ đọc chính của DOCX, model thứ hai là bộ đọc kiểm chéo (tô vàng)
 ALL_MODELS = [M_FT1, M_FT2, M_BASEER, M_KETABA, M_SHERIF, M_TROCR]
+# ft1 ở độ mạnh 0,5: Omar 93,4% (≥ gốc 93,3%) · Muharaf 87,0% (gốc 79,1%) — độ mạnh 1 thì Omar tụt còn 92,0%.
+# ft2 để nguyên (1,0) làm bộ kiểm chéo: dòng ft1@0,5 và ft2 đọc trùng đúng 97,5% (Omar) / 98,5% (Muharaf); 89% / 97% số
+# lỗi nằm ở các dòng hai bên đọc khác → tô vàng đúng chỗ (500 dòng mỗi bộ, 2026-10-12).
+FT_SCALE = {"ft1": 0.5}
 BASEER_ADAPTER = {M_FT1: "ft1", M_FT2: "ft2", M_BASEER: "goc"}  # ba lựa chọn dùng CHUNG một nền Baseer trên GPU
 DOTS_FULL, DOTS_LAYOUT = "dots đọc cả chữ (để so sánh)", "dots chỉ chia khối (nhanh hơn)"
 
@@ -57,7 +61,8 @@ def ketaba():
 
 def baseer():
     if S["baseer"] is None:
-        S["baseer"] = BaseerNakba(device=f"cuda:{S['gpu']}", quant4=S["baseer_quant4"], lora=["ft1", "ft2"]).load()
+        S["baseer"] = BaseerNakba(device=f"cuda:{S['gpu']}", quant4=S["baseer_quant4"], lora=["ft1", "ft2"],
+                                   lora_scale=FT_SCALE).load()
     return S["baseer"]
 
 

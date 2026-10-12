@@ -225,11 +225,12 @@ class BaseerNakba:
                 "<|im_start|>assistant\n")
 
     def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto",
-                 lora: str | list[str] | None = None, lora_scale: float = 1.0):
+                 lora: str | list[str] | None = None, lora_scale: float | dict[str, float] = 1.0):
         """lora: adapter do htr_train/huan_luyen.py tạo → model đã huấn luyện tiếp. Mỗi mục: thư mục (vd. <out>/best),
         "ft1" / "ft2" (repo HF_FT) hoặc "hf:<chủ>/<repo>/<thư mục con>". Nhiều mục → nạp CHUNG một nền Baseer, đổi
         adapter khi đọc: read(..., adapter="ft2"); adapter="goc" = Baseer gốc (tắt adapter). Mặc định: mục đầu.
-        lora_scale: nhân độ mạnh MỌI adapter (1 = như huấn luyện; 0 = Baseer gốc; 0,5 = nửa đường giữa gốc và bản
+        lora_scale: số → nhân độ mạnh MỌI adapter; dict {tên adapter: số} → từng adapter (vd. {"ft1": 0.5}).
+        Ý nghĩa: 1 = như huấn luyện; 0 = Baseer gốc; 0,5 = nửa đường giữa gốc và bản
         huấn luyện — kiểu WiSE-FT: thường giữ lại độ chính xác miền cũ mà vẫn giữ phần lớn cái mới học)."""
         self.device, self.quant4, self.max_new_tokens, self.dtype = device, quant4, max_new_tokens, dtype
         self.lora = [lora] if isinstance(lora, str) else list(lora or [])
@@ -271,14 +272,19 @@ class BaseerNakba:
                 self.model.load_adapter(lora_dir(spec), adapter_name=ten)
             self.adapters.append(ten)
         self.model.set_adapter(self.adapters[0])
-        if self.lora_scale != 1.0:  # LoRA: y = Wx + scaling·BAx → nhân scaling = đi thẳng giữa gốc và bản huấn luyện
+        he_so = (dict(self.lora_scale) if isinstance(self.lora_scale, dict)
+                 else {t: float(self.lora_scale) for t in self.adapters})
+        if set(he_so) - set(self.adapters):
+            raise ValueError(f"lora_scale cho adapter chưa nạp: {sorted(set(he_so) - set(self.adapters))}")
+        he_so = {t: v for t, v in he_so.items() if v != 1.0}
+        if he_so:  # LoRA: y = Wx + scaling·BAx → nhân scaling = đi thẳng giữa gốc và bản huấn luyện
             n = 0
             for mod in self.model.modules():
                 sc = getattr(mod, "scaling", None)
                 if isinstance(sc, dict):
-                    for ten in self.adapters:
+                    for ten, v in he_so.items():
                         if ten in sc:
-                            sc[ten] *= self.lora_scale
+                            sc[ten] *= v
                             n += 1
             if not n:
                 raise RuntimeError("không tìm thấy lớp LoRA nào để đổi độ mạnh")

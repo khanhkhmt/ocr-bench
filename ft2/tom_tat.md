@@ -1,8 +1,8 @@
-# Huấn luyện ft2 — 2026-10-12 06:49 UTC
+# Huấn luyện ft2 — 2026-10-12 07:00 UTC
 
-Trạng thái: đánh giá bước 400: đúng ký tự 86.9%
+Trạng thái: bước 500/600 · loss 0.4361
 
-Bước 400/600 · loss 0.515 · 6.11 s/bước · lr 3.45e-05
+Bước 500/600 · loss 0.4361 · 5.92 s/bước · lr 9.55e-06
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

@@ -120,3 +120,23 @@ def alt_oracle(rec: dict, gt: str, max_char_edit: int = 2, lenient: bool = False
         covered += hit
         covered_top2 += hit2
     return {"near": near, "covered": covered, "covered_top2": covered_top2}
+
+
+def oracle_edits(rec: dict, gt: str, max_char_edit: int = 2, lenient: bool = False):
+    """Sửa của một bộ sửa HOÀN HẢO dưới chốt chặn: mọi từ sai-gần-đúng (≤ max_char_edit ký tự) được thay bằng từ đáp án
+    (giữ dấu câu của OCR). Trần lý thuyết — không bộ sửa thật nào vượt được nếu chốt chặn y như vậy."""
+    from .text import split_affixes
+
+    page = page_text_from_cells(rec["id"], rec["cells"])
+    words, gwords = split_words(page.text), split_words(gt)
+    al = align(words, gwords, lenient)
+    edits = []
+    for i, w in enumerate(words):
+        j = al.pair[i]
+        if al.label[i] == "sub" and j is not None and Levenshtein.distance(al.src_norm[i], al.gt_norm[j]) <= max_char_edit:
+            pre, _, suf = split_affixes(w)
+            edits.append({"index": i, "span": 1, "from": w, "to": pre + split_affixes(gwords[j])[1] + suf})
+    from .diff import Edit, apply_edits_text
+
+    corrected = apply_edits_text(page.text, [Edit(e["index"], (e["from"],), (e["to"],)) for e in edits])
+    return page.text, corrected, edits

@@ -115,3 +115,17 @@ def test_refilter_reapplies_guard_to_saved_raw_output_without_llm():
     be2 = DummyBackend(fixes=FIX, suspicious={"المحتزم"})
     rc = correct_pages([page()], be2, Settings(strategy="C", flag_frac=0.5))[0]
     assert [e["to"] for e in refilter_result(rc, GuardConfig(max_char_ratio=0.8))["edits"]] == ["المحترم"]
+
+
+def test_vote_keeps_only_edits_proposed_by_enough_runs():
+    from postcorrect.pipeline import vote_results
+
+    p = page()
+    r1 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم", "بخير": "بخبر"}), Settings(strategy="A"))[0]
+    r2 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم", "الاخ": "الأخ"}), Settings(strategy="A"))[0]
+    r3 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم"}), Settings(strategy="A"))[0]
+    both = vote_results([r1, r2], min_votes=2)
+    assert [e["to"] for e in both["edits"]] == ["المحترم"] and both["edits"][0]["votes"] == 2
+    assert both["corrected"] == r1["original"].replace("المحتزم", "المحترم")
+    assert len(vote_results([r1, r2, r3], 1)["edits"]) == 3      # hợp: mọi sửa ≥ 1 phiếu
+    assert [e["votes"] for e in vote_results([r1, r2, r3], 3)["edits"]] == [3]

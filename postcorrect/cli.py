@@ -5,6 +5,8 @@
   correct-cache        sửa hàng loạt từ cache OCR  (một tiến trình mỗi GPU: --device i --shard i/n)
   correct-text         sửa một văn bản (file hoặc stdin) → JSON
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
+  oracle               trần: CER nếu sửa HOÀN HẢO mọi từ trong tầm chốt chặn
+  vote                 đồng thuận: chỉ nhận sửa nhiều lượt chạy (khác prompt / khác model) cùng đề xuất
   refilter             áp lại chốt chặn (ngưỡng khác) lên đầu ra thô đã lưu, không cần GPU
   analyze              tín hiệu nào khoanh đúng từ sai-gần-đúng (dots ngần ngừ / LM ngạc nhiên) + trần ứng viên
   eval                 so các lượt chạy với đáp án: CER/WER trước-sau, sửa đúng / sửa nhầm, KTC bootstrap
@@ -256,6 +258,49 @@ def cmd_refilter(a):
     print(f"đã áp lại chốt chặn cho {n} trang → {dst}")
 
 
+# ---------------------------------------------------------------- vote
+def cmd_vote(a):
+    """Đồng thuận giữa các lượt chạy (khác prompt hoặc khác model): chỉ nhận sửa có ≥ --min-votes lượt cùng đề xuất."""
+    from .pipeline import vote_results
+
+    dirs = [Path(d) for d in a.runs]
+    ids = sorted(set.intersection(*({f.stem for f in d.glob("*.json") if not f.name.startswith("run_meta")} for d in dirs)))
+    dst = Path(a.out)
+    dst.mkdir(parents=True, exist_ok=True)
+    for i in ids:
+        res = vote_results([json.loads((d / f"{i}.json").read_text(encoding="utf-8")) for d in dirs], a.min_votes)
+        (dst / f"{i}.json").write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
+    print(f"đồng thuận {a.min_votes}/{len(dirs)} cho {len(ids)} trang chung → {dst}")
+
+
+# ---------------------------------------------------------------- oracle
+def cmd_oracle(a):
+    """Trần: CER sau khi sửa HOÀN HẢO mọi từ trong tầm chốt chặn (k ký tự). Cho biết nới chốt chặn có đáng không."""
+    from .analysis import oracle_edits
+    from .evaluate import page_metrics, summarize
+    from .ocr_cache import load_manifest
+
+    man = {r["id"]: r for r in load_manifest(Path(a.manifest)) if not a.split or r.get("split") == a.split}
+    recs = []
+    for i in man:
+        f = Path(a.ocr) / f"{i}.json"
+        if f.exists():
+            r = json.loads(f.read_text(encoding="utf-8"))
+            if not r.get("error") and r.get("cells"):
+                recs.append(r)
+    print(f"# Trần sửa hoàn hảo — {len(recs)} trang ({a.split or 'tất cả'})\n")
+    for name in ("strict", "lenient"):
+        print(f"## {name}\n\n| tầm với (ký tự) | CER trước | CER sau (trần) | ΔCER (điểm %) | WER sau (trần) | từ sửa được |\n|---|---|---|---|---|---|")
+        for k in (1, 2, 3, 4):
+            rows = []
+            for r in recs:
+                orig, corr, edits = oracle_edits(r, man[r["id"]]["gt"], k, name == "lenient")
+                rows.append(page_metrics(man[r["id"]]["gt"], orig, corr, edits, None, k))
+            s = summarize(rows, name)
+            print(f"| {k} | {s['cer_before']:.4f} | {s['cer_after']:.4f} | {s['cer_delta'] * 100:+.2f} | {s['wer_after']:.4f} | {s['edits']} |")
+        print()
+
+
 # ---------------------------------------------------------------- eval
 def _label_path(s: str) -> tuple[str, Path]:
     return tuple(s.split("=", 1)) if "=" in s else (Path(s).name, Path(s))  # type: ignore[return-value]
@@ -394,6 +439,18 @@ def main(argv=None):
     p.add_argument("--max-drift", type=float, default=0.10)
     p.add_argument("--no-split-merge", action="store_true")
     p.set_defaults(func=cmd_refilter)
+
+    p = sub.add_parser("oracle")
+    p.add_argument("--ocr", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--split", choices=["dev", "holdout"])
+    p.set_defaults(func=cmd_oracle)
+
+    p = sub.add_parser("vote")
+    p.add_argument("--runs", nargs="+", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--min-votes", type=int, default=2)
+    p.set_defaults(func=cmd_vote)
 
     p = sub.add_parser("analyze")
     p.add_argument("--ocr", required=True)

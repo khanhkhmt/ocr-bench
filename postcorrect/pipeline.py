@@ -210,3 +210,27 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
         eds = [Edit(e["index"], tuple(e["from"].split()), tuple(e["to"].split())) for e in res["edits"]]
         res["corrected"] = apply_edits_text(p.text, eds)
     return results
+
+
+def vote_results(results: list[dict], min_votes: int = 2) -> dict:
+    """Đồng thuận: chỉ giữ sửa mà ≥ min_votes lượt chạy (khác prompt / khác model) cùng đề xuất GIỐNG HỆT
+    (cùng vị trí, cùng từ gốc, cùng từ thay). Chính xác hơn từng lượt riêng lẻ, đổi lại bớt recall.
+    `results`: kết quả của CÙNG MỘT trang từ các lượt chạy khác nhau."""
+    base = results[0]
+    votes: dict[tuple, int] = {}
+    for r in results:
+        for k in {(e["index"], e["from"], e["to"]) for e in r["edits"]}:
+            votes[k] = votes.get(k, 0) + 1
+    edits = [{"index": i, "span": len(f.split()), "from": f, "to": t, "votes": v,
+              "block": next((e.get("block") for r in results for e in r["edits"] if (e["index"], e["from"], e["to"]) == (i, f, t)), None)}
+             for (i, f, t), v in sorted(votes.items()) if v >= min_votes]
+    eds = [Edit(e["index"], tuple(e["from"].split()), tuple(e["to"].split())) for e in edits]
+    flags: dict[int, dict] = {}
+    for r in results:
+        for f in r.get("flags", []):
+            flags.setdefault(f["index"], {"index": f["index"], "word": f["word"], "n_runs": 0})["n_runs"] += 1
+    return {"id": base["id"], "strategy": "vote", "model": "+".join(sorted({r.get("model", "?") for r in results})),
+            "tag": f"vote{min_votes}of{len(results)}", "original": base["original"],
+            "corrected": apply_edits_text(base["original"], eds), "edits": edits,
+            "flags": sorted(flags.values(), key=lambda f: f["index"]), "rejected": [], "chunks": [],
+            "settings": {"runs": [r.get("tag") or r.get("strategy") for r in results], "min_votes": min_votes}}

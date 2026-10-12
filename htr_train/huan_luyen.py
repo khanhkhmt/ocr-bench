@@ -299,15 +299,22 @@ def main(argv=None, nap=nap_model) -> int:
         sch.step()
         buoc += 1
         if buoc % 10 == 0 or buoc == 1:
-            rec = {"buoc": buoc, "loss": round(sum(lo_mat) / len(lo_mat), 4), "lr": sch.get_last_lr()[0],
+            # lô tràn số fp16 (loss nan/inf): GradScaler đã tự bỏ qua bước cập nhật đó → chỉ đếm, loss = TB các lô hữu hạn
+            huu_han = [x for x in lo_mat if math.isfinite(x)]
+            rec = {"buoc": buoc, "loss": round(sum(huu_han) / len(huu_han), 4) if huu_han else None,
+                   "lo_tran": len(lo_mat) - len(huu_han), "lr": sch.get_last_lr()[0],
                    "s_buoc": round((time.time() - t_buoc) / max(1, len(lo_mat) // a.accum), 2),
                    "vram_gb": round(torch.cuda.max_memory_allocated(dev) / 2**30, 1) if dev != "cpu" else 0}
-            print(f"   bước {buoc}/{buoc_toi_da} · loss {rec['loss']} · {rec['s_buoc']} s/bước · VRAM đỉnh {rec['vram_gb']} GB",
+            tran = f" · {rec['lo_tran']} lô tràn fp16 (đã tự bỏ qua — bình thường, KHÔNG phải lỗi)" if rec["lo_tran"] else ""
+            print(f"   bước {buoc}/{buoc_toi_da} · loss {rec['loss']} · {rec['s_buoc']} s/bước · VRAM đỉnh {rec['vram_gb']} GB{tran}",
                   flush=True)
             nk.write(json.dumps(rec) + "\n")
             nk.flush()
             t_buoc, lo_mat = time.time(), []
             day(f"bước {buoc}/{buoc_toi_da} · loss {rec['loss']}")
+            if not huu_han:  # cả 10 bước đều tràn → model hỏng thật, dừng (checkpoint trước đó vẫn còn)
+                day(f"LỖI: loss nan liên tục tới bước {buoc}", ep=True)
+                sys.exit(f"✘ LỖI: loss nan/inf ở MỌI lô trong 10 bước tới bước {buoc} — model phân kỳ, dừng")
         if buoc % a.save_every == 0 or buoc == buoc_toi_da:
             d = luu(model, opt, sch, scaler, out, buoc, vi_tri)
             print(f"✔ lưu {d.name}", flush=True)

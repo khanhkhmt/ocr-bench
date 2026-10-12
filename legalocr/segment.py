@@ -46,27 +46,53 @@ class KrakenSegmenter:
             p = Path(d) / "page.png"
             image.save(p)
             seg = self.worker.segment(str(p), self.text_direction)
-        lines = drop_faint_lines(image, parse_lines(seg))
-        return extend_to_ink(merge_fragments([_line(i, ln["bbox"], ln["polygon"]) for i, ln in enumerate(lines)]), image)
+        lines = [_line(i, ln["bbox"], ln["polygon"]) for i, ln in enumerate(drop_faint_lines(image, parse_lines(seg)))]
+        return extend_to_ink(merge_fragments(lines), image) if fragmented(lines) else lines
 
 
-def merge_fragments(lines: list[Line], min_overlap: float = 0.6, rtl: bool = True) -> list[Line]:
+def fragmented(lines: list[Line], narrow: float = 0.35, share: float = 0.5) -> bool:
+    """Trang bị tách thành MẢNH (đa số "dòng" hẹp hơn `narrow` × bề rộng vùng chữ) — chỉ khi đó mới gộp mảnh; trang
+    đánh máy dòng liền thì để nguyên kết quả kraken (gộp / nới trên trang đó chỉ có hại: đo trên công văn 1972)."""
+    if len(lines) < 4:
+        return False
+    x0, x1 = min(l.bbox[0] for l in lines), max(l.bbox[2] for l in lines)
+    W = max(1, x1 - x0)
+    return sum(1 for l in lines if l.bbox[2] - l.bbox[0] < narrow * W) / len(lines) >= share
+
+
+def merge_fragments(lines: list[Line], min_overlap: float = 0.6, rtl: bool = True, max_gap: float = 2.5) -> list[Line]:
     """Gộp các mảnh nằm trên CÙNG một dòng (chồng nhau theo chiều dọc ≥ min_overlap chiều cao mảnh thấp hơn).
     Đo trên một trang Muharaf viết tay chữ to, thưa: blla mặc định trả 35 mảnh cỡ từ cho 12 dòng — model dòng đọc mảnh
     rời mất ngữ cảnh và thứ tự. Dòng đã liền (một mảnh / dòng) đi qua không đổi. Thứ tự: trên → dưới, trong dòng phải → trái."""
     if len(lines) < 2:
         return lines
-    groups: list[list[Line]] = []
-    for ln in sorted(lines, key=lambda l: (l.bbox[1] + l.bbox[3]) / 2):
-        y1, y2 = ln.bbox[1], ln.bbox[3]
-        for g in groups:
-            gy1, gy2 = min(x.bbox[1] for x in g), max(x.bbox[3] for x in g)
-            ov = min(y2, gy2) - max(y1, gy1)
-            if ov >= min_overlap * min(y2 - y1, gy2 - gy1) and not any(_hoverlap(ln.bbox, x.bbox) > 0.5 for x in g):
-                g.append(ln)
+    def can_join(g: list[Line], h: list[Line]) -> bool:
+        gy1, gy2 = min(x.bbox[1] for x in g), max(x.bbox[3] for x in g)
+        hy1, hy2 = min(x.bbox[1] for x in h), max(x.bbox[3] for x in h)
+        ov = min(gy2, hy2) - max(gy1, hy1)
+        if ov < min_overlap * min(gy2 - gy1, hy2 - hy1):
+            return False
+        if any(_hoverlap(a.bbox, b.bbox) > 0.5 for a in g for b in h):
+            return False
+        if max(gy2 - gy1, hy2 - hy1) > 1.8 * min(gy2 - gy1, hy2 - hy1):  # nét chữ ký cao không nuốt dòng thường
+            return False
+        # khe ngang giữa hai mảnh gần nhau nhất ≤ max_gap × chiều cao: khe giữa hai từ thì gộp, khe giữa hai CỘT
+        # (ô công chứng bên phải, chữ ký bên trái cùng độ cao) thì không
+        gap = min(max(a.bbox[0], b.bbox[0]) - min(a.bbox[2], b.bbox[2]) for a in g for b in h)
+        return gap <= max_gap * max(gy2 - gy1, hy2 - hy1)
+
+    groups: list[list[Line]] = [[ln] for ln in lines]
+    changed = True
+    while changed:  # gộp lặp tới khi ổn định (mảnh giữa dòng đến sau vẫn nối được hai mảnh hai đầu)
+        changed = False
+        for i in range(len(groups)):
+            for j in range(i + 1, len(groups)):
+                if can_join(groups[i], groups[j]):
+                    groups[i] += groups.pop(j)
+                    changed = True
+                    break
+            if changed:
                 break
-        else:
-            groups.append([ln])
     if len(groups) == len(lines):
         return lines
     out = []
@@ -79,7 +105,7 @@ def merge_fragments(lines: list[Line], min_overlap: float = 0.6, rtl: bool = Tru
 
 
 def extend_to_ink(lines: list[Line], image, core: float = 0.2, min_rel_height: float = 0.35,
-                  ink_thresh: float = 0.6) -> list[Line]:
+                  ink_thresh: float = 0.6, max_extend: float = 3.0) -> list[Line]:
     """Sau khi gộp: (1) bỏ mảnh tí hon (thấp hơn min_rel_height × trung vị — dấu chấm, vết bẩn); (2) nới khung NGANG tới
     hết mực trong dải lõi của dòng (bỏ `core` trên / dưới để khỏi ăn sang dòng bên cạnh) — kraken hay hụt từ đầu / cuối
     dòng. Dòng đã nới mất đa giác (thay bằng khung chữ nhật)."""
@@ -95,7 +121,17 @@ def extend_to_ink(lines: list[Line], image, core: float = 0.2, min_rel_height: f
         if y2 - y1 < min_rel_height * med:
             continue
         a, b = y1 + int(core * (y2 - y1)), y2 - int(core * (y2 - y1))
-        cols = np.flatnonzero(ink[a:max(a + 1, b)].sum(0) > 1)
+        # chỉ nới trong phạm vi `max_extend` × chiều cao dòng, và không lấn sang khung của dòng khác cùng độ cao (cột bên)
+        lim = int(max_extend * (y2 - y1))
+        lo, hi = max(0, x1 - lim), min(ink.shape[1], x2 + lim)
+        for o in lines:
+            if o is ln or min(o.bbox[3], y2) - max(o.bbox[1], y1) <= 0.3 * (y2 - y1):
+                continue
+            if o.bbox[2] <= x1:
+                lo = max(lo, o.bbox[2] + 1)
+            elif o.bbox[0] >= x2:
+                hi = min(hi, o.bbox[0] - 1)
+        cols = np.flatnonzero(ink[a:max(a + 1, b), lo:hi].sum(0) > 1) + lo
         if cols.size:
             nx1, nx2 = min(x1, int(cols[0])), max(x2, int(cols[-1]) + 1)
             if (nx1, nx2) != (x1, x2):
@@ -113,7 +149,8 @@ def _dedupe(lines: list[Line], min_overlap: float = 0.5) -> list[Line]:
         prev = out[-1] if out else None
         if prev is not None:
             ov = min(ln.bbox[3], prev.bbox[3]) - max(ln.bbox[1], prev.bbox[1])
-            if ov >= min_overlap * min(ln.bbox[3] - ln.bbox[1], prev.bbox[3] - prev.bbox[1]):
+            h1, h2 = ln.bbox[3] - ln.bbox[1], prev.bbox[3] - prev.bbox[1]
+            if ov >= min_overlap * min(h1, h2) and max(h1, h2) <= 1.8 * min(h1, h2):
                 b = [min(ln.bbox[0], prev.bbox[0]), min(ln.bbox[1], prev.bbox[1]), max(ln.bbox[2], prev.bbox[2]),
                      max(ln.bbox[3], prev.bbox[3])]
                 out[-1] = _line(len(out) - 1, b)

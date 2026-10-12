@@ -118,6 +118,46 @@ Mặc định (chưa hiệu chỉnh): 1 model → `0,9·p`; ≥ 2 model → `sup
 | `flag_rate` | tỉ lệ từ phải duyệt |
 | `ece` | độ lệch giữa độ tin cậy và tỉ lệ đúng thật |
 
+## Adapter cho web demo / `ocrbench convert` (CPU): `--model legalocr`
+
+```bash
+bash inference/setup_kraken.sh                                       # một lần
+python -c "from legalocr.engines import fetch_tessdata; fetch_tessdata('/kaggle/working/tessdata_best')"
+ocrbench serve --config inference/config_cpu.yaml --model legalocr --ocr-all
+```
+
+Thay cho model `kraken` cũ (kraken + Tesseract `ara+eng`). Lần nạp đầu huấn luyện bộ đọc chữ số từ phông (~3 phút CPU,
+lưu `~/.cache/legalocr/digits_v4.npz`). Sửa đúng các lỗi đã đo trên 5 trang kiểm thử (`test_infer/input/01–05`):
+
+| Lỗi quan sát | Nguyên nhân tìm được | Sửa |
+|---|---|---|
+| rác Latin, LRM/RLM vô hình | `ara+eng`: mô hình Anh "thắng" ở chỗ mờ; Tesseract chèn LRM/RLM quanh mỗi mẩu Latin | mỗi engine MỘT ngôn ngữ; model Ả Rập trả chữ Latin = đọc hỏng, không bỏ phiếu; bỏ ký tự điều khiển |
+| chữ số Ả Rập-Ấn sai ("١٩٧٢" → "1171", "٥٤٩" → "061") | Tesseract (fast lẫn best, có ép bộ ký tự) không đọc được chữ số máy chữ | `digits.py`: phân loại từng nét số (học từ 21 phông mở), một hệ chữ số / số / trang; số chỉ "chắc" khi mọi engine khớp TỪNG chữ số, không thì `số[؟]` |
+| câu bị đảo khi chữ Latin chen vào | DOCX và web chọn hướng đoạn theo chữ có hướng ĐẦU TIÊN → dòng mở đầu bằng rác Latin bị lật trái→phải | `para_rtl` xét cả đa số chữ (dùng chung 3 kiểu DOCX); web thêm RLM khi hiển thị dòng như vậy |
+| dòng ghép sai vị trí | thứ tự của kraken xen kẽ hai cột | `order.py`: XY-cut khe rộng nhất, cột phải trước |
+| nét kéo dài máy chữ thành ký tự thừa | tatweel, chữ lặp ("بالتتههه") | `normalize_token` |
+| ô công chứng Hebrew thành rác | chỉ đọc bằng `ara` | mỗi dòng đọc thêm `heb`, chọn theo độ tin cậy (≥ 3 chữ Hebrew) |
+| số công văn / ngày viết tay cạnh chữ ký bị bỏ | adapter cũ BỎ mọi dòng nằm trong khung chữ ký / con dấu | giữ và đọc; in `[توقيع: …]` / `[ختم: …]`, toàn rác thì `[توقيع]` |
+| chỗ sai trình bày như chắc chắn | không có độ tin cậy | bỏ phiếu 3 Tesseract (+ chữ số, + chữ tay) → `từ[؟]`; `extra` có `issues`, `fields`, `legalocr` (mọi cách đọc) |
+
+Đo trên 2 trang có đáp án (công văn 1972 có watermark — đáp án do mình chép từ ảnh, CHƯA được xác nhận; hợp đồng số hoá
+— đáp án có sẵn). "Hiển thị" = văn bản người dùng thấy, bỏ ký hiệu `[؟]` và nhãn vùng (từ `[؟]` không đọc được tính là trống):
+
+| | công văn 1972: CER / WER | hợp đồng số: CER / WER | ký tự Latin rác |
+|---|---|---|---|
+| model `kraken` cũ (Tesseract `ara+eng`) | 29,0% / 64,1% | 1,5% / 9,0% | 47 |
+| `legalocr` — cách đọc tốt nhất | **17,4% / 54,3%** | 1,9% / 9,0% | 0 |
+| `legalocr` — hiển thị | 22,7% / 54,3% | **1,5% / 8,5%** | 0 |
+| cờ `[؟]` (công văn) | bắt **48/48** từ sai; 0/18 từ không đánh dấu bị sai; 72/90 từ bị đánh dấu | | |
+
+Vì sao các lựa chọn (đo trên các dòng kraken của 2 trang trên): `ara` fast + phóng dòng lên 80 px tốt nhất (18,2% /
+1,3%), hơn `ara` best (19,4% / 2,2%) và `script/Arabic` (23,7% / 1,8%) → fast là phiếu chính, best / script là phiếu phụ.
+Làm phẳng nền (19,4 → 21,3%), phóng cả trang (→ 22,1%), lọc mực đỏ (→ 19,8%) đều làm Tesseract KÉM đi → tắt mặc định.
+
+Giới hạn còn lại (thật): chữ số `٩` của máy chữ đậm mực bộ đọc chữ số chưa nhận ra (đọc thành `١` / `٤`) — số vẫn bị
+gắn `[؟]` nhưng cách đọc hiển thị có thể sai; chữ viết tay vẫn kém với Tesseract (xem dòng HATFormer bên dưới); cờ
+`[؟]` dày trên trang đánh máy cũ (ngưỡng chưa hiệu chỉnh — cần `calibrate` trên vài chục trang có đáp án).
+
 ## Chạy thử thật (2026-10-12, CPU — GPU đang bận việc khác)
 
 Một trang Muharaf **dev** viết tay (`muharaf_0010`, 42 từ, 11 dòng tách bằng `ProjectionSegmenter(mode="valley")`),

@@ -66,12 +66,25 @@ def sanitize(fragment: str) -> str:
     return "".join(s.out)
 
 
+def _rtl_hint(text: str) -> str:
+    """CSS `unicode-bidi: plaintext` chọn hướng theo chữ có hướng ĐẦU TIÊN: dòng tiếng Ả Rập mở đầu bằng mẩu rác Latin
+    của OCR sẽ bị hiển thị trái → phải (đảo trật tự câu). Dòng như vậy (đa số chữ Ả Rập / Hebrew, theo
+    docx_export.para_rtl) được thêm RLM ở đầu — CHỈ trong HTML xem trên web, không vào văn bản / DOCX xuất ra."""
+    from .docx_export import _STRONG, para_rtl
+
+    out = []
+    for line in (text or "").split("\n"):
+        first = _STRONG.search(line)
+        out.append("\u200f" + line if first and first.group(0) < "\u0590" and para_rtl(line) else line)
+    return "\n".join(out)
+
+
 def ocr_html(text: str) -> str:
     """Markdown (kể cả bảng Markdown và bảng HTML lồng trong) → HTML an toàn."""
     from markdown_it import MarkdownIt
 
     md = MarkdownIt("commonmark", {"html": True}).enable("table")
-    body = sanitize(md.render(text or ""))
+    body = sanitize(md.render(_rtl_hint(text or "")))
     return f'<div class="ocr-page">{body or "<p><i>(trang không có chữ)</i></p>"}</div>'
 
 

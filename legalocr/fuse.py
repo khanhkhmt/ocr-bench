@@ -5,7 +5,7 @@ cách đọc được nhiều model (có trọng số) đồng ý nhất; độ 
 model (xác suất token) nếu có.
 
 Độ tin cậy mặc định (chưa hiệu chỉnh) — dễ giải thích cho người duyệt:
-    1 model:      p × 0,9          (không có gì để đối chiếu → không bao giờ đủ ngưỡng "read" của thông tin quan trọng)
+    1 model:      p × 0,9          (không có gì để đối chiếu → không bao giờ "read": min_engines_read = 2)
     ≥ 2 model:    support × (0,5 + 0,5·p)
 với support = tỉ trọng (theo trọng số model) đồng ý với cách đọc được chọn, p = xác suất trung bình các model đồng ý
 tự báo (thiếu thì dùng `default_engine_prob`). Khi đã có dữ liệu dev có đáp án, `calibrate.py` học hàm logistic trên
@@ -38,9 +38,13 @@ class FusionConfig:
     tau_read_critical: float = 0.90
     tau_illegible: float = 0.25
     min_engines_critical: int = 2      # thông tin quan trọng phải có ≥ 2 model cùng đọc mới được "read"
+    # MỌI từ: chỉ một model đọc dòng đó (không có gì đối chiếu) → không bao giờ "read". Đo trên hợp đồng viết tay 1972:
+    # cho phép một model (HATFormer, tự tin cao cả khi bịa văn kiểu hadith "البخاري ثنا") → 256/307 từ thành "chắc"
+    min_engines_read: int = 2
     harakat: str = "consensus"         # drop | consensus (giữ khi mọi model đồng ý giữ) | keep
     default_engine_prob: float = 0.75
     calibration: dict | None = None    # {"weights": {feature: w}, "bias": b} từ calibrate.py
+    digits_never_illegible: bool = True  # từ có chữ số: in cách đọc tốt nhất kèm [؟] thay vì [؟] trơn (dễ soát hơn)
     engines: dict[str, EngineSpec] = field(default_factory=dict)
 
     def weight(self, e: str) -> float:
@@ -150,7 +154,7 @@ def fuse_line(line: Line, hyps: dict[str, tuple[list[str], list[float | None] | 
         if has_latin(text) and any(r and not has_latin(r) for r in readings.values()):
             reasons.append("latin_in_arabic_line")
         w = Word(id=f"{line.id}:{len(words)}", text=text, readings=readings, features=feat, alternatives=alts,
-                 reasons=reasons)
+                 reasons=reasons, probs={e: slot.probs.get(e) for e in usable})
         words.append(w)
     line.words = words
     return line
@@ -163,7 +167,8 @@ def decide_status(w: Word, cfg: FusionConfig) -> Word:
     w.confidence = confidence(f, cfg)
     w.status = READ
     blocking = {"latin_in_arabic_line"}
-    if w.confidence < cfg.tau_illegible and f.get("rasm_support", 0) < 0.5:
+    if (w.confidence < cfg.tau_illegible and f.get("rasm_support", 0) < 0.5
+            and not (cfg.digits_never_illegible and f.get("digit"))):
         w.status = ILLEGIBLE
         return w
     if w.critical:
@@ -173,9 +178,29 @@ def decide_status(w: Word, cfg: FusionConfig) -> Word:
             ds = {digits_of(r) for r in w.readings.values() if r}
             if len(ds) > 1 or any(not r for r in w.readings.values()):
                 w.flag("digits_disagree")
+    if f.get("n_engines", 1) < cfg.min_engines_read:
+        w.flag("single_engine")
     tau = cfg.tau_read_critical if w.critical else cfg.tau_read
     if w.confidence < tau:
         w.flag("low_confidence")
     if blocking & set(w.reasons):
         w.flag("blocked")
     return w
+
+
+def add_token_reading(w: Word, engine: str, text: str, prob: float | None, cfg: FusionConfig) -> None:
+    """Thêm phiếu của một engine chỉ đọc TỪNG TỪ (vd. bộ đọc chữ số trên khung từ) rồi bỏ phiếu lại ô này.
+    Gọi trước decide_status. Không làm mất lý do / đặc trưng phụ (ảnh cắt...) đã có."""
+    w.readings[engine] = text
+    w.probs[engine] = prob
+    engines = sorted(w.readings, key=lambda e: -cfg.weight(e))
+    slot = Slot(pivot=() if w.features.get("insert_slot") else (0,), readings=dict(w.readings), probs=dict(w.probs))
+    new_text, feat, alts, reasons = vote_slot(slot, engines, cfg)
+    if new_text is None:  # đa số (có trọng số) nói không có từ ở đây: giữ chữ cũ nhưng đánh dấu
+        w.flag("token_vote_empty")
+        return
+    extra = {k: v for k, v in w.features.items() if k not in feat}
+    w.text, w.features, w.alternatives = new_text, {**feat, **extra}, alts
+    for r in reasons:
+        if r not in w.reasons:
+            w.reasons.append(r)

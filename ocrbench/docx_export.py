@@ -41,10 +41,15 @@ _STRONG = re.compile(r"[A-Za-z\u00C0-\u024F\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFE
 
 
 def para_rtl(text: str) -> bool:
-    """Hướng đoạn theo UAX #9 (quy tắc P2): chữ CÓ HƯỚNG đầu tiên là Ả Rập / Do Thái → phải → trái.
-    ("الهاتف: +971 56 512 3883 contact@firm.co.uk" nhiều chữ Latin hơn nhưng vẫn là đoạn phải → trái.)"""
-    m = _STRONG.search(text or "")
-    return bool(m) and m.group(0) >= "\u0590"
+    """Hướng đoạn: chữ CÓ HƯỚNG đầu tiên là Ả Rập / Do Thái (UAX #9, quy tắc P2) → phải → trái
+    ("الهاتف: +971 56 512 3883 contact@firm.co.uk" nhiều chữ Latin hơn nhưng vẫn là đoạn phải → trái),
+    HOẶC chữ Ả Rập / Do Thái chiếm ≥ 50% chữ có hướng — OCR hay để một mẩu rác Latin ở ĐẦU dòng tiếng Ả Rập
+    ("pel اثانة متحف ..."), riêng P2 sẽ lật cả dòng thành trái → phải và đảo trật tự câu khi hiển thị."""
+    strong = _STRONG.findall(text or "")
+    if not strong:
+        return False
+    rtl = sum(1 for c in strong if c >= "\u0590")
+    return strong[0] >= "\u0590" or rtl >= 0.5 * len(strong)
 
 
 def is_rtl(text: str) -> bool:

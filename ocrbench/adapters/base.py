@@ -111,6 +111,7 @@ BUILTIN = {
     "dots": "ocrbench.adapters.dots:DotsAdapter",
     "openai_api": "ocrbench.adapters.openai_api:OpenAIAPIAdapter",
     "command": "ocrbench.adapters.command:CommandAdapter",
+    "legalocr": "legalocr.adapter:LegalOCRAdapter",  # hồ sơ pháp lý tiếng Ả Rập: nhiều engine bỏ phiếu + [؟]
 }
 
 

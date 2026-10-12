@@ -75,7 +75,9 @@ def distribute_page_words(pivot_words: list[list[str]], page: Reading, min_run: 
 
 
 def fuse_page(page: Page, line_readings: dict[str, dict[str, Reading]], page_readings: dict[str, Reading],
-              cfg: PipelineConfig) -> Page:
+              cfg: PipelineConfig, token_hook=None) -> Page:
+    """`token_hook(page)`: gọi sau khi bỏ phiếu từng dòng, trước khi khoanh thông tin quan trọng — chỗ để engine chỉ đọc
+    TỪNG TỪ (vd. bộ đọc chữ số) thêm phiếu (fuse.add_token_reading)."""
     fc = cfg.fusion
     lines = page.lines
     hyps = {ln.id: {e: (r[ln.id].words, r[ln.id].word_probs) for e, r in line_readings.items() if ln.id in r}
@@ -96,6 +98,8 @@ def fuse_page(page: Page, line_readings: dict[str, dict[str, Reading]], page_rea
             page.provenance.setdefault("page_only", {})[e] = extras
     for ln in lines:
         fuse_line(ln, hyps[ln.id], fc)
+    if token_hook is not None:
+        token_hook(page)
     tag_page(page, cfg.extra_lexicon)
     for w in page.words():
         decide_status(w, fc)

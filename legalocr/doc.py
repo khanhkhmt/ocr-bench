@@ -26,6 +26,7 @@ class Word:
     status: str = UNCERTAIN
     confidence: float = 0.0
     readings: dict[str, str] = field(default_factory=dict)
+    probs: dict[str, float | None] = field(default_factory=dict)   # xác suất model tự báo cho cách đọc của nó
     features: dict = field(default_factory=dict)
     alternatives: list[str] = field(default_factory=list)
     entity: str | None = None

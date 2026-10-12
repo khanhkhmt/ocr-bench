@@ -49,26 +49,77 @@ def trim_loops(words: list[str], max_period: int = 6, min_repeats: int = 3) -> t
     return words, False
 
 
+def default_tessdata() -> str | None:
+    """Thư mục tessdata_best (model LSTM tốt nhất, tải từ github.com/tesseract-ocr/tessdata_best): $LEGALOCR_TESSDATA,
+    /kaggle/working/tessdata_best, ~/.cache/legalocr/tessdata_best; None = tessdata của hệ thống (bản fast)."""
+    for d in (os.environ.get("LEGALOCR_TESSDATA"), "/kaggle/working/tessdata_best",
+              str(Path.home() / ".cache" / "legalocr" / "tessdata_best")):
+        if d and Path(d, "ara.traineddata").exists():
+            return d
+    return None
+
+
+def fetch_tessdata(dest: str | Path, langs=("ara", "heb", "eng"), scripts=("Arabic", "Hebrew")) -> Path:
+    """Tải model tessdata_best (Apache-2.0) vào `dest`. Model script/<X> được chép thành <X>.traineddata."""
+    import urllib.request
+
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    base = "https://github.com/tesseract-ocr/tessdata_best/raw/main/"
+    for name, url in [(f"{l}.traineddata", f"{base}{l}.traineddata") for l in langs] + \
+                     [(f"{x}.traineddata", f"{base}script/{x}.traineddata") for x in scripts]:
+        if not (dest / name).exists():
+            urllib.request.urlretrieve(url, dest / name)
+    return dest
+
+
+def upscale_line(im, target_h: int = 80, max_k: float = 4.0):
+    """Dòng thấp (ảnh chụp màn hình, ảnh nhỏ) → phóng tới cao `target_h` px: Tesseract đọc kém khi chữ chỉ cao ~10 px
+    (đo trên công văn 550×708: CER 26,4% → 19,4% khi phóng)."""
+    from PIL import Image
+
+    if im.height >= target_h:
+        return im
+    k = min(max_k, target_h / max(1, im.height))
+    return im.resize((max(1, int(im.width * k)), max(1, int(im.height * k))), Image.LANCZOS)
+
+
+_TATWEEL = "\u0640"
+_TRIPLE = re.compile(r"([\u0621-\u064A])\1{2,}")
+
+
+def normalize_token(t: str) -> str:
+    """Rác thường gặp của OCR chữ đánh máy: ký tự điều khiển hướng, nét kéo dài (tatweel) của máy chữ, một chữ cái
+    lặp ≥ 3 lần (nét kéo dài bị đọc thành chữ: "بالتتههه") — tiếng Ả Rập không có chữ cái nào viết liền 3 lần."""
+    t = _BIDI.sub("", t).replace(_TATWEEL, "")
+    return _TRIPLE.sub(r"\1", t)
+
+
 class TesseractEngine:
-    """psm 7 (một dòng); dòng nào ra rỗng thì thử psm 13 (dòng thô, không phân tích bố cục) — đo trên ảnh hợp đồng
-    tổng hợp: một dòng psm 7 rỗng, psm 13 đọc đủ."""
+    """Tesseract LSTM một dòng. psm 7 (một dòng); dòng ra rỗng thì thử psm 13 (dòng thô). Model `best` nếu có
+    (default_tessdata), phóng dòng thấp, chuẩn hoá token. `lang` chỉ MỘT ngôn ngữ cho mỗi engine: "ara+eng" làm chữ
+    Ả Rập mờ thành rác Latin và chữ số Ả Rập-Ấn thành số Latin sai ("١٩٧٢" → "1171"), kèm LRM/RLM quanh mỗi mẩu Latin."""
 
     def __init__(self, name: str = "tesseract", lang: str = "ara", psm: tuple = (7, 13), weight: float = 0.6,
-                 scripts=ALL_SCRIPTS, timeout: float = 60):
+                 scripts=ALL_SCRIPTS, timeout: float = 60, tessdata_dir: str | None = "auto", upscale_to: int = 80,
+                 workers: int | None = None):
         self.name, self.lang, self.weight, self.scripts, self.timeout = name, lang, weight, scripts, timeout
         self.psm = (psm,) if isinstance(psm, int) else tuple(psm)
+        self.tessdata_dir = default_tessdata() if tessdata_dir == "auto" else tessdata_dir
+        self.upscale_to, self.workers = upscale_to, workers
 
     def _one(self, im, psm: int) -> Reading:
         import pytesseract
 
+        cfg = f"--psm {psm}" + (f" --tessdata-dir {self.tessdata_dir}" if self.tessdata_dir else "")
         try:
-            d = pytesseract.image_to_data(im, lang=self.lang, config=f"--psm {psm}",
-                                          output_type=pytesseract.Output.DICT, timeout=self.timeout)
+            d = pytesseract.image_to_data(im, lang=self.lang, config=cfg, output_type=pytesseract.Output.DICT,
+                                          timeout=self.timeout)
         except RuntimeError:  # quá thời gian
             return Reading("", [], [], {"error": "timeout", "psm": psm})
         words, probs, boxes = [], [], []
         for i, t in enumerate(d["text"]):
-            t = clean_text(t)
+            t = normalize_token(clean_text(t))
             if not t or float(d["conf"][i]) < 0:
                 continue
             for piece in t.split():
@@ -77,17 +128,23 @@ class TesseractEngine:
                 boxes.append([d["left"][i], d["top"][i], d["left"][i] + d["width"][i], d["top"][i] + d["height"][i]])
         return Reading(" ".join(words), probs, boxes, {"psm": psm})
 
+    def read_one(self, im) -> Reading:
+        im = upscale_line(im, self.upscale_to) if self.upscale_to else im
+        r = Reading("")
+        for psm in self.psm:
+            r = self._one(im, psm)
+            if r.text:
+                break
+        r.meta["size"] = list(im.size)   # khung từ (boxes) tính trên ảnh ĐÃ phóng này
+        return r
+
     def read(self, crops) -> list[Reading]:
+        from concurrent.futures import ThreadPoolExecutor
+
         os.environ.setdefault("OMP_THREAD_LIMIT", "1")  # nhiều luồng OpenMP tranh nhau trên máy ít nhân
-        out = []
-        for im in crops:
-            r = Reading("")
-            for psm in self.psm:
-                r = self._one(im, psm)
-                if r.text:
-                    break
-            out.append(r)
-        return out
+        n = self.workers or max(1, len(os.sched_getaffinity(0)))
+        with ThreadPoolExecutor(n) as ex:
+            return list(ex.map(self.read_one, crops))
 
 
 # Cấu hình suy luận theo mã gốc của tác giả (github.com/misraj-ai/Nakba-pipeline, Baseer_Nakba.py): prompt, system,
@@ -283,9 +340,9 @@ class HATFormerEngine:
             arr = np.stack([np.asarray(self.to_canvas(im), dtype=np.float32) / 255.0 for im in crops[k:k + self.batch_size]])
             pv = torch.from_numpy(np.transpose((arr - 0.5) / 0.5, (0, 3, 1, 2))).to(self.device)
             with torch.inference_mode():
-                g = self.model.generate(pixel_values=pv, num_beams=self.num_beams, length_penalty=0,
-                                        max_new_tokens=self.max_new_tokens, output_scores=True,
-                                        return_dict_in_generate=True)
+                beam = {"num_beams": self.num_beams, "length_penalty": 0} if self.num_beams > 1 else {"num_beams": 1}
+                g = self.model.generate(pixel_values=pv, max_new_tokens=self.max_new_tokens, output_scores=True,
+                                        return_dict_in_generate=True, **beam)
                 trans = self.model.compute_transition_scores(g.sequences, g.scores, getattr(g, "beam_indices", None),
                                                              normalize_logits=False)
             special = set(self.tok.all_special_ids)

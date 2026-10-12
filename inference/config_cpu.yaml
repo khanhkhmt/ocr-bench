@@ -1,5 +1,11 @@
-# Web demo trên máy KHÔNG có GPU (thay cho dots.mocr). Hai model:
-#   kraken    (khuyên dùng) — kraken tách dòng (hợp chữ viết tay Ả Rập) + chữ ký / con dấu / vân tay + Tesseract đọc
+# Web demo trên máy KHÔNG có GPU (thay cho dots.mocr). Ba model:
+#   legalocr  (khuyên dùng cho hồ sơ pháp lý / hành chính tiếng Ả Rập) — kraken tách dòng như model kraken, nhưng mỗi
+#             dòng đọc bằng NHIỀU Tesseract (ara fast + best + script/Arabic, heb cho dòng Hebrew) rồi bỏ phiếu; bộ đọc
+#             chữ số riêng cho số Ả Rập-Ấn; thứ tự đọc theo cột; giữ và đọc dòng trong vùng chữ ký / con dấu; chỗ chưa
+#             chắc in từ[؟] / [؟]. Cần: venv kraken + tessdata_best (python -c "from legalocr.engines import
+#             fetch_tessdata; fetch_tessdata('/kaggle/working/tessdata_best')"). Xem legalocr/README.md.
+#             ocrbench serve --config inference/config_cpu.yaml --model legalocr --ocr-all
+#   kraken    — kraken tách dòng (hợp chữ viết tay Ả Rập) + chữ ký / con dấu / vân tay + Tesseract đọc
 #             từng dòng. Cài một lần: bash inference/setup_kraken.sh. Xem ocrbench/adapters/kraken_layout.py.
 #             ocrbench serve --config inference/config_cpu.yaml --model kraken --ocr-all
 #   tesseract — Tesseract tự tách dòng (bỏ sót nhiều chữ viết tay), không cần cài thêm.
@@ -19,3 +25,9 @@ models:
   adapter: kraken_layout
   # seg_height 1400: nhanh hơn ~40% so với 1800 của model trên CPU, số dòng gần như không đổi (GPU: để 1800)
   params: {seg_height: 1400, recognizer: tesseract, lang: ara+eng, pictures: true, signatures: true}
+- name: legalocr
+  adapter: legalocr
+  # đo trên 2 trang có đáp án (công văn 1972 có watermark; hợp đồng số hoá): CER 29,0% → 17,2% (cách đọc tốt nhất),
+  # 1,5% → 1,5%; rác Latin 47 → 0 ký tự. handwriting: hatformer → dòng chữ tay gửi thêm HATFormer (CPU, chậm,
+  # giấy phép CC-BY-NC-SA); vlm:<model_id> khi có GPU.
+  params: {seg_height: 1400, handwriting: null}

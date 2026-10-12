@@ -1,23 +1,24 @@
 # postcorrect — kết quả đo: LLM sửa lỗi sau dots.mocr có giảm lỗi thật không?
 
-> **Trạng thái: phần dev đã xong; phần holdout (chấm một lần) và kiểm tra quy mô model (Qwen3-14B) đang chạy** — mục nào ghi «(chờ số)» sẽ
-> được điền khi xong. Mọi con số đo trên máy của dự án (2× Tesla T4), bằng bộ dữ liệu công khai; **không có dữ liệu thật của người dùng
+> **Trạng thái: dev + holdout (chấm một lần) + kiểm tra quy mô model đã xong; phép thử điểm nhiễu thấp hơn (KHATT) đang chạy** — mục nào
+> ghi «(chờ số)» sẽ được điền khi xong. Mọi con số đo trên máy của dự án (2× Tesla T4), bằng bộ dữ liệu công khai; **không có dữ liệu thật của người dùng
 > và không có API ngoài**. Mã nguồn: [postcorrect/](../postcorrect/), hướng dẫn: [postcorrect/README.md](../postcorrect/README.md).
 
 ## 0. Tóm tắt
 
-1. **Ở mức nhiễu này, LLM chạy cục bộ (≤ 14 tỉ tham số, 4-bit) sửa lỗi bằng văn bản đơn thuần gần như không giảm được CER.** Trên 24 trang dev
-   (CER của dots 45,7%), cấu hình tốt nhất giảm **0,13 điểm CER** (ALLaM-7B, chỉ nhận sửa khi ≥ 2/3 lượt chạy đồng ý), trong khi một bộ sửa
-   *hoàn hảo* bị giới hạn 2 ký tự sẽ giảm **3,10 điểm** — LLM đạt ~4% trần.
-2. **Có chốt chặn thì không làm hại**: mọi cấu hình có chốt chặn đều cho 0–4 từ đúng bị đổi sai trên ~560 từ đúng của 24 trang (≤ 0,7%); **không có chốt chặn thì ước lượng
-   dao động rất rộng** ([−1,4; +0,2] điểm) và chỉ trông "tốt hơn" nhờ cắt bớt một trang dots bịa văn bản lặp.
-3. **Nút thắt không phải LLM kiểm chứng** (khi cho sẵn chữ đúng nó nhận đúng 41% với 1,3% nhận nhầm, precision 97%) **mà là thiếu bằng chứng để biết
-   chữ đúng là gì**: 58% từ OCR sai xa (> 2 ký tự), 30% trang bị dots *bịa* văn bản kiểu Qur'an đầy tashkeel, và phần lỗi "sai ít" phần lớn cần
-   nhìn ảnh để quyết định (`الرابعة` / `السابعة` / `التاسعة` chỉ khác nét).
+1. **Ở mức nhiễu này (CER của dots ~42%), LLM chạy cục bộ (≤ 14 tỉ tham số, 4-bit) sửa lỗi bằng văn bản đơn thuần KHÔNG giảm được CER một cách có ý nghĩa.**
+   Trên **holdout** (49 trang, chấm một lần, cấu hình đóng băng từ dev) cả bốn cấu hình cho ΔCER trong **−0,03…+0,01 điểm** với mọi khoảng tin cậy chứa 0,
+   trong khi một bộ sửa *hoàn hảo* bị giới hạn 2 ký tự sẽ giảm **3,95 điểm** — LLM đạt chưa tới 1% trần. Kết quả "có ý nghĩa" duy nhất trên dev
+   (đồng thuận ≥ 2/3 của ALLaM-7B, −0,13 [−0,29; −0,03]) **không lặp lại ở holdout** (−0,03 [−0,07; +0,01]): đúng kiểu chọn lọc sau nhiều lần thử.
+2. **Chốt chặn là thứ quyết định, không phải LLM.** Trên holdout, *cùng đầu ra* của ALLaM A cho ΔCER **−0,03** có chốt chặn và **+1,88 [+0,15; +4,80]** nếu nhận nguyên bản LLM
+   viết lại (426 sửa, 33 từ đúng bị đổi, một trang tăng CER 0,39 → 0,82 vì LLM chèn thêm văn bản). Cách làm ngây thơ *làm xấu đi*; cách làm có chốt chặn *vô hại nhưng gần vô dụng*.
+3. **Nút thắt không phải LLM kiểm chứng** (khi cho sẵn chữ đúng nó nhận đúng 41% với 1,3% nhận nhầm, precision 97%) **mà là thiếu bằng chứng để biết chữ đúng là gì**:
+   ~58% từ OCR sai xa (> 2 ký tự), **30–43% trang bị dots *bịa* văn bản kiểu Qur'an đầy tashkeel** (dev 30%, holdout 43%), và phần lỗi "sai ít" phần lớn cần nhìn ảnh để quyết định
+   (`الرابعة` / `السابعة` / `التاسعة` chỉ khác nét). Tăng quy mô model không giúp: Qwen3-14B không tốt hơn Qwen3-8B (và chậm gấp ba ALLaM-7B).
 4. **Khuyến nghị:** không triển khai LLM hậu xử lý như "tự sửa" trên đầu ra dots ở mức nhiễu này. Làm theo thứ tự: (a) **cải thiện bước đọc ảnh**
-   (đây mới là đòn bẩy lớn: 15 trang dev có CER > 50%), (b) **kiểm chứng ứng viên bằng ảnh qua một model đọc ảnh KHÁC dots** (HTR theo dòng chấm xác suất của từng ứng viên
-   trên ảnh cắt của dòng) thay vì chỉ bằng ngôn ngữ, (c) nếu vẫn dùng LLM thì chỉ ở chế độ **gợi ý có người duyệt** (JSON `edits` đã có chỉ số từ) và dùng
-   **cờ chất lượng rẻ** (tashkeel > 10%, lặp vòng) để loại trang đọc hỏng ra trước khi nhờ LLM.
+   (đây mới là đòn bẩy lớn), (b) **kiểm chứng ứng viên bằng ảnh qua một model đọc ảnh KHÁC dots** (HTR theo dòng chấm xác suất của từng ứng viên
+   trên ảnh cắt của dòng) thay vì chỉ bằng ngôn ngữ, (c) nếu vẫn dùng LLM thì chỉ ở chế độ **gợi ý có người duyệt** (JSON `edits` đã có chỉ số từ), luôn **có chốt chặn**,
+   và dùng **cờ chất lượng rẻ** (tashkeel > 10%, lặp vòng) để loại trang đọc hỏng ra trước.
 
 ## 1. Câu hỏi và cách trả lời
 
@@ -90,7 +91,41 @@ nên câu hỏi không phải "LLM sửa được bao nhiêu" mà là "**sau khi
 - Sửa **sai**: `المغوض→المغول` (đáp án `المفوض`), `الكتير→الكثير` (đáp án `السكرتير`), `القوائين→القوائم` (đáp án `القوانين`), và từ đúng bị đổi: `اقتصادي→الاقتصادي`, `الثلوج→الثلج`. Mô hình đoán một từ *hợp lý* chứ không phải từ *đúng*.
 - Không có chốt chặn, LLM còn **chuẩn hoá quy ước** (`ان→أن`, `الى→إلى`, `العزنه→العزنة`) dù prompt cấm, và **bịa tashkeel / văn Qur'an** ở trang dots bịa; đó là lý do các luật tương ứng được thêm vào chốt chặn.
 
-## 5. Kết quả cuối trên holdout (50 trang, chấm một lần; cấu hình đóng băng từ dev) — (chờ số)
+## 5. Kết quả cuối trên holdout (49 trang, chấm MỘT lần; cấu hình đóng băng từ dev)
+
+Đóng băng *trước khi nhìn holdout*: guard mặc định; prompt "quyết đoán"; ví dụ thật từ dev trang 25–50; **H1** ALLaM-7B A · **H2** ALLaM-7B đồng thuận ≥ 2/3 của {A, B, C} ·
+**H3** Qwen3-8B A (tham chiếu) · **H4** ALLaM-7B D (τ = 8 nat, lề 3 nat). Dòng «thăm dò» (≥ 2/4 gồm D) chỉ để mô tả, không phải giả thuyết đã đăng ký trước.
+Holdout 50 trang, 1 trang (`muharaf_0058`) dots trả JSON bố cục hỏng nên không có khối chữ → loại. **OCR nền: CER 42,1%, WER 91,1%** (5.578 từ đáp án); từ OCR sai trong tầm chốt chặn: 19,1%;
+**21/49 trang (43%) tashkeel dày** (nghi dots bịa; CER 47,3% so với 39,5% ở nhóm còn lại). **Trần** sửa hoàn hảo: −1,42 / **−3,95** / −6,16 / −8,05 điểm với giới hạn 1 / 2 / 3 / 4 ký tự.
+
+| Cấu hình | ΔCER [KTC 95%] | số sửa | precision | sửa nhầm | sửa đúng hẳn | recall trong tầm | giây GPU/trang |
+|---|---|---|---|---|---|---|---|
+| H1 ALLaM-7B · A + ví dụ thật | −0,03 [−0,09; +0,03] | 78 | 0,49 | 5 (0,39%) | 13 | 1,5% | 12,7 |
+| H2 ALLaM-7B · đồng thuận ≥ 2/3 (A, B, C) | −0,03 [−0,07; +0,01] | 17 | 0,82 | 0 | 4 | 0,5% | ≈ 45 |
+| H3 Qwen3-8B · A + ví dụ thật | +0,01 [−0,02; +0,06] | 25 | 0,44 | 2 (0,16%) | 1 | 0,1% | 29,0 |
+| H4 ALLaM-7B · D (τ 8, lề 3) | −0,02 [−0,06; +0,02] | 49 | 0,33 | 0 | 6 | 0,7% | 4,6 |
+| (thăm dò) ALLaM-7B · đồng thuận ≥ 2/4 (A, B, C, D) | −0,03 [−0,08; +0,01] | 19 | 0,79 | 0 | 5 | 0,6% | ≈ 50 |
+| **H1 KHÔNG chốt chặn** (nhận nguyên bản LLM viết lại) | **+1,88 [+0,15; +4,80]** (xấu đi) | 426 | 0,23 | **33 (2,45%)** | 39 | 5,1% | 12,7 |
+| H3 KHÔNG chốt chặn | +0,12 [+0,01; +0,27] (xấu đi) | 69 | 0,26 | 20 (1,58%) | 2 | 0,2% | 29,0 |
+
+Theo mức nhiễu của OCR (strict; ΔCER điểm % / số sửa đúng hẳn / số từ đúng bị đổi):
+
+| Cấu hình | CER OCR 15–30% (9 trang) | CER OCR 30–50% (25 trang) | CER OCR ≥ 50% (15 trang) |
+|---|---|---|---|
+| H1 ALLaM A | −0,09 / 7 / 3 | −0,02 / 4 / 1 | −0,01 / 2 / 1 |
+| H2 ALLaM ≥ 2/3 | −0,10 / 3 / 0 | −0,01 / 1 / 0 | −0,02 / 0 / 0 |
+| H3 Qwen3-8B A | +0,09 / 0 / 1 | +0,00 / 1 / 1 | −0,01 / 0 / 0 |
+| H4 ALLaM D | −0,09 / 4 / 0 | +0,02 / 2 / 0 | −0,04 / 0 / 0 |
+
+Theo nhóm trang: nhóm đọc thật (28 trang, tashkeel ≤ 10%, CER 39,5%) cho H1 −0,05 [−0,13; +0,04], H2 −0,04 [−0,10; +0,01], H3 +0,02, H4 −0,02; nhóm nghi bịa (21 trang): **chốt chặn không cho sửa gì** (0 sửa).
+
+Đọc kết quả:
+- **Dev không lặp lại.** H2: dev −0,13 → holdout −0,03; H1: −0,07 → −0,03; H3: −0,05 → +0,01; D: −0,08 → −0,02. Mọi cấu hình co về gần 0 — dấu hiệu "lời nguyền của người thắng" (chọn cấu hình tốt nhất trên 24 trang dev sau nhiều lần thử). Hiệu ứng thật ước tính **≈ −0,03 điểm (< 1% của trần −3,95)**.
+- **Hiệu quả tương đối lớn nhất ở nhóm nhiễu thấp nhất** (CER OCR 15–30%: −0,09…−0,10 điểm với H1, H2, H4) và ≈ 0 ở nhóm nhiễu cao: nhất quán với giả thuyết "càng ít nhiễu càng dùng được", nhưng ở đây vẫn nhỏ, và **chưa có trang nào CER < 15%** để thử tiếp (xem mục 5b).
+- **H1 có 5 từ đúng bị đổi** (0,39%) trên holdout trong khi dev là 0; chỉ đồng thuận (H2) giữ được 0 sửa nhầm với precision 0,82. Đồng thuận là cách rẻ nhất để mua độ an toàn, nhưng nó mua bằng cách bỏ gần hết recall (0,5%).
+- **Chốt chặn không thể bỏ**: không có nó, ALLaM A làm CER xấu đi gần 2 điểm.
+
+## 5b. Điểm nhiễu thấp hơn: KHATT (24 đoạn viết tay hiện đại, tiếng Ả Rập chuẩn) — (chờ số)
 
 ## 6. Vì sao không hiệu quả: các phép chẩn đoán
 
@@ -100,7 +135,8 @@ nên câu hỏi không phải "LLM sửa được bao nhiêu" mà là "**sau khi
 | **LM có nhận ra chữ đúng khi được cho sẵn?** (`lm-prefer`, Qwen3-8B, 300 từ + 300 đối chứng) | thích bản có chữ đúng ở 55,7% từ sai-gần-đúng; ở τ = 3 nat: nhận đúng **40,7%**, nhận nhầm **1,3%**, precision **96,8%**; thích từ đúng gốc hơn bản bị làm nhiễu ở 96,7% | LM *kiểm chứng* tốt, nhưng *không đề xuất* được ứng viên đúng |
 | **Ứng viên từ từ điển** (Wikipedia 200 nghìn từ) | chữ đáp án có trong từ điển 81,7%; trong 2 ký tự: 71,5%; ứng viên trung vị chạm trần 200/từ; xếp theo (khoảng cách, tần suất): top-1 14,6%, top-5 31,0% | Quá nhiều ứng viên gần nhau → cần bằng chứng ảnh để chọn |
 | **D phân rã** (24 trang, 402 từ sai-gần-đúng) | chỉ 85 (21%) được chọn làm từ nghi lỗi; 51 (12,7% tổng) có chữ đúng trong 20 ứng viên; LM xếp đúng đầu 11/51 = 21,6%; 70% từ nghi lỗi là lỗi sai xa | Trần của D ≈ −0,5 điểm ngay cả khi chọn hoàn hảo; thực tế +0,4 |
-| **Chốt chặn** (quét từng luật, A + ví dụ thật) | bỏ riêng từng luật: ΔCER −0,03…−0,07 (không đổi); bỏ hết: −0,38 [−1,42; +0,16] | "Cải thiện" khi bỏ hết đến từ **một** trang dots bịa lặp (`muharaf_0004`: 1.516 → 1.179 ký tự), không phải sửa lỗi |
+| **Chốt chặn** (quét từng luật, A + ví dụ thật, dev) | bỏ riêng từng luật: ΔCER −0,03…−0,07 (không đổi); bỏ hết: −0,38 [−1,42; +0,16] | "Cải thiện" khi bỏ hết đến từ **một** trang dots bịa lặp (`muharaf_0004`: 1.516 → 1.179 ký tự), không phải sửa lỗi |
+| **Chốt chặn trên holdout** (ALLaM A) | có chốt chặn −0,03; **bỏ hết +1,88 [+0,15; +4,80]**, 33 từ đúng bị đổi; trang `muharaf_0097` CER 0,39 → 0,82 (văn bản 926 → 1.331 ký tự) | Trên dev, bỏ chốt chặn trông "tốt hơn" chỉ do may rủi; trên holdout nó gây hại rõ rệt |
 
 ## 7. Tài nguyên và độ trễ
 
@@ -109,7 +145,7 @@ nên câu hỏi không phải "LLM sửa được bao nhiêu" mà là "**sau khi
 | dots.mocr (OCR) | ~14,3 GiB đỉnh (hết một card 15 GiB) | ~150–180 giây/trang (trung vị 153; tối đa 290) |
 | Qwen3-8B nf4 | 6,0 GiB sau nạp, đỉnh 6,2–7,0 GiB (batch 1–8) | 24–27 giây/trang (A) |
 | ALLaM-7B nf4 | 4,4 GiB sau nạp, đỉnh 4,7–6,3 GiB | 12,7 (A) · 14,8 (C) · 17,4 (B) giây/trang; ~1.300–1.600 token vào + ~325 token ra mỗi lượt |
-| Qwen3-14B nf4 | (chờ số) | (chờ số) |
+| Qwen3-14B nf4 | ~10 GiB (nạp 164 giây) | 46,3 giây/trang (A); ΔCER dev +0,04 [−0,15; +0,22], 110 sửa, precision 0,25, 2 từ đúng bị đổi, 12 sửa đúng |
 
 - Một card (≥ 15 GiB): chạy **tuần tự** — OCR xong, giải phóng dots, rồi mới nạp LLM; đỉnh ~14,3 GiB. Giữ cả hai trong VRAM cùng lúc cần ~21 GiB (ước tính). Hai card: dots ở card này, LLM ở card kia, hoặc mỗi card một bản.
 - Chi phí cục bộ: LLM thêm ~13–45 giây GPU/trang (khoảng 8–30% thời gian OCR); không có chi phí API. Để ước lượng nếu sau này dùng API: ~1.300–1.900 token vào và ~320–500 token ra mỗi trang cho mỗi lượt.

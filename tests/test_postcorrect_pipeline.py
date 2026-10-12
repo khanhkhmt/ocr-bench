@@ -122,7 +122,7 @@ def test_vote_keeps_only_edits_proposed_by_enough_runs():
 
     p = page()
     r1 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم", "بخير": "بخبر"}), Settings(strategy="A"))[0]
-    r2 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم", "الاخ": "الأخ"}), Settings(strategy="A"))[0]
+    r2 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم", "الاخ": "الاخو"}), Settings(strategy="A"))[0]
     r3 = correct_pages([p], DummyBackend(fixes={"المحتزم": "المحترم"}), Settings(strategy="A"))[0]
     both = vote_results([r1, r2], min_votes=2)
     assert [e["to"] for e in both["edits"]] == ["المحترم"] and both["edits"][0]["votes"] == 2

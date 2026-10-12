@@ -13,7 +13,7 @@ from dataclasses import asdict, dataclass, field
 from .chunking import chunk_text
 from .detect import DEFAULT_MIN, canon_signal, combine_ranks, nll_scores, select_flags
 from .diff import Edit, apply_edits_text
-from .guard import GuardConfig, filter_edits
+from .guard import GuardConfig, diacritic_ratio, filter_edits
 from .parse import parse_flags, parse_rewrite
 from .prompts import mark_words, messages
 from .text import TEXT_CATS, split_words, words_with_spans
@@ -183,6 +183,8 @@ def correct_pages(pages: list[PageText], backend, st: Settings, shots: list[dict
 
     results = [{"id": p.id, "strategy": strategy, "model": getattr(backend, "model_id", "?"), "tag": st.tag,
                 "original": p.text, "corrected": p.text, "edits": [], "flags": [], "rejected": [], "chunks": [],
+                "quality": {"diacritic_ratio": round(diacritic_ratio(split_words(p.text)), 4),
+                            "suspect_hallucination": diacritic_ratio(split_words(p.text)) > 0.10},
                 "settings": st.as_dict()} for p in pages]
     for t in tasks:
         res = results[t.page]

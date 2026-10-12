@@ -212,3 +212,21 @@ def test_guard_blocks_foreign_script_letters_but_allows_removing_them():
     assert check_edit(E(0, "جهדكم", "جهدكم"), CFG) is None                 # bỏ chữ Hebrew lọt vào: đúng
     assert foreign_letters(("هنیا",), ("هنيا",)) == set()                  # ی (Ba Tư) → ي (Ả Rập): chỉ chuyển về chữ chuẩn
     assert check_edit(E(0, "المحتزم", "المحترم"), CFG) is None
+
+
+def test_guard_blocks_convention_only_edits():
+    for src, dst in [("ان", "أن"), ("العزنه", "العزنة"), ("الى", "إلى"), ("على", "علي"), ("انها", "أنها")]:
+        assert check_edit(E(0, src, dst), CFG) == "convention_only", (src, dst)
+    assert check_edit(E(0, "فرجه", "فرحة"), CFG) is None            # ج→ح là sửa chữ thật (ه→ة đi kèm không làm nó thành "quy ước")
+    assert check_edit(E(0, "ان", "أن"), GuardConfig(block_convention=False)) is None
+
+
+def test_filter_edits_skips_chunks_with_dense_diacritics():
+    src = ["مُحَمَّدٌ", "وَالْحَمْدُ", "لِلَّهِ", "الْعَالَمِينَ"] * 3
+    hyp = list(src)
+    hyp[0] = "مُحَمَّد"
+    f = filter_edits(src, hyp, CFG)
+    assert f.chunk_reason == "diacritics" and not f.accepted
+    plain = "الى الاخ العزيز جبيلي المحتزم اني بخير".split()
+    assert filter_edits(plain, "الى الاخ العزيز جبيلي المحترم اني بخير".split(), CFG).accepted
+    assert filter_edits(src, hyp, GuardConfig(max_diacritic_ratio=0)).chunk_reason != "diacritics"

@@ -26,6 +26,18 @@ def foreign_letters(src: tuple[str, ...], dst: tuple[str, ...]) -> set[str]:
     return {c for w in dst for c in core_of(w) if c.isalpha() and c not in _ARABIC_CORE and c not in have}
 
 
+# Khác biệt "quy ước" giữa các cách viết: hamza trên alef, alef maqsura / ya, ta marbuta / ha. Phiên âm trung thành có chỗ ghi أن, có
+# chỗ ghi ان; sửa kiểu này là tung đồng xu (đo trên dev: đa số "sửa nhầm" của LLM là loại này) → mặc định chặn.
+_CONV = str.maketrans({"أ": "ا", "إ": "ا", "آ": "ا", "ٱ": "ا", "ى": "ي", "ة": "ه"})
+
+
+def diacritic_ratio(words) -> float:
+    """Tỉ lệ ký tự là tashkeel. Đáp án thật hiếm khi vượt 15%; dots bịa văn kiểu Qur'an khi không đọc nổi ảnh (đo: 30% trang
+    dev có chunk ~40% tashkeel)."""
+    text = " ".join(words)
+    return 1 - len(strip_marks(text)) / max(1, len(text))
+
+
 @dataclass
 class GuardConfig:
     max_char_edit: int = 2          # sửa 1→1: tối đa số ký tự khác (trên lõi chữ đã bỏ tashkeel)
@@ -34,6 +46,8 @@ class GuardConfig:
     max_edit_ratio: float = 0.35    # chunk: tỉ lệ từ bị sửa tối đa, vượt = coi như LLM viết lại → bỏ cả chunk
     max_drift: float = 0.10         # chunk: lệch số từ tối đa (tỉ lệ; luôn cho phép ≥ 2 từ)
     min_core_len: int = 2           # từ có lõi ngắn hơn (vd. "و") không bao giờ bị sửa
+    block_convention: bool = True   # chặn sửa chỉ khác quy ước (أ/ا, ى/ي, ة/ه)
+    max_diacritic_ratio: float = 0.05  # chunk có tashkeel dày hơn mức này = dots đang bịa → không sửa gì (0 = tắt)
 
 
 def check_edit(e: Edit, cfg: GuardConfig, allowed: set[int] | None = None) -> str | None:
@@ -53,6 +67,8 @@ def check_edit(e: Edit, cfg: GuardConfig, allowed: set[int] | None = None) -> st
         a, b = core_of(e.src[0]), core_of(e.dst[0])
         if a == b:
             return "no_change"  # chỉ khác tashkeel / dấu câu
+        if cfg.block_convention and a.translate(_CONV) == b.translate(_CONV):
+            return "convention_only"
         d = Levenshtein.distance(a, b)
         if d > cfg.max_char_edit or d / max(1, len(a)) > cfg.max_char_ratio:
             return "too_far"
@@ -85,6 +101,8 @@ def filter_edits(src: list[str], hyp: list[str], cfg: GuardConfig, allowed: set[
     """So src (từ gốc của chunk) với hyp (từ LLM trả về) → sửa được nhận / bị từ chối. Chỉ số theo src."""
     raw = explode_equal_blocks(diff_words(src, hyp))
     n = len(src)
+    if cfg.max_diacritic_ratio and diacritic_ratio(src) > cfg.max_diacritic_ratio:
+        return Filtered([], [(e, "chunk_rejected") for e in raw], "diacritics")
     if abs(len(hyp) - n) > max(2, cfg.max_drift * n):
         return Filtered([], [(e, "chunk_rejected") for e in raw], "drift")
     if n and sum(max(e.span, len(e.dst)) for e in raw) / n > cfg.max_edit_ratio:

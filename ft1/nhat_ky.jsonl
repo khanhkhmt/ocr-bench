@@ -1,1 +1,7 @@
 {"buoc": 1, "loss": 0.7313, "lr": 1.0000000000000002e-06, "s_buoc": 10.62, "vram_gb": 8.3}
+{"buoc": 10, "loss": 0.9675, "lr": 1e-05, "s_buoc": 11.2, "vram_gb": 9.5}
+{"buoc": 20, "loss": 0.9876, "lr": 2e-05, "s_buoc": 9.87, "vram_gb": 9.5}
+{"buoc": 30, "loss": 0.8188, "lr": 3e-05, "s_buoc": 10.38, "vram_gb": 9.5}
+{"buoc": 40, "loss": 0.7493, "lr": 4e-05, "s_buoc": 10.21, "vram_gb": 9.5}
+{"buoc": 50, "loss": 0.7533, "lr": 5e-05, "s_buoc": 9.94, "vram_gb": 9.5}
+{"buoc": 60, "loss": 0.6349, "lr": 6e-05, "s_buoc": 10.26, "vram_gb": 9.5}

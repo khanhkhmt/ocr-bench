@@ -5,3 +5,9 @@
 {"buoc": 40, "loss": 0.7493, "lr": 4e-05, "s_buoc": 10.21, "vram_gb": 9.5}
 {"buoc": 50, "loss": 0.7533, "lr": 5e-05, "s_buoc": 9.94, "vram_gb": 9.5}
 {"buoc": 60, "loss": 0.6349, "lr": 6e-05, "s_buoc": 10.26, "vram_gb": 9.5}
+{"buoc": 70, "loss": 0.6537, "lr": 7e-05, "s_buoc": 10.33, "vram_gb": 9.5}
+{"buoc": 80, "loss": 0.5854, "lr": 8e-05, "s_buoc": 10.94, "vram_gb": 9.5}
+{"buoc": 90, "loss": 0.6971, "lr": 9e-05, "s_buoc": 9.9, "vram_gb": 9.5}
+{"buoc": 100, "loss": 0.6043, "lr": 0.0001, "s_buoc": 9.8, "vram_gb": 9.5}
+{"buoc": 110, "loss": 0.5743, "lr": 9.990133642141359e-05, "s_buoc": 10.17, "vram_gb": 9.5}
+{"buoc": 120, "loss": 0.5049, "lr": 9.96057350657239e-05, "s_buoc": 10.06, "vram_gb": 9.5}

@@ -1,11 +1,11 @@
 # Dòng chữ viết tay Omar Al-Saleh — test (500 dòng)
 
-Cập nhật: 2026-10-12 04:53 UTC — XONG tất cả
+Cập nhật: 2026-10-12 05:03 UTC — đang chấm ketaba 240/500
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | baseer | 500/500 | **79.1%** | **55.0%** | 23.6% | 53.3% | 20.9% | 45.0% | 22.3% | 1.01 | 2 | 9 |
-| ketaba | 474/500 | **79.1%** | **45.4%** | 23.8% | 62.3% | 20.9% | 54.6% | 21.0% | 0.97 | 0 | 10 |
+| ketaba | 490/500 | **75.9%** | **41.7%** | 27.0% | 65.9% | 24.1% | 58.3% | 22.3% | 0.98 | 1 | 11 |
 | dots | 240/500 | **0.0%** | **0.0%** | 173.7% | 273.6% | 153.4% | 236.6% | 133.7% | 1.50 | 15 | 62 |
 
 đúng ký tự = 100% − CER chuẩn hoá (cả tập, tính theo tổng ký tự); đúng từ = 100% − WER chuẩn hoá. Từng dòng: chi_tiet.csv (mở bằng Excel) và xem_ket_qua.html (có ảnh).

@@ -64,9 +64,15 @@ def load_lines(data: str | None, split: str) -> list[tuple[str, Image.Image, str
     return out
 
 
-def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba_mode: str = "q4"):
+def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba_mode: str = "q4", lora: str | None = None):
     """→ hàm(list ảnh) → list chữ."""
     dev = f"cuda:{gpu}" if gpu >= 0 else "cpu"
+    if name.startswith("baseer_ft"):  # Baseer + adapter tự huấn luyện (htr_train) — cần --lora
+        from htr_test.models import BaseerNakba
+        if not lora:
+            raise SystemExit("baseer_ft cần --lora <thư mục adapter, vd. <out>/best>")
+        m = BaseerNakba(device=dev, dtype=dtype, lora=lora).load()
+        return lambda ims: m.read(ims, batch=batch)
     if name == "baseer":
         from htr_test.models import BaseerNakba
         m = BaseerNakba(device=dev, dtype=dtype).load()
@@ -95,7 +101,7 @@ def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba
                 out.append((conv.adapter.predict(img, item).text or "").strip())
             return out
         return read
-    raise SystemExit(f"model lạ: {name} (có: baseer, ketaba, ketaba16, sherif, trocr, dots)")
+    raise SystemExit(f"model lạ: {name} (có: baseer, baseer_ft…, ketaba, ketaba16, sherif, trocr, dots)")
 
 
 def score(pairs: list[tuple[str, str]]) -> dict:
@@ -252,6 +258,7 @@ def main() -> int:
                     help="số ảnh model đọc cùng lúc (baseer/ketaba). 1 = đúng; >1 làm Qwen2.5-VL dừng sớm (xem models.py)")
     ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"],
                     help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
+    ap.add_argument("--lora", default=None, help="baseer_ft*: thư mục adapter (htr_train), vd. /kaggle/working/ft1/best")
     ap.add_argument("--shard", default="", help="i/k: chạy song song k phần (vd. 0/2 trên --gpu 0, 1/2 trên --gpu 1); "
                     "mỗi phần ghi <model>.shard<i>of<k>.jsonl, bảng / chi tiết tự gộp mọi phần")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
@@ -286,7 +293,7 @@ def main() -> int:
             print(f"== {name}: phần này đã chấm xong ({len(done)}/{len(lines)} dòng cả mẫu)", flush=True)
             continue
         t0 = time.time()
-        read = make_reader(name, a.gpu, a.dtype, a.model_batch, a.ketaba_mode)
+        read = make_reader(name, a.gpu, a.dtype, a.model_batch, a.ketaba_mode, a.lora)
         print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
         t0 = time.time()
         with open(f, "a", encoding="utf-8") as fo:

@@ -224,8 +224,10 @@ class BaseerNakba:
                 "<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{p}<|im_end|>\n"
                 "<|im_start|>assistant\n")
 
-    def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto"):
-        self.device, self.quant4, self.max_new_tokens, self.dtype = device, quant4, max_new_tokens, dtype
+    def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto",
+                 lora: str | None = None):
+        """lora: thư mục adapter do htr_train/huan_luyen.py tạo (vd. <out>/best) → model đã huấn luyện tiếp."""
+        self.device, self.quant4, self.max_new_tokens, self.dtype, self.lora = device, quant4, max_new_tokens, dtype, lora
         self.model = self.processor = None
 
     def load(self):
@@ -241,6 +243,11 @@ class BaseerNakba:
 
         cfg = self._fix_config(AutoConfig.from_pretrained(self.REPO))
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.REPO, config=cfg, **kw).eval()
+        if self.lora:
+            from peft import PeftModel
+
+            KetabaOCR._peft_khong_torchao()
+            self.model = PeftModel.from_pretrained(self.model, self.lora).eval()
         self.processor = AutoProcessor.from_pretrained(self.REPO, min_pixels=28 * 28, max_pixels=1280 * 28 * 28)
         self.processor.tokenizer.padding_side = "left"
         self.load_s = round(time.time() - t, 1)

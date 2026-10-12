@@ -445,7 +445,7 @@ def cmd_oracle(a):
 
     man = {r["id"]: r for r in load_manifest(Path(a.manifest)) if not a.split or r.get("split") == a.split}
     recs = []
-    for i in man:
+    for i in list(man)[: a.limit_pages or None]:
         f = Path(a.ocr) / f"{i}.json"
         if f.exists():
             r = json.loads(f.read_text(encoding="utf-8"))
@@ -655,6 +655,7 @@ def main(argv=None):
     p.add_argument("--ocr", required=True)
     p.add_argument("--manifest", required=True)
     p.add_argument("--split", choices=["dev", "holdout"])
+    p.add_argument("--limit-pages", type=int)
     p.set_defaults(func=cmd_oracle)
 
     p = sub.add_parser("vote")

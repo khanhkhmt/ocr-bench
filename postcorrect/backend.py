@@ -151,6 +151,34 @@ class HFBackend:
             cache_file.write_text(json.dumps([[w.total, w.max, w.n_tok] for w in out]), encoding="utf-8")
         return out
 
+    def nll_totals(self, texts: list[str], token_budget: int = 3000) -> list[float]:
+        """Tổng NLL (nat) của từng văn bản (bỏ token đầu), chấm theo BATCH (xếp theo độ dài, padding phải). Dùng để so ứng viên."""
+        torch, tok = self.torch, self.tok
+        ids = [tok(t)["input_ids"] for t in texts]
+        order = sorted(range(len(texts)), key=lambda i: len(ids[i]))
+        out = [0.0] * len(texts)
+        pad = tok.pad_token_id if tok.pad_token_id is not None else 0
+        i = 0
+        while i < len(order):
+            j = i
+            while j + 1 < len(order) and (j + 2 - i) * len(ids[order[j + 1]]) <= token_budget:
+                j += 1
+            batch = order[i:j + 1]
+            L = max(len(ids[b]) for b in batch)
+            x = torch.full((len(batch), L), pad, dtype=torch.long)
+            m = torch.zeros((len(batch), L), dtype=torch.long)
+            for r, b in enumerate(batch):
+                x[r, :len(ids[b])] = torch.tensor(ids[b])
+                m[r, :len(ids[b])] = 1
+            x, m = x.to(self.model.device), m.to(self.model.device)
+            with torch.inference_mode():
+                logp = torch.log_softmax(self.model(input_ids=x, attention_mask=m).logits[:, :-1].float(), -1)
+                nll = -logp.gather(2, x[:, 1:, None])[:, :, 0] * m[:, 1:]
+            for r, b in enumerate(batch):
+                out[b] = float(nll[r].sum())
+            i = j + 1
+        return out
+
     def close(self):
         del self.model
         self.torch.cuda.empty_cache()
@@ -190,6 +218,9 @@ class DummyBackend:
     def nll_words(self, text):
         return [WordNLL(8.0, 8.0, 2) if w in self.suspicious else WordNLL(1.0, 0.5, 1)
                 for w, _, _ in words_with_spans(text)]
+
+    def nll_totals(self, texts):
+        return [sum(w.total for w in self.nll_words(t)) for t in texts]
 
     def close(self):
         pass

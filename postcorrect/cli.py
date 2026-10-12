@@ -5,6 +5,7 @@
   correct-cache        sửa hàng loạt từ cache OCR  (một tiến trình mỗi GPU: --device i --shard i/n)
   correct-text         sửa một văn bản (file hoặc stdin) → JSON
   correct-image        ảnh → dots (GPU --ocr-device) → LLM (GPU --llm-device) → JSON  (venv dots)
+  lexicon-coverage     độ phủ ứng viên của từ điển trên các từ sai-gần-đúng (hướng 'LLM chỉ kiểm chứng')
   lm-prefer            chẩn đoán: cho SẴN từ đúng, LM có nhận ra không (cận trên của 'ứng viên + chấm LM')
   oracle               trần: CER nếu sửa HOÀN HẢO mọi từ trong tầm chốt chặn
   vote                 đồng thuận: chỉ nhận sửa nhiều lượt chạy (khác prompt / khác model) cùng đề xuất
@@ -34,8 +35,11 @@ from .text import split_words
 def add_model_args(ap):
     ap.add_argument("--model", default="Qwen/Qwen3-8B", help="id Hugging Face của LLM (chạy cục bộ)")
     ap.add_argument("--quant", choices=["nf4", "fp16"], default="nf4")
-    ap.add_argument("--strategy", choices=["A", "B", "C"], default="A",
-                    help="A viết lại chunk | B khoanh từ lỗi (JSON) | C viết lại, chỉ đổi từ NLL cao")
+    ap.add_argument("--strategy", choices=["A", "B", "C", "D"], default="A",
+                    help="A viết lại chunk | B khoanh từ lỗi (JSON) | C viết lại, chỉ đổi từ NLL cao | D ứng viên từ điển + LM kiểm chứng")
+    ap.add_argument("--lexicon", help="từ điển tần suất (JSON) cho chiến lược D — python -m postcorrect.lexicon")
+    ap.add_argument("--d-tau", type=float, default=3.0)
+    ap.add_argument("--d-margin", type=float, default=0.5)
     ap.add_argument("--fewshot", action="store_true")
     ap.add_argument("--chunk-chars", type=int, default=700)
     ap.add_argument("--flag-signal", default="nll_sum", help="nll_sum | nll_max | dots_lp | dots_lp+nll_sum | dots_lp+nll_max")
@@ -53,6 +57,7 @@ def add_model_args(ap):
 def settings_from(a) -> Settings:
     return Settings(strategy=a.strategy, chunk_chars=a.chunk_chars, fewshot=a.fewshot, flag_frac=a.flag_frac,
                     flag_min=a.flag_min, flag_signal=canon_signal(a.flag_signal), tag=a.tag,
+                    d_tau=getattr(a, "d_tau", 3.0), d_margin=getattr(a, "d_margin", 0.5),
                     guard=GuardConfig(max_char_edit=a.max_char_edit, max_edit_ratio=a.max_edit_ratio,
                                       max_diacritic_ratio=a.max_diacritic_ratio, block_convention=not a.no_block_convention))
 
@@ -100,12 +105,12 @@ def parse_variant(v: str) -> tuple[str, str | None, str, str]:
             shots, v = suffix[1:], v[:-3]
     core, _, style = v.partition("@")
     strategy, _, signal = core.partition("=")
-    if strategy not in ("A", "B", "C") or style not in ("", "cons", "assert"):
+    if strategy not in ("A", "B", "C", "D") or style not in ("", "cons", "assert"):
         raise ValueError(f"biến thể không hợp lệ: {v!r}")
     return strategy, (canon_signal(signal) if signal else None), shots, style or "cons"
 
 
-def _run_variant(backend, a, ids: list[str], st: Settings, out: Path, shots: list[dict] | None = None) -> None:
+def _run_variant(backend, a, ids: list[str], st: Settings, out: Path, shots: list[dict] | None = None, lexicon=None) -> None:
     out.mkdir(parents=True, exist_ok=True)
     pages = load_ocr_pages(Path(a.ocr), [i for i in ids if not (out / f"{i}.json").exists()])
     print(f"[{st.tag or st.strategy}] {len(ids)} trang thuộc phần này, cần chạy {len(pages)} "
@@ -119,7 +124,7 @@ def _run_variant(backend, a, ids: list[str], st: Settings, out: Path, shots: lis
         grp = pages[g:g + a.group]
         s0 = (backend.stats.seconds, backend.stats.prompt_tokens, backend.stats.new_tokens)
         t = time.perf_counter()
-        results = correct_pages(grp, backend, st, shots)
+        results = correct_pages(grp, backend, st, shots, lexicon)
         dt = time.perf_counter() - t
         for r in results:
             (out / f"{r['id']}.json").write_text(json.dumps(r, ensure_ascii=False), encoding="utf-8")
@@ -150,6 +155,13 @@ def cmd_correct_cache(a):
     variants = [v.strip() for v in a.variants.split(",")] if a.variants else [a.strategy + ("+fs" if a.fewshot else "")]
     for v in variants:
         parse_variant(v)  # báo lỗi cú pháp trước khi tốn thời gian nạp model
+    lexicon = None
+    if any(parse_variant(v)[0] == "D" for v in variants):
+        if not a.lexicon:
+            raise SystemExit("chiến lược D cần --lexicon")
+        from .lexicon import Lexicon
+
+        lexicon = Lexicon(a.lexicon)
     backend = load_backend(a, a.device)
     print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {getattr(backend, 'load_seconds', 0):.0f}s", flush=True)
     for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model
@@ -165,7 +177,8 @@ def cmd_correct_cache(a):
         st.tag = v
         tag_dir = v.replace("=", "_").replace("+", "_").replace("@", "_")
         _run_variant(backend, a, ids, st, Path(f"{a.out}__{tag_dir}") if a.variants else Path(a.out),
-                     json.loads(Path(a.shots_file).read_text(encoding="utf-8")) if st.real_shots else None)
+                     json.loads(Path(a.shots_file).read_text(encoding="utf-8")) if st.real_shots else None,
+                     lexicon)
     backend.close()
 
 
@@ -318,7 +331,7 @@ def cmd_refilter(a):
         if f.name.startswith("run_meta"):
             (dst / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
             continue
-        res = refilter_result(json.loads(f.read_text(encoding="utf-8")), guard)
+        res = refilter_result(json.loads(f.read_text(encoding="utf-8")), guard, a.d_tau, a.d_margin)
         (dst / f.name).write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
         n += 1
     print(f"đã áp lại chốt chặn cho {n} trang → {dst}")
@@ -337,6 +350,59 @@ def cmd_vote(a):
         res = vote_results([json.loads((d / f"{i}.json").read_text(encoding="utf-8")) for d in dirs], a.min_votes)
         (dst / f"{i}.json").write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
     print(f"đồng thuận {a.min_votes}/{len(dirs)} cho {len(ids)} trang chung → {dst}")
+
+
+# ---------------------------------------------------------------- lexicon-coverage
+def cmd_lexicon_coverage(a):
+    """Độ phủ ứng viên của từ điển trên các từ sai-gần-đúng: từ đáp án có trong từ điển không, có bao nhiêu ứng viên, xếp hạng ra sao."""
+    from collections import Counter
+
+    from .analysis import word_rows
+    from .evaluate import align, norm_w
+    from .lexicon import Lexicon
+    from .ocr_cache import load_manifest
+    from .text import norm_word, split_words
+
+    lex = Lexicon(a.lexicon)
+    man = [r for r in load_manifest(Path(a.manifest)) if not a.split or r.get("split") == a.split][: a.limit_pages or None]
+    n_near = in_lex = in_cand = top1 = top5 = 0
+    ncands, oov = [], Counter()
+    for r in man:
+        f = Path(a.ocr) / f"{r['id']}.json"
+        if not f.exists():
+            continue
+        rec = json.loads(f.read_text(encoding="utf-8"))
+        if rec.get("error") or not rec.get("cells"):
+            continue
+        page, rows = word_rows(rec, r["gt"], a.max_char_edit)
+        words, gw = split_words(page.text), split_words(r["gt"])
+        al = align(words, gw)
+        for row in rows:
+            w = row.word
+            if row.label in ("ok", "near", "far"):
+                oov[(row.label, norm_word(w) in lex.set)] += 1
+            if row.label != "near" or al.pair[row.index] is None:
+                continue
+            gold = norm_word(gw[al.pair[row.index]])
+            cands = lex.candidates(w, a.max_char_edit, limit=200)
+            n_near += 1
+            in_lex += gold in lex.set
+            names = [c[0] for c in cands]
+            ncands.append(len(cands))
+            if gold in names:
+                in_cand += 1
+                rank = names.index(gold)
+                top1 += rank == 0
+                top5 += rank < 5
+    print(f"# Độ phủ từ điển ({len(lex.words)} từ) trên {n_near} từ sai-gần-đúng của {a.split or 'tất cả'}\n")
+    print(f"- Từ đáp án CÓ trong từ điển: {in_lex / max(1, n_near):.1%} (= trần recall ứng viên; thiếu = từ địa phương / cổ / tên riêng)")
+    print(f"- Từ đáp án nằm trong ứng viên cách ≤ {a.max_char_edit} ký tự: {in_cand / max(1, n_near):.1%}; xếp hạng top-1 / top-5 chỉ bằng (khoảng cách, tần suất): "
+          f"{top1 / max(1, n_near):.1%} / {top5 / max(1, n_near):.1%}")
+    srt = sorted(ncands)
+    print(f"- Số ứng viên mỗi từ: trung vị {srt[len(srt) // 2] if srt else 0}, p90 {srt[int(.9 * (len(srt) - 1))] if srt else 0}, tối đa {srt[-1] if srt else 0}")
+    for lab in ("ok", "near", "far"):
+        tot = oov[(lab, True)] + oov[(lab, False)]
+        print(f"- Từ OCR nhãn '{lab}': {oov[(lab, False)] / max(1, tot):.1%} NGOÀI từ điển (OOV) — tín hiệu 'từ nghi lỗi' miễn phí")
 
 
 # ---------------------------------------------------------------- lm-prefer
@@ -556,7 +622,18 @@ def main(argv=None):
     p.add_argument("--no-split-merge", action="store_true")
     p.add_argument("--no-block-convention", action="store_true", help="cho phép sửa chỉ khác quy ước (hamza, ى/ي, ة/ه)")
     p.add_argument("--max-diacritic-ratio", type=float, default=0.05, help="bỏ chunk có tashkeel dày hơn mức này (0 = tắt)")
+    p.add_argument("--d-tau", type=float, help="(chiến lược D) ngưỡng Δ NLL mới")
+    p.add_argument("--d-margin", type=float, help="(chiến lược D) lề so với ứng viên thứ hai mới")
     p.set_defaults(func=cmd_refilter)
+
+    p = sub.add_parser("lexicon-coverage")
+    p.add_argument("--lexicon", required=True)
+    p.add_argument("--ocr", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--split", choices=["dev", "holdout"])
+    p.add_argument("--limit-pages", type=int)
+    p.add_argument("--max-char-edit", type=int, default=2)
+    p.set_defaults(func=cmd_lexicon_coverage)
 
     p = sub.add_parser("lm-prefer")
     p.add_argument("--ocr", required=True)

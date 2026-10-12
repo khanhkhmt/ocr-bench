@@ -77,8 +77,9 @@ def test_parse_variant_grammar():
     assert parse_variant("A@assert") == ("A", None, "", "assert")
     assert parse_variant("C=nll_sum@assert+fs") == ("C", "nll_sum", "fs", "assert")
     assert parse_variant("A@assert+rs") == ("A", None, "rs", "assert")
+    assert parse_variant("D") == ("D", None, "", "cons")                # chiến lược D: ứng viên từ điển + LM kiểm chứng
     with pytest.raises(ValueError):
-        parse_variant("D")
+        parse_variant("E")
     with pytest.raises(ValueError):
         parse_variant("A@khac")
     with pytest.raises(ValueError):

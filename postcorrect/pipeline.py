@@ -16,6 +16,7 @@ from .diff import Edit, apply_edits_text
 from .guard import GuardConfig, diacritic_ratio, filter_edits
 from .parse import parse_flags, parse_rewrite
 from .prompts import mark_words, messages
+from .verify import decide, score_suspects, suspects_of
 from .text import TEXT_CATS, split_words, words_with_spans
 
 _HASHES = re.compile(r"^#{1,6}\s+")
@@ -62,6 +63,12 @@ class Settings:
     flag_frac: float = 0.3            # C: tỉ lệ từ được đánh dấu (sau khi bỏ từ bảo vệ)
     flag_min: float | None = None     # C: điểm tuyệt đối tối thiểu để được đánh dấu (None = mặc định theo tín hiệu; tổ hợp hạng: không có)
     max_new_factor: float = 1.4
+    d_tau: float = 3.0                # D: Δ NLL tối thiểu (nat) để nhận ứng viên
+    d_margin: float = 0.5             # D: ứng viên tốt nhất phải hơn ứng viên thứ hai ít nhất chừng này (nat)
+    d_before: int = 8                 # D: số từ ngữ cảnh trước / sau trong cửa sổ chấm
+    d_after: int = 4
+    d_max_cands: int = 30             # D: tối đa ứng viên mỗi từ nghi lỗi
+    d_max_suspects: int = 40          # D: tối đa từ nghi lỗi mỗi chunk
     tag: str = ""
 
     def as_dict(self) -> dict:
@@ -85,6 +92,43 @@ def _block_of(page: PageText, word_index: int):
         if b["first_word"] <= word_index < b["first_word"] + b["n_words"]:
             return b["block"]
     return None
+
+
+def _skeleton(p: PageText, backend, st: Settings) -> dict:
+    return {"id": p.id, "strategy": st.strategy, "model": getattr(backend, "model_id", "?"), "tag": st.tag,
+            "original": p.text, "corrected": p.text, "edits": [], "flags": [], "rejected": [], "chunks": [],
+            "quality": {"diacritic_ratio": round(diacritic_ratio(split_words(p.text)), 4),
+                        "suspect_hallucination": diacritic_ratio(split_words(p.text)) > 0.10},
+            "settings": st.as_dict()}
+
+
+def _correct_pages_d(pages: list[PageText], backend, st: Settings, lexicon) -> list[dict]:
+    """Chiến lược D: ứng viên từ từ điển + LM chấm NLL trong ngữ cảnh (verify.py). Không sinh chữ."""
+    if lexicon is None:
+        raise ValueError("chiến lược D cần từ điển (--lexicon)")
+    results = [_skeleton(p, backend, st) for p in pages]
+    for p, res in zip(pages, results):
+        for ci, ch in enumerate(chunk_text(p.text, st.chunk_chars)):
+            words = split_words(ch.text)
+            if diacritic_ratio(words) > (st.guard.max_diacritic_ratio or 9):
+                res["chunks"].append({"i": ci, "start": ch.start, "end": ch.end, "first_word": ch.first_word, "n_words": ch.n_words,
+                                      "status": "D:skipped", "chunk_reason": "diacritics", "n_edits": 0, "n_rejected": 0, "dcands": []})
+                continue
+            sus = suspects_of(words, lexicon, st.guard, st.d_max_suspects, st.d_max_cands)
+            score_suspects(backend, words, sus, st.d_before, st.d_after)
+            acc, rej = decide(words, sus, st.d_tau, st.d_margin, st.guard)
+            res["chunks"].append({"i": ci, "start": ch.start, "end": ch.end, "first_word": ch.first_word, "n_words": ch.n_words,
+                                  "status": "D:ok", "chunk_reason": None, "n_edits": len(acc), "n_rejected": len(rej), "dcands": sus})
+            res["flags"] += [{"index": ch.first_word + s_["i"], "word": s_["w"], "n_cands": len(s_["cands"])} for s_ in sus]
+            for e in acc:
+                g = Edit(ch.first_word + e.index, e.src, e.dst)
+                res["edits"].append({**g.as_json(), "chunk": ci, "block": _block_of(p, g.index)})
+            for e, why in rej:
+                res["rejected"].append({"index": ch.first_word + e.index, "from": e.from_, "to": e.to, "reason": why})
+        res["edits"].sort(key=lambda e: e["index"])
+        eds = [Edit(e["index"], tuple(e["from"].split()), tuple(e["to"].split())) for e in res["edits"]]
+        res["corrected"] = apply_edits_text(p.text, eds)
+    return results
 
 
 def process_raw(strategy: str, words: list[str], raw: str, guard: GuardConfig, allowed: set[int] | None) -> dict:
@@ -111,14 +155,29 @@ def process_raw(strategy: str, words: list[str], raw: str, guard: GuardConfig, a
     return out
 
 
-def refilter_result(res: dict, guard: GuardConfig) -> dict:
-    """Áp lại chốt chặn khác lên đầu ra thô đã lưu của một trang (không chạy lại LLM). Trả bản sao đã cập nhật."""
+def refilter_result(res: dict, guard: GuardConfig, d_tau: float | None = None, d_margin: float | None = None) -> dict:
+    """Áp lại chốt chặn khác lên đầu ra thô đã lưu của một trang (không chạy lại LLM). Trả bản sao đã cập nhật.
+    Chiến lược D: có thể đổi cả ngưỡng d_tau / d_margin (điểm Δ đã lưu trong `dcands`)."""
     out = {**res, "edits": [], "rejected": [], "chunks": []}
     words = split_words(res["original"])
     strategy = res["strategy"]
     flagged = {f["index"] for f in res["flags"]} if strategy == "C" else None
     for info in res["chunks"]:
         info = dict(info)
+        if strategy == "D":
+            lo, n = info["first_word"], info["n_words"]
+            sus = info.get("dcands") or []
+            tau = d_tau if d_tau is not None else res["settings"].get("d_tau", 3.0)
+            mar = d_margin if d_margin is not None else res["settings"].get("d_margin", 0.5)
+            acc, rej = decide(words[lo:lo + n], sus, tau, mar, guard) if sus else ([], [])
+            info["n_edits"], info["n_rejected"] = len(acc), len(rej)
+            for e in acc:
+                g = Edit(lo + e.index, e.src, e.dst)
+                out["edits"].append({**g.as_json(), "chunk": info["i"], "block": None})
+            for e, why in rej:
+                out["rejected"].append({"index": lo + e.index, "from": e.from_, "to": e.to, "reason": why})
+            out["chunks"].append(info)
+            continue
         if "raw" not in info:  # chunk không gọi LLM (C không có từ nghi lỗi)
             out["chunks"].append(info)
             continue
@@ -139,13 +198,18 @@ def refilter_result(res: dict, guard: GuardConfig) -> dict:
     eds = [Edit(e["index"], tuple(e["from"].split()), tuple(e["to"].split())) for e in out["edits"]]
     out["corrected"] = apply_edits_text(res["original"], eds)
     out["settings"] = {**res["settings"], "guard": asdict(guard)}
+    if strategy == "D":
+        out["settings"].update(d_tau=d_tau if d_tau is not None else res["settings"].get("d_tau"),
+                               d_margin=d_margin if d_margin is not None else res["settings"].get("d_margin"))
     return out
 
 
-def correct_pages(pages: list[PageText], backend, st: Settings, shots: list[dict] | None = None) -> list[dict]:
+def correct_pages(pages: list[PageText], backend, st: Settings, shots: list[dict] | None = None, lexicon=None) -> list[dict]:
     if st.real_shots and not shots:
         raise ValueError("real_shots cần danh sách ví dụ (shots)")
     strategy = st.strategy
+    if strategy == "D":
+        return _correct_pages_d(pages, backend, st, lexicon)
     tasks: list[_Task] = []
     for pi, p in enumerate(pages):
         for ci, ch in enumerate(chunk_text(p.text, st.chunk_chars)):

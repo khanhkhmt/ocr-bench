@@ -1,6 +1,6 @@
 # Dòng chữ viết tay Muharaf — test (500 dòng)
 
-Cập nhật: 2026-10-12 10:55 UTC — xong baseer_ft1_s075
+Cập nhật: 2026-10-12 10:55 UTC — XONG tất cả
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|

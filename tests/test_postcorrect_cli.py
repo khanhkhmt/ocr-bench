@@ -62,3 +62,19 @@ def test_pick_devices_collapses_to_single_gpu():
     assert pick_devices(0, 1, 1) == (0, 0)      # một card: cả hai về 0 (dots được giải phóng trước khi nạp LLM)
     with pytest.raises(RuntimeError):
         pick_devices(0, 1, 0)
+
+
+def test_parse_variant_grammar():
+    import pytest
+
+    from postcorrect.cli import parse_variant
+
+    assert parse_variant("A") == ("A", None, False)
+    assert parse_variant("B+fs") == ("B", None, True)
+    assert parse_variant("C=nll_sum") == ("C", "nll_sum", False)
+    assert parse_variant("C=dots_lp+nll_sum+fs") == ("C", "dots_lp+nll_sum", True)
+    assert parse_variant("C=dots") == ("C", "dots_lp", False)           # bí danh cũ
+    with pytest.raises(ValueError):
+        parse_variant("D")
+    with pytest.raises(ValueError):
+        parse_variant("C=khong_co")

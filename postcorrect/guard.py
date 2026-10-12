@@ -15,6 +15,17 @@ from .diff import Edit, diff_words, explode_equal_blocks
 from .text import core_of, has_digit, has_latin, is_protected, split_affixes, strip_marks
 
 
+# Bộ chữ cái Ả Rập chuẩn: ء…غ (U+0621–063A) và ف…ي (U+0641–064A), cộng alef wasla. LLM đổi chữ Ả Rập sang biến thể chữ Ba Tư /
+# Urdu (ہ ی ک ں ے...) là sai với loại tài liệu này (đã thấy: "هنیا" → "ہنیا") → chặn; ngược lại bỏ chữ lạ khỏi từ thì được.
+_ARABIC_CORE = {chr(c) for c in range(0x0621, 0x063B)} | {chr(c) for c in range(0x0641, 0x064B)} | {"\u0671"}
+
+
+def foreign_letters(src: tuple[str, ...], dst: tuple[str, ...]) -> set[str]:
+    """Chữ cái ngoài bộ Ả Rập chuẩn xuất hiện ở `dst` mà `src` chưa có."""
+    have = {c for w in src for c in core_of(w) if c.isalpha()}
+    return {c for w in dst for c in core_of(w) if c.isalpha() and c not in _ARABIC_CORE and c not in have}
+
+
 @dataclass
 class GuardConfig:
     max_char_edit: int = 2          # sửa 1→1: tối đa số ký tự khác (trên lõi chữ đã bỏ tashkeel)
@@ -35,6 +46,8 @@ def check_edit(e: Edit, cfg: GuardConfig, allowed: set[int] | None = None) -> st
         return "protected"
     if any(has_digit(w) or has_latin(w) for w in e.dst):
         return "introduces_digit_latin"
+    if foreign_letters(e.src, e.dst):
+        return "foreign_script"
     m, n = e.span, len(e.dst)
     if m == 1 and n == 1:
         a, b = core_of(e.src[0]), core_of(e.dst[0])

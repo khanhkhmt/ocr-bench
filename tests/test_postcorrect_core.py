@@ -203,3 +203,12 @@ def test_parse_flags_variants():
     assert items == [{"word": "أ", "fix": "ب"}] and st == "partial"
     assert parse_flags("không có gì")[1] == "bad_json"
     assert parse_flags('[{"word": "س", "fix": "س"}]')[0] == []  # fix trùng word
+
+
+def test_guard_blocks_foreign_script_letters_but_allows_removing_them():
+    from postcorrect.guard import foreign_letters
+
+    assert check_edit(E(0, "هنیا", "ہنیا"), CFG) == "foreign_script"      # ه (Ả Rập) → ہ (Urdu): sai
+    assert check_edit(E(0, "جهדكم", "جهدكم"), CFG) is None                 # bỏ chữ Hebrew lọt vào: đúng
+    assert foreign_letters(("هنیا",), ("هنيا",)) == set()                  # ی (Ba Tư) → ي (Ả Rập): chỉ chuyển về chữ chuẩn
+    assert check_edit(E(0, "المحتزم", "المحترم"), CFG) is None

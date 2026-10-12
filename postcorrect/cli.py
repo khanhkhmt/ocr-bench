@@ -85,6 +85,17 @@ def load_ocr_pages(ocr_dir: Path, ids: list[str]) -> list[PageText]:
     return pages
 
 
+def parse_variant(v: str) -> tuple[str, str | None, bool]:
+    """Cú pháp biến thể: CHIẾN_LƯỢC[=TÍN_HIỆU][+fs]. Vd. "A", "B+fs", "C=nll_sum", "C=dots_lp+nll_sum+fs".
+    +fs = thêm ví dụ few-shot; =TÍN_HIỆU chỉ dùng cho C (xem detect.SIGNALS)."""
+    fs = v.endswith("+fs")
+    core = v[:-3] if fs else v
+    strategy, _, signal = core.partition("=")
+    if strategy not in ("A", "B", "C"):
+        raise ValueError(f"biến thể không hợp lệ: {v!r}")
+    return strategy, (canon_signal(signal) if signal else None), fs
+
+
 def _run_variant(backend, a, ids: list[str], st: Settings, out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     pages = load_ocr_pages(Path(a.ocr), [i for i in ids if not (out / f"{i}.json").exists()])
@@ -128,12 +139,18 @@ def cmd_correct_cache(a):
     si, sn = (int(x) for x in a.shard.split("/"))
     ids = [i for k, i in enumerate(ids) if k % sn == si]
     variants = [v.strip() for v in a.variants.split(",")] if a.variants else [a.strategy + ("+fs" if a.fewshot else "")]
+    for v in variants:
+        parse_variant(v)  # báo lỗi cú pháp trước khi tốn thời gian nạp model
     backend = load_backend(a, a.device)
     print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {getattr(backend, 'load_seconds', 0):.0f}s", flush=True)
-    for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model: A, B, C, A+fs (few-shot)...
+    for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model
         st = settings_from(a)
-        st.strategy, st.fewshot, st.tag = v.split("+")[0], v.endswith("+fs"), v
-        _run_variant(backend, a, ids, st, Path(f"{a.out}__{v}") if a.variants else Path(a.out))
+        st.strategy, signal, st.fewshot = parse_variant(v)
+        if signal:
+            st.flag_signal = signal
+        st.tag = v
+        tag_dir = v.replace("=", "_").replace("+", "_")
+        _run_variant(backend, a, ids, st, Path(f"{a.out}__{tag_dir}") if a.variants else Path(a.out))
     backend.close()
 
 

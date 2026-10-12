@@ -1,8 +1,8 @@
-# Huấn luyện ft2 — 2026-10-12 06:31 UTC
+# Huấn luyện ft2 — 2026-10-12 06:42 UTC
 
-Trạng thái: bước 300/600 · loss 0.5259
+Trạng thái: bước 400/600 · loss 0.515
 
-Bước 300/600 · loss 0.5259 · 6.02 s/bước · lr 6.55e-05
+Bước 400/600 · loss 0.515 · 6.11 s/bước · lr 3.45e-05
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

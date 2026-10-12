@@ -17,10 +17,14 @@ from .guard import GuardConfig, check_edit
 from .text import is_protected, norm_word, split_affixes
 
 
-def suspects_of(words: list[str], lex, guard: GuardConfig, max_suspects: int = 40, max_cands: int = 30) -> list[dict]:
-    """[{i, w, cands:[[ứng viên (dạng đã gắn dấu câu của OCR), khoảng cách, tần suất], ...]}] cho các từ OOV có ≥ 1 ứng viên hợp lệ."""
+def suspects_of(words: list[str], lex, guard: GuardConfig, max_suspects: int = 40, max_cands: int = 30,
+                scores: list[float | None] | None = None) -> list[dict]:
+    """[{i, w, cands:[[ứng viên (dạng đã gắn dấu câu của OCR), khoảng cách, tần suất], ...]}] cho các từ OOV có ≥ 1 ứng viên hợp lệ.
+    scores (vd. NLL tổng của từ): khi có thì lấy các từ điểm CAO nhất trước (không thiên về đầu chunk) rồi trả lại theo thứ tự vị trí."""
     out = []
-    for i, w in enumerate(words):
+    order = sorted(range(len(words)), key=lambda i: -(scores[i] if scores and scores[i] is not None else 0.0)) if scores else range(len(words))
+    for i in order:
+        w = words[i]
         if is_protected(w, guard.min_core_len) or norm_word(w) in lex.set:
             continue
         pre, _, suf = split_affixes(w)
@@ -35,7 +39,7 @@ def suspects_of(words: list[str], lex, guard: GuardConfig, max_suspects: int = 4
             out.append({"i": i, "w": w, "cands": cands})
         if len(out) >= max_suspects:
             break
-    return out
+    return sorted(out, key=lambda x: x["i"])
 
 
 def window_texts(words: list[str], i: int, forms: list[str], before: int = 8, after: int = 4) -> tuple[str, list[str]]:

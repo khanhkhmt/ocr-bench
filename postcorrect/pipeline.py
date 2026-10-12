@@ -114,7 +114,7 @@ def _correct_pages_d(pages: list[PageText], backend, st: Settings, lexicon) -> l
                 res["chunks"].append({"i": ci, "start": ch.start, "end": ch.end, "first_word": ch.first_word, "n_words": ch.n_words,
                                       "status": "D:skipped", "chunk_reason": "diacritics", "n_edits": 0, "n_rejected": 0, "dcands": []})
                 continue
-            sus = suspects_of(words, lexicon, st.guard, st.d_max_suspects, st.d_max_cands)
+            sus = suspects_of(words, lexicon, st.guard, st.d_max_suspects, st.d_max_cands, nll_scores(backend.nll_words(ch.text), "sum"))
             score_suspects(backend, words, sus, st.d_before, st.d_after)
             acc, rej = decide(words, sus, st.d_tau, st.d_margin, st.guard)
             res["chunks"].append({"i": ci, "start": ch.start, "end": ch.end, "first_word": ch.first_word, "n_words": ch.n_words,

@@ -40,6 +40,8 @@ def add_model_args(ap):
     ap.add_argument("--lexicon", help="từ điển tần suất (JSON) cho chiến lược D — python -m postcorrect.lexicon")
     ap.add_argument("--d-tau", type=float, default=3.0)
     ap.add_argument("--d-margin", type=float, default=0.5)
+    ap.add_argument("--d-max-cands", type=int, default=30, help="chiến lược D: tối đa ứng viên mỗi từ nghi lỗi")
+    ap.add_argument("--d-max-suspects", type=int, default=40, help="chiến lược D: tối đa từ nghi lỗi mỗi chunk (lấy NLL cao nhất)")
     ap.add_argument("--fewshot", action="store_true")
     ap.add_argument("--chunk-chars", type=int, default=700)
     ap.add_argument("--flag-signal", default="nll_sum", help="nll_sum | nll_max | dots_lp | dots_lp+nll_sum | dots_lp+nll_max")
@@ -58,6 +60,7 @@ def settings_from(a) -> Settings:
     return Settings(strategy=a.strategy, chunk_chars=a.chunk_chars, fewshot=a.fewshot, flag_frac=a.flag_frac,
                     flag_min=a.flag_min, flag_signal=canon_signal(a.flag_signal), tag=a.tag,
                     d_tau=getattr(a, "d_tau", 3.0), d_margin=getattr(a, "d_margin", 0.5),
+                    d_max_cands=getattr(a, "d_max_cands", 30), d_max_suspects=getattr(a, "d_max_suspects", 40),
                     guard=GuardConfig(max_char_edit=a.max_char_edit, max_edit_ratio=a.max_edit_ratio,
                                       max_diacritic_ratio=a.max_diacritic_ratio, block_convention=not a.no_block_convention))
 

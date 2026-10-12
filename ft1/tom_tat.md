@@ -1,8 +1,8 @@
-# Huấn luyện ft1 — 2026-10-12 06:50 UTC
+# Huấn luyện ft1 — 2026-10-12 07:23 UTC
 
-Trạng thái: bước 300/600 · loss 0.4651
+Trạng thái: bước 210/600 · loss 0.5086
 
-Bước 300/600 · loss 0.4651 · 10.04 s/bước · lr 6.55e-05
+Bước 210/600 · loss 0.5086 · 9.42 s/bước · lr 8.85e-05
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

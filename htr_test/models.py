@@ -225,12 +225,15 @@ class BaseerNakba:
                 "<|im_start|>assistant\n")
 
     def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto",
-                 lora: str | list[str] | None = None):
+                 lora: str | list[str] | None = None, lora_scale: float = 1.0):
         """lora: adapter do htr_train/huan_luyen.py tạo → model đã huấn luyện tiếp. Mỗi mục: thư mục (vd. <out>/best),
         "ft1" / "ft2" (repo HF_FT) hoặc "hf:<chủ>/<repo>/<thư mục con>". Nhiều mục → nạp CHUNG một nền Baseer, đổi
-        adapter khi đọc: read(..., adapter="ft2"); adapter="goc" = Baseer gốc (tắt adapter). Mặc định: mục đầu."""
+        adapter khi đọc: read(..., adapter="ft2"); adapter="goc" = Baseer gốc (tắt adapter). Mặc định: mục đầu.
+        lora_scale: nhân độ mạnh MỌI adapter (1 = như huấn luyện; 0 = Baseer gốc; 0,5 = nửa đường giữa gốc và bản
+        huấn luyện — kiểu WiSE-FT: thường giữ lại độ chính xác miền cũ mà vẫn giữ phần lớn cái mới học)."""
         self.device, self.quant4, self.max_new_tokens, self.dtype = device, quant4, max_new_tokens, dtype
         self.lora = [lora] if isinstance(lora, str) else list(lora or [])
+        self.lora_scale = lora_scale
         self.adapters: list[str] = []
         self.model = self.processor = None
 
@@ -268,6 +271,17 @@ class BaseerNakba:
                 self.model.load_adapter(lora_dir(spec), adapter_name=ten)
             self.adapters.append(ten)
         self.model.set_adapter(self.adapters[0])
+        if self.lora_scale != 1.0:  # LoRA: y = Wx + scaling·BAx → nhân scaling = đi thẳng giữa gốc và bản huấn luyện
+            n = 0
+            for mod in self.model.modules():
+                sc = getattr(mod, "scaling", None)
+                if isinstance(sc, dict):
+                    for ten in self.adapters:
+                        if ten in sc:
+                            sc[ten] *= self.lora_scale
+                            n += 1
+            if not n:
+                raise RuntimeError("không tìm thấy lớp LoRA nào để đổi độ mạnh")
 
     def _adapter(self, adapter: str | None):
         """Ngữ cảnh chọn adapter (gọi trong _LOCK — các luồng web không giẫm lên nhau)."""

@@ -64,14 +64,15 @@ def load_lines(data: str | None, split: str) -> list[tuple[str, Image.Image, str
     return out
 
 
-def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba_mode: str = "q4", lora: str | None = None):
+def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba_mode: str = "q4", lora: str | None = None,
+                lora_scale: float = 1.0):
     """→ hàm(list ảnh) → list chữ."""
     dev = f"cuda:{gpu}" if gpu >= 0 else "cpu"
     if name.startswith("baseer_ft"):  # Baseer + adapter tự huấn luyện (htr_train) — cần --lora
         from htr_test.models import BaseerNakba
         if not lora:
             raise SystemExit("baseer_ft cần --lora <thư mục adapter, vd. <out>/best> hoặc ft1 / ft2 (HF)")
-        m = BaseerNakba(device=dev, dtype=dtype, lora=lora).load()
+        m = BaseerNakba(device=dev, dtype=dtype, lora=lora, lora_scale=lora_scale).load()
         return lambda ims: m.read(ims, batch=batch)
     if name == "baseer":
         from htr_test.models import BaseerNakba
@@ -269,6 +270,9 @@ def main() -> int:
                     help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
     ap.add_argument("--lora", default=None, help="baseer_ft*: thư mục adapter (htr_train), vd. /kaggle/working/ft1/best, "
                     "hoặc ft1 / ft2 (tải từ HF khanh99/htr-baseer-nakba-ft)")
+    ap.add_argument("--lora-scale", type=float, default=1.0,
+                    help="baseer_ft*: độ mạnh adapter (1 = như huấn luyện; 0,5 = nửa đường về Baseer gốc). Đặt tên model "
+                         "riêng cho mỗi mức, vd. baseer_ft1_s050, để không trộn kết quả")
     ap.add_argument("--shard", default="", help="i/k: chạy song song k phần (vd. 0/2 trên --gpu 0, 1/2 trên --gpu 1); "
                     "mỗi phần ghi <model>.shard<i>of<k>.jsonl, bảng / chi tiết tự gộp mọi phần")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")
@@ -303,7 +307,10 @@ def main() -> int:
             print(f"== {name}: phần này đã chấm xong ({len(done)}/{len(lines)} dòng cả mẫu)", flush=True)
             continue
         t0 = time.time()
-        read = make_reader(name, a.gpu, a.dtype, a.model_batch, a.ketaba_mode, a.lora)
+        if a.lora_scale != 1.0 and f"_s{round(a.lora_scale * 100):03d}" not in name:
+            raise SystemExit(f"--lora-scale {a.lora_scale}: tên model phải có _s{round(a.lora_scale * 100):03d} "
+                             f"(vd. {name}_s{round(a.lora_scale * 100):03d}) để không trộn với kết quả độ mạnh khác")
+        read = make_reader(name, a.gpu, a.dtype, a.model_batch, a.ketaba_mode, a.lora, a.lora_scale)
         print(f"== {name}: nạp {time.time() - t0:.0f}s, còn {len(todo)} dòng", flush=True)
         t0 = time.time()
         with open(f, "a", encoding="utf-8") as fo:

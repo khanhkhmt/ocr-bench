@@ -7,7 +7,15 @@ from .base import Adapter, Prediction
 
 class TesseractAdapter(Adapter):
     # with_confidence: chạy thêm image_to_data để lấy độ tin cậy (chậm gấp đôi)
-    defaults = {"lang": "ara+eng", "psm": 3, "config": "", "with_confidence": False}
+    # layout: trả thêm extra.blocks = khung chữ Tesseract tìm được (giao diện web vẽ khung bố cục, như dots):
+    #   "line" = mỗi dòng một khối · "paragraph" (hoặc true) = mỗi đoạn một khối (Tesseract hay gộp đoạn rất thô).
+    #   Loại khối chữ luôn là "Text" (Tesseract không phân loại tiêu đề / bảng). Benchmark để False.
+    # pictures: cùng layout, tìm thêm khối "Picture" (con dấu, vân tay, tem, logo — ocrbench/pictures.py, cần scipy);
+    #   DOCX cắt các vùng này từ trang gốc thành ảnh.
+    # signatures: cùng pictures, dùng thêm model phát hiện chữ ký → khối "Signature" (true = model mặc định, hoặc
+    #   tên model trên Hugging Face; cần torch + transformers, CPU ~2,5 giây/trang). signature_threshold: điểm tối thiểu.
+    defaults = {"lang": "ara+eng", "psm": 3, "config": "", "with_confidence": False, "layout": False,
+                "pictures": False, "signatures": False, "signature_threshold": 0.45}
 
     def load(self):
         import pytesseract
@@ -19,10 +27,45 @@ class TesseractAdapter(Adapter):
         cfg = f"--psm {self.params['psm']} {self.params['config']}".strip()
         text = self._tess.image_to_string(image, lang=self.params["lang"], config=cfg)
         conf = None
-        if self.params["with_confidence"]:
+        extra = {}
+        if self.params["with_confidence"] or self.params["layout"]:
             data = self._tess.image_to_data(
                 image, lang=self.params["lang"], config=cfg, output_type=self._tess.Output.DICT
             )
-            confs = [float(c) for c in data["conf"] if float(c) >= 0]
-            conf = (sum(confs) / len(confs) / 100) if confs else None
-        return Prediction(text, confidence=conf)
+            if self.params["with_confidence"]:
+                confs = [float(c) for c in data["conf"] if float(c) >= 0]
+                conf = (sum(confs) / len(confs) / 100) if confs else None
+            if self.params["layout"]:
+                extra["blocks"] = text_blocks(data, by_line=self.params["layout"] == "line")
+                if self.params["pictures"]:
+                    from ..pictures import SIGNATURE_MODEL, add_pictures, combine, find_pictures, find_signatures
+
+                    words = [([data["left"][i], data["top"][i], data["left"][i] + data["width"][i],
+                               data["top"][i] + data["height"][i]], float(data["conf"][i]),
+                              (data["block_num"][i], data["par_num"][i], data["line_num"][i]), w)
+                             for i, w in enumerate(data["text"]) if (w or "").strip()]
+                    sig = self.params["signatures"]
+                    sigs = None
+                    if sig:
+                        sigs = find_signatures(image, SIGNATURE_MODEL if sig is True else sig,
+                                               self.params["signature_threshold"])
+                    extra["blocks"] = add_pictures(extra["blocks"], combine(find_pictures(image, words), sigs))
+        return Prediction(text, confidence=conf, extra=extra)
+
+
+def text_blocks(data: dict, by_line: bool = False) -> list[dict]:
+    """image_to_data → một khối mỗi đoạn (block_num, par_num), hoặc mỗi dòng nếu by_line, theo thứ tự Tesseract đọc.
+    bbox = hình bao các từ của khối trên ảnh gốc; chữ = các dòng của khối nối bằng xuống dòng."""
+    paras: dict[tuple, dict] = {}
+    for i, word in enumerate(data["text"]):
+        word = (word or "").strip()
+        if not word or float(data["conf"][i]) < 0:
+            continue
+        x, y, w, h = data["left"][i], data["top"][i], data["width"][i], data["height"][i]
+        key = (data["block_num"][i], data["par_num"][i]) + ((data["line_num"][i],) if by_line else ())
+        p = paras.setdefault(key, {"bbox": [x, y, x + w, y + h], "lines": {}})
+        b = p["bbox"]
+        p["bbox"] = [min(b[0], x), min(b[1], y), max(b[2], x + w), max(b[3], y + h)]
+        p["lines"].setdefault(data["line_num"][i], []).append(word)
+    return [{"category": "Text", "bbox": p["bbox"], "text": "\n".join(" ".join(ws) for ws in p["lines"].values())}
+            for p in paras.values()]

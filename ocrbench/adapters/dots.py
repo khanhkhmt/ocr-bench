@@ -14,6 +14,7 @@ Khác source (chỉ để chạy được trên Kaggle T4, không đổi phép t
 - nạp qua thư mục tên không dấu chấm (README của họ cũng yêu cầu vậy);
 - stop_on_loop (tùy chọn, mặc định bật): dừng sinh khi model lặp vòng — JSON dở dang vẫn qua OutputCleaner của họ;
 - strip_images: bỏ ảnh base64 mà layoutjson2md nhúng cho khối Picture khỏi văn bản để chấm điểm.
+- fix_bboxes: bbox ngược / ra ngoài ảnh được sắp lại + kẹp vào trang trước layoutjson2md (bản gốc crop lỗi → mất trang).
 - manual_embeds (mặc định bật): tự ghép embedding ảnh vào chuỗi đầu vào (đúng hàm prepare_inputs_embeds của họ)
   rồi sinh bằng phần ngôn ngữ Qwen2. Code generate của họ chỉ đưa ảnh vào khi `cache_position[0] == 0`
   — transformers mới không truyền cache_position nữa → model bị lỗi hoặc KHÔNG nhìn thấy ảnh (đọc ra chữ bịa).
@@ -28,6 +29,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 from .base import Adapter, Prediction
@@ -57,11 +59,18 @@ class DotsAdapter(Adapter):
         "min_pixels": None,
         "max_pixels": None,
         "max_new_tokens": 24000,    # như _inference_with_hf của họ
+        # tham số sinh thêm, vd. {repetition_penalty: 1.05}; {} = greedy như source gốc (họ không đặt gì thêm)
+        "generation_kwargs": {},
         "no_page_hf": False,        # True = văn bản bỏ Page-header/Page-footer (file _nohf.md của họ)
         "strip_images": True,
         "stop_on_loop": True,
         "loop_max_period": 60,
         "loop_min_span": 600,       # bảng HTML nhiều ô trống lặp hợp lệ, đừng cắt nhầm
+        "loop_long_max_period": 0,  # >0: bắt cả vòng lặp chu kỳ dài tới chừng này token (phải lặp ≥ 8 lần); 0 = tắt
+        "max_time": None,           # giây: giới hạn thời gian sinh mỗi trang (web demo); None = không giới hạn
+        # trang bị dừng giữa chừng (lặp / hết thời gian / hết token): bỏ phần lặp, đóng JSON dở dang để GIỮ khối cuối
+        # (thường là đoạn văn dài đọc đúng tới chỗ bắt đầu lặp) thay vì vứt cả khối. False = như source gốc
+        "repair_truncated": False,
         "dtype": "auto",
         "vision_dtype": "float32",
         "attn_implementation": "sdpa",
@@ -72,6 +81,18 @@ class DotsAdapter(Adapter):
         # chặn chạy vòng tới max_new_tokens với ảnh nhỏ: tối đa k token sinh ra cho mỗi token ảnh (+512).
         # Mỗi token ảnh = 28×28 px chứa vài ký tự → k=4 không cắt trang thật. None = tắt (như source gốc)
         "adaptive_max_tokens": None,
+        # PHÓNG TO VÙNG "KHUNG ĐỀU + CHỮ CHÉP": ở form điền tay, dots có lúc bỏ bám dòng, sinh một dãy khung cùng cột,
+        # cao bằng nhau, cách đều (ảnh thật: 22 khung cao 22 px) rồi chép chữ / con số của dòng này sang dòng khác
+        # ("1983 02081" ở 3 ô, "מר (ה) 3/7/1983" ở 3 ô). Không phải vòng lặp token nên stop_on_loop không bắt.
+        # Bật: dãy ≥ zoom_min_run khung như vậy có chữ chép (copied_cells) → cắt vùng đó, dựng lại bố cục ở
+        # zoom_min_pixels, thay vào trang nếu bớt chép. Đo: cùng trang, form đọc đúng tên / số căn cước / ngày, hết
+        # chép, +~55 giây. Vùng nhỏ (1–2 chữ) KHÔNG phóng: thử thì model trôi sang chữ khác (Urdu, chữ Hán).
+        # Đã thử và loại: repetition_penalty 1.05 (vẫn khung đều + chép), giảm còn 3,5 MP (lặp thật, mất nửa form).
+        "zoom_repeats": False,
+        "zoom_min_run": 6,
+        "zoom_min_pixels": 2000000,
+        # khối có chữ (hoặc một chuỗi số dài) lặp ≥ chừng này lần mà không sửa được → ghi chú "cần soát"; 0 = tắt
+        "flag_copies": 3,
     }
 
     def load(self):
@@ -135,14 +156,17 @@ class DotsAdapter(Adapter):
         if p["adaptive_max_tokens"]:
             n_img = int((inputs["input_ids"] == self._model.config.image_token_id).sum())
             max_new = min(max_new, int(p["adaptive_max_tokens"]) * n_img + 512)
-        gen = {"max_new_tokens": max_new}
+        gen = {**p["generation_kwargs"], "max_new_tokens": max_new}
+        if p["max_time"]:
+            gen["max_time"] = float(p["max_time"])
         loop = None
         if p["stop_on_loop"]:
             from transformers import StoppingCriteria, StoppingCriteriaList
 
             from .hf_vlm import _LoopStop
 
-            loop = _LoopStop(torch, start, 1, p["loop_max_period"], p["loop_min_span"])
+            loop = _LoopStop(torch, start, 1, p["loop_max_period"], p["loop_min_span"],
+                             long_max_period=p["loop_long_max_period"])
             tok = getattr(self._processor, "tokenizer", self._processor)
             layout_loop = _LayoutLoopStop(tok, start)
 
@@ -151,6 +175,7 @@ class DotsAdapter(Adapter):
                     return loop(input_ids, scores) | layout_loop(input_ids)
 
             gen["stopping_criteria"] = StoppingCriteriaList([_Wrap()])
+        t_gen = time.perf_counter()
         with torch.inference_mode():
             generated_ids = self._model.generate(**gen_inputs, **gen)
         ids = inputs["input_ids"]
@@ -162,18 +187,23 @@ class DotsAdapter(Adapter):
                                                 clean_up_tokenization_spaces=False)[0]
         n_new = int(trimmed[0].shape[0])
         extra = {"new_tokens": n_new, "hit_max_tokens": n_new >= max_new, "max_new_tokens": max_new}
+        if p["max_time"] and n_new < max_new and time.perf_counter() - t_gen >= float(p["max_time"]) \
+                and not (loop is not None and loop.stopped[0]):
+            extra["hit_max_time"] = True
         if loop is not None and loop.stopped[0]:
             extra["stopped_loop"] = True
         return response, extra
 
     # --- giống DotsOCRParser._parse_single_image (phần không ghi file) ---
-    def parse_image(self, origin_image, prompt_mode: str | None = None, bbox=None) -> dict:
+    def parse_image(self, origin_image, prompt_mode: str | None = None, bbox=None, min_pixels=None, max_pixels=None,
+                    zoom: bool = True) -> dict:
         """Trả về dict: response (chữ thô), cells (list khối hoặc None), filtered, md, md_nohf, extra."""
         consts, prompts, image_utils, layout_utils, fmt = dots_utils()
         p = self.params
         prompt_mode = prompt_mode or p["prompt_mode"]
         bbox = bbox if bbox is not None else p["bbox"]
-        min_pixels, max_pixels = p["min_pixels"], p["max_pixels"]
+        min_pixels = min_pixels if min_pixels is not None else p["min_pixels"]
+        max_pixels = max_pixels if max_pixels is not None else p["max_pixels"]
         if prompt_mode == "prompt_grounding_ocr":
             min_pixels = min_pixels or consts.MIN_PIXELS
             max_pixels = max_pixels or consts.MAX_PIXELS
@@ -190,7 +220,50 @@ class DotsAdapter(Adapter):
                 origin_image, [list(bbox)], input_width=image.width, input_height=image.height,
                 min_pixels=min_pixels, max_pixels=max_pixels)[0])
         response, extra = self._inference_with_hf(image, prompt)
-        return postprocess_response(response, prompt_mode, origin_image, image, min_pixels, max_pixels, extra)
+        if p["repair_truncated"] and prompt_mode in LAYOUT_MODES and prompt_mode != "prompt_layout_only_en" and (
+                extra.get("stopped_loop") or extra.get("hit_max_time") or extra.get("hit_max_tokens")):
+            fixed = close_truncated_layout(response)
+            if fixed != response:
+                response, extra["truncated_repaired"] = fixed, True
+        out = postprocess_response(response, prompt_mode, origin_image, image, min_pixels, max_pixels, extra)
+        if prompt_mode == "prompt_layout_all_en" and out["cells"]:
+            if zoom and p["zoom_repeats"]:
+                self._zoom(origin_image, out)
+            if p["flag_copies"]:
+                n = len(copied_cells(out["cells"], p["flag_copies"]))
+                if n:
+                    out["extra"]["copied_cells"] = n
+        return out
+
+    def _zoom(self, origin_image, out: dict) -> None:
+        """Vùng "khung đều + chữ chép" (grid_runs) → dựng lại bố cục riêng vùng đó ở độ phân giải cao, thay vào trang
+        nếu bớt chép. Dựng lại Markdown khi có thay đổi."""
+        _, _, _, _, fmt = dots_utils()
+        p, cells = self.params, out["cells"]
+        runs = [r for r in grid_runs(cells, p["zoom_min_run"])
+                if set(r) & set(copied_cells(cells, p["flag_copies"] or 3))]
+        if not runs:
+            return
+        t = time.perf_counter()
+        replaced = 0
+        for run in reversed(runs):  # thay từ cuối lên để chỉ số các dãy phía trước không lệch
+            box = region_of([cells[i]["bbox"] for i in run], *origin_image.size)
+            sub = self.parse_image(origin_image.crop(box), min_pixels=p["zoom_min_pixels"], max_pixels=None, zoom=False)
+            ex = sub["extra"]
+            if not sub["cells"] or ex.get("stopped_loop") or ex.get("hit_max_tokens") or ex.get("hit_max_time"):
+                continue
+            new = [dict(c, bbox=[c["bbox"][0] + box[0], c["bbox"][1] + box[1], c["bbox"][2] + box[0],
+                                 c["bbox"][3] + box[1]]) for c in sub["cells"]]
+            merged = replace_run(cells, run, new)
+            if len(copied_cells(merged, p["flag_copies"] or 3)) < len(copied_cells(cells, p["flag_copies"] or 3)):
+                cells[:] = merged
+                replaced += 1
+        out["extra"].update(zoom_regions=len(runs), zoom_replaced=replaced,
+                            zoom_seconds=round(time.perf_counter() - t, 1))
+        if replaced:
+            out["extra"]["blocks"] = [{"category": c.get("category"), "bbox": c.get("bbox")} for c in cells]
+            out["md"] = fmt.layoutjson2md(origin_image, cells, text_key="text")
+            out["md_nohf"] = fmt.layoutjson2md(origin_image, cells, text_key="text", no_page_hf=True)
 
     def predict(self, image, item):
         r = self.parse_image(image.convert("RGB"))
@@ -229,6 +302,43 @@ def layout_loop(text: str, min_repeats: int = 25, min_chars: int = 6) -> bool:
     return n >= min_repeats
 
 
+def _strip_repeated_tail(text: str, min_repeats: int = 3, min_span: int = 30, max_period: int = 4000) -> str:
+    """Đuôi là một đoạn lặp liên tiếp ≥ min_repeats lần (và dài ≥ min_span ký tự, để không đụng tới dấu chấm dẫn
+    "....." hợp lệ) → chỉ giữ một bản (chu kỳ ngắn nhất tìm được)."""
+    for period in range(1, min(max_period, len(text) // min_repeats) + 1):
+        unit = text[-period:]
+        if text.endswith(unit * max(min_repeats, -(-min_span // period))):
+            while text.endswith(unit * 2):
+                text = text[:-period]
+            return text
+    return text
+
+
+def close_truncated_layout(response: str) -> str:
+    """JSON bố cục bị dừng giữa chừng → bỏ phần lặp ở đuôi, đóng chuỗi "text" / khối / mảng đang dở. Không sửa
+    được thành JSON hợp lệ → trả nguyên chuỗi cũ (bộ làm sạch phía sau vẫn nhặt các khối hoàn chỉnh như trước)."""
+    try:
+        json.loads(response)
+        return response
+    except json.JSONDecodeError:
+        pass
+    s = _strip_repeated_tail(response.rstrip())
+    if (len(s) - len(s.rstrip("\\"))) % 2:  # dấu \ thoát dở ở cuối
+        s = s[:-1]
+    s = re.sub(r"\\u[0-9a-fA-F]{0,3}$", "", s)
+    candidates = [s + tail for tail in ('"}]', '}]', ']')]
+    if not s.lstrip().startswith("["):
+        candidates += ["[" + c for c in candidates]
+    for c in candidates:
+        try:
+            data = json.loads(c)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, list) and data and all(isinstance(d, dict) for d in data):
+            return c
+    return response
+
+
 class _LayoutLoopStop:
     """StoppingCriteria cho dots: mỗi `every` bước giải mã phần đuôi đã sinh, dừng khi `layout_loop`."""
 
@@ -247,6 +357,96 @@ class _LayoutLoopStop:
         return torch.tensor([self.stopped], device=input_ids.device)
 
 
+_TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}
+_LONG_TOKEN = re.compile(r"[^\s]*\d[^\s]*")
+
+
+def copied_cells(cells: list, min_count: int = 3) -> list[int]:
+    """Chỉ số các khối chữ nghi bị chép: chữ (bỏ khoảng trắng thừa) giống hệt ở ≥ min_count khối, hoặc chung một
+    "từ" có chữ số dài ≥ 5 ký tự (vd. "02081", "3/7/1983") với ≥ min_count - 1 khối khác. Trùng 2 lần không tính
+    (nhãn lặp hợp lệ: hai chỗ "توقيع", hai nhân chứng "شاهد"). Bảng / công thức / hình không xét."""
+    from collections import Counter, defaultdict
+
+    norm = {i: " ".join(str(c.get("text") or "").split()) for i, c in enumerate(cells)
+            if c.get("category") in _TEXT_CATS and str(c.get("text") or "").strip()}
+    counts = Counter(norm.values())
+    out = {i for i, t in norm.items() if counts[t] >= min_count}
+    owners = defaultdict(set)
+    for i, t in norm.items():
+        for tok in _LONG_TOKEN.findall(t):
+            if len(tok) >= 5:
+                owners[tok].add(i)
+    for ids in owners.values():
+        if len(ids) >= min_count:
+            out |= ids
+    return sorted(out)
+
+
+def grid_runs(cells: list, min_run: int = 6, tol: int = 4) -> list[list[int]]:
+    """Dãy ≥ min_run khối chữ LIỀN NHAU trong thứ tự đọc, cùng cột (x1, x2 lệch ≤ tol), cao bằng nhau và nối tiếp
+    đều đặn (bước = chiều cao, lệch ≤ tol) — dấu hiệu dots sinh khung theo nhịp thay vì bám dòng thật."""
+    def ok(a, b):
+        (ax1, ay1, ax2, ay2), (bx1, by1, bx2, by2) = a["bbox"], b["bbox"]
+        h = ay2 - ay1
+        return (a.get("category") in _TEXT_CATS and b.get("category") in _TEXT_CATS
+                and abs(ax1 - bx1) <= tol and abs(ax2 - bx2) <= tol and abs((by2 - by1) - h) <= tol
+                and abs((by1 - ay1) - h) <= tol)
+
+    runs, cur = [], [0] if cells else []
+    for i in range(1, len(cells)):
+        if ok(cells[i - 1], cells[i]):
+            cur.append(i)
+        else:
+            if len(cur) >= min_run:
+                runs.append(cur)
+            cur = [i]
+    if len(cur) >= min_run:
+        runs.append(cur)
+    return runs
+
+
+def region_of(bboxes: list, width: int, height: int, pad: float = 0.5) -> list[int]:
+    """Khung bao các khối, đệm pad × chiều cao khối trung vị mỗi phía, kẹp vào trang."""
+    hs = sorted(b[3] - b[1] for b in bboxes)
+    d = int(pad * hs[len(hs) // 2])
+    return [max(0, min(b[0] for b in bboxes) - d), max(0, min(b[1] for b in bboxes) - d),
+            min(width, max(b[2] for b in bboxes) + d), min(height, max(b[3] for b in bboxes) + d)]
+
+
+def replace_run(cells: list, run: list[int], new: list) -> list:
+    """Thay các khối trong dãy run bằng new (đặt đúng chỗ dãy cũ trong thứ tự đọc). Khối mới trùng ≥ 50% diện tích
+    với một khối giữ lại (vd. chữ ký ngay mép vùng cắt đã có ở lượt đầu) bị bỏ để không thành hai khối."""
+    def overlap(a, b):
+        ix = max(0, min(a[2], b[2]) - max(a[0], b[0]))
+        iy = max(0, min(a[3], b[3]) - max(a[1], b[1]))
+        return ix * iy / max(1, (a[2] - a[0]) * (a[3] - a[1]))
+
+    drop = set(run)
+    kept = [c for i, c in enumerate(cells) if i not in drop]
+    new = [c for c in new if not any(overlap(c["bbox"], k["bbox"]) >= 0.5 for k in kept)]
+    return cells[:run[0]] + new + [c for i, c in enumerate(cells) if i > run[0] and i not in drop]
+
+
+def fix_bboxes(cells: list, width: int, height: int) -> int:
+    """Bbox model trả về bị ngược (x2 < x1 / y2 < y1) hoặc thò ra ngoài ảnh → sắp lại + kẹp vào trang (sửa tại chỗ).
+    Không sửa thì layoutjson2md của họ crop khối Picture lỗi ValueError → mất cả trang. Trả về số khối đã sửa."""
+    n = 0
+    for c in cells:
+        b = c.get("bbox")
+        if not (isinstance(b, (list, tuple)) and len(b) == 4):
+            continue
+        x1, x2 = sorted(min(max(int(v), 0), width) for v in (b[0], b[2]))
+        y1, y2 = sorted(min(max(int(v), 0), height) for v in (b[1], b[3]))
+        if x2 == x1:
+            x1, x2 = (x1 - 1, x1) if x1 >= width else (x1, x1 + 1)
+        if y2 == y1:
+            y1, y2 = (y1 - 1, y1) if y1 >= height else (y1, y1 + 1)
+        if [x1, y1, x2, y2] != list(b):
+            c["bbox"] = [x1, y1, x2, y2]
+            n += 1
+    return n
+
+
 def postprocess_response(response, prompt_mode, origin_image, image, min_pixels, max_pixels, extra=None) -> dict:
     """Phần hậu xử lý của _parse_single_image, tách riêng để kiểm thử được không cần GPU."""
     _, _, _, layout_utils, fmt = dots_utils()
@@ -259,6 +459,9 @@ def postprocess_response(response, prompt_mode, origin_image, image, min_pixels,
             out.update(filtered=True, md=cells, md_nohf=cells)
             extra["layout"] = "filtered"
         else:
+            n_fixed = fix_bboxes(cells, *origin_image.size)
+            if n_fixed:
+                extra["bbox_fixed"] = n_fixed
             out["cells"] = cells
             extra["layout"] = "ok"
             extra["blocks"] = [{"category": c.get("category"), "bbox": c.get("bbox")} for c in cells]

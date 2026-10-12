@@ -142,3 +142,13 @@ def test_flag_signal_names_default_and_aliases():
         canon_signal("khong_co")
     r = correct_pages([page()], DummyBackend(fixes=FIX, suspicious={"المحتزم"}), Settings(strategy="C", flag_frac=0.2))[0]
     assert [f["word"] for f in r["flags"]] == ["المحتزم"]   # mặc định nll_sum, ngưỡng tối thiểu 4,0
+
+
+def test_prompt_styles_differ_and_share_output_contract():
+    from postcorrect.prompts import messages
+
+    for strat in "ABC":
+        cons, ass = messages(strat, "نص", style="cons")[0]["content"], messages(strat, "نص", style="assert")[0]["content"]
+        assert cons != ass and ("<output>" in cons) == ("<output>" in ass)
+    assert "MANY" in messages("A", "نص", style="assert")[0]["content"] and "MANY" not in messages("A", "نص")[0]["content"]
+    assert "[[ ]]" in messages("C", "نص", style="assert")[0]["content"]

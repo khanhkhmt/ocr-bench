@@ -176,3 +176,31 @@ def test_cli_refuse_and_apply_review(tmp_path, capsys):
     assert s["applied"] == 1 and (tmp_path / "final" / "page1.final.txt").exists()
     main(["models"])
     assert "Baseer__Nakba" in capsys.readouterr().out
+
+
+def test_merge_fragments_and_extend_to_ink():
+    from legalocr.doc import Line
+    from legalocr.segment import extend_to_ink, merge_fragments
+
+    # 2 dòng, mỗi dòng bị tách thành mảnh cỡ từ (kiểu blla trên chữ viết tay thưa), + một dấu chấm lẻ
+    frags = [Line("a", [700, 100, 900, 150]), Line("b", [400, 105, 650, 152]), Line("c", [100, 98, 350, 149]),
+             Line("d", [650, 250, 900, 300]), Line("e", [120, 255, 600, 302]), Line("f", [500, 160, 512, 172])]
+    m = merge_fragments(frags)
+    assert len(m) == 3 and m[0].bbox == [100, 98, 900, 152]
+    im = Image.new("RGB", (1000, 400), (240, 240, 240))
+    d = ImageDraw.Draw(im)
+    d.rectangle([60, 110, 95, 140], fill=(20, 20, 20))   # từ đầu dòng mà kraken bỏ sót
+    out = extend_to_ink(m, im)
+    assert len(out) == 2                                  # mảnh tí hon bị bỏ
+    assert out[0].bbox[0] == 60 and [ln.id for ln in out] == ["l000", "l001"]
+
+
+def test_valley_segmenter_splits_touching_lines():
+    im = Image.new("RGB", (1000, 700), (245, 245, 245))
+    d = ImageDraw.Draw(im)
+    for i in range(6):   # 6 dòng sát nhau, nét lên / xuống chạm dòng bên cạnh → không có khe trắng
+        y = 60 + 100 * i
+        d.rectangle([100, y, 900, y + 40], fill=(30, 30, 30))
+        d.rectangle([300 + 40 * i, y - 30, 310 + 40 * i, y + 75], fill=(30, 30, 30))
+    assert len(ProjectionSegmenter(mode="gap").segment(im)) < 6
+    assert len(ProjectionSegmenter(mode="valley").segment(im)) == 6

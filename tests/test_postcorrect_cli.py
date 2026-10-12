@@ -69,12 +69,16 @@ def test_parse_variant_grammar():
 
     from postcorrect.cli import parse_variant
 
-    assert parse_variant("A") == ("A", None, False)
-    assert parse_variant("B+fs") == ("B", None, True)
-    assert parse_variant("C=nll_sum") == ("C", "nll_sum", False)
-    assert parse_variant("C=dots_lp+nll_sum+fs") == ("C", "dots_lp+nll_sum", True)
-    assert parse_variant("C=dots") == ("C", "dots_lp", False)           # bí danh cũ
+    assert parse_variant("A") == ("A", None, False, "cons")
+    assert parse_variant("B+fs") == ("B", None, True, "cons")
+    assert parse_variant("C=nll_sum") == ("C", "nll_sum", False, "cons")
+    assert parse_variant("C=dots_lp+nll_sum+fs") == ("C", "dots_lp+nll_sum", True, "cons")
+    assert parse_variant("C=dots") == ("C", "dots_lp", False, "cons")   # bí danh cũ
+    assert parse_variant("A@assert") == ("A", None, False, "assert")
+    assert parse_variant("C=nll_sum@assert+fs") == ("C", "nll_sum", True, "assert")
     with pytest.raises(ValueError):
         parse_variant("D")
+    with pytest.raises(ValueError):
+        parse_variant("A@khac")
     with pytest.raises(ValueError):
         parse_variant("C=khong_co")

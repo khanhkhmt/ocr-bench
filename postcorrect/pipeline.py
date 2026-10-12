@@ -54,6 +54,7 @@ class Settings:
     strategy: str = "A"               # A viết lại | B khoanh từ lỗi (JSON) | C viết lại có đánh dấu từ nghi lỗi
     chunk_chars: int = 700
     fewshot: bool = False
+    style: str = "cons"               # kiểu prompt: cons (bảo thủ) | assert (quyết đoán, nói rõ mật độ lỗi cao)
     guard: GuardConfig = field(default_factory=GuardConfig)
     flag_signal: str = "nll_sum"      # C: nll_sum | nll_max (LM) | dots_lp (độ ngần ngừ của dots) | dots_lp+nll_sum | dots_lp+nll_max (hạng TB)
     flag_frac: float = 0.3            # C: tỉ lệ từ được đánh dấu (sau khi bỏ từ bảo vệ)
@@ -170,7 +171,7 @@ def correct_pages(pages: list[PageText], backend, st: Settings) -> list[dict]:
         text = t.chunk.text
         if strategy == "C":
             text = mark_words(words_with_spans(t.chunk.text), t.chunk.text, set(t.flagged))
-        t.prompt = backend.build_prompt(messages(strategy, text, st.fewshot))
+        t.prompt = backend.build_prompt(messages(strategy, text, st.fewshot, st.style))
         t.max_new = 320 if strategy == "B" else min(3000, int(st.max_new_factor * backend.n_tokens(t.chunk.text)) + 48)
     if todo:
         for t, raw in zip(todo, backend.generate([t.prompt for t in todo], [t.max_new for t in todo])):

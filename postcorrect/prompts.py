@@ -36,6 +36,30 @@ SYSTEM = {
          " Remove the [[ ]] markers. Output ONLY the full text inside <output></output> tags.",
 }
 
+# Kiểu "quyết đoán" (assert): nói rõ MẬT ĐỘ LỖI CAO (dots đọc chữ viết tay sai tới ~40% ký tự) và yêu cầu sửa mọi từ rõ ràng là đọc
+# sai, sửa ít chữ cái nhất có thể. Kiểu "bảo thủ" (cons, mặc định) tuyệt đối ưu tiên giữ nguyên: đo trên dev cho thấy nó gần như
+# không sửa gì (sửa đúng ~1% số từ trong tầm với). Chốt chặn cứng (guard.py) áp như nhau cho cả hai kiểu.
+_INTRO_ASSERT = ("You are an expert proofreader of OCR output from HANDWRITTEN Arabic documents (personal letters, official "
+                 "decrees, contracts). The text may be dialectal or old-fashioned. The OCR engine is weak on handwriting: MANY "
+                 "words (often a third or more) are misreadings — a wrong or missing letter, wrong dots, a word wrongly split "
+                 "or two words wrongly joined. ")
+_ASSERT_RULE = ("Read each sentence, understand its meaning from the context (place names, titles, common phrases, legal "
+                "wording), and correct every word that is clearly a misreading, changing as few letters as possible (usually "
+                "one or two). Keep words that are valid and fit the context unchanged — including dialect words, old "
+                "spellings, names of people and places, numbers, dates and punctuation. Do NOT paraphrase, translate, add or "
+                "delete words, or add diacritics. ")
+SYSTEM_ASSERT = {
+    "A": _INTRO_ASSERT + _ASSERT_RULE + "Output ONLY the corrected text inside <output></output> tags.",
+    "B": _INTRO_ASSERT + "List every word that is clearly a misreading, each with its corrected form (change as few letters as "
+         "possible). Never list valid words, numbers, dates, names or Latin text. Output ONLY a JSON array like "
+         "[{\"word\": \"<exactly as it appears in the input>\", \"fix\": \"<corrected word>\"}], or [] if there is nothing to fix.",
+    "C": _INTRO_ASSERT + "Words inside [[ ]] were flagged as likely misreadings. For each flagged word decide: if it is a "
+         "misreading, correct it with as few letter changes as possible; if it is a valid word that fits the context, keep it. "
+         "NEVER change a word that is not inside [[ ]]. Do NOT paraphrase, translate, add or delete words, or add diacritics. "
+         "Remove the [[ ]] markers. Output ONLY the full text inside <output></output> tags.",
+}
+STYLES = {"cons": SYSTEM, "assert": SYSTEM_ASSERT}
+
 # (đầu vào, đáp án mong muốn). Ví dụ 2: tiếng địa phương + số → KHÔNG đổi gì.
 _EX = [
     ("الى الاخ العزيز جبيلي المحتزم\nاني بخير والحمد لله وارجو ان تكونوا بالف خبر",
@@ -71,9 +95,9 @@ def user_content(text: str) -> str:
     return f"<input>{text}</input>"
 
 
-def messages(strategy: str, text: str, fewshot: bool = False) -> list[dict]:
+def messages(strategy: str, text: str, fewshot: bool = False, style: str = "cons") -> list[dict]:
     """Danh sách thông điệp chat cho một chunk. `text` của chiến lược C phải là văn bản đã đánh dấu [[ ]]."""
-    msgs = [{"role": "system", "content": SYSTEM[strategy]}]
+    msgs = [{"role": "system", "content": STYLES[style][strategy]}]
     if fewshot:
         for (src, dst, fixes), marks in zip(_EX, _EX_MARKS):
             if strategy == "A":

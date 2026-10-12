@@ -85,15 +85,16 @@ def load_ocr_pages(ocr_dir: Path, ids: list[str]) -> list[PageText]:
     return pages
 
 
-def parse_variant(v: str) -> tuple[str, str | None, bool]:
-    """Cú pháp biến thể: CHIẾN_LƯỢC[=TÍN_HIỆU][+fs]. Vd. "A", "B+fs", "C=nll_sum", "C=dots_lp+nll_sum+fs".
-    +fs = thêm ví dụ few-shot; =TÍN_HIỆU chỉ dùng cho C (xem detect.SIGNALS)."""
+def parse_variant(v: str) -> tuple[str, str | None, bool, str]:
+    """Cú pháp biến thể: CHIẾN_LƯỢC[=TÍN_HIỆU][@KIỂU][+fs]. Vd. "A", "B+fs", "C=nll_sum", "C=dots_lp+nll_sum+fs", "A@assert".
+    +fs = thêm ví dụ few-shot; =TÍN_HIỆU chỉ dùng cho C (xem detect.SIGNALS); @KIỂU = cons (mặc định) | assert."""
     fs = v.endswith("+fs")
     core = v[:-3] if fs else v
+    core, _, style = core.partition("@")
     strategy, _, signal = core.partition("=")
-    if strategy not in ("A", "B", "C"):
+    if strategy not in ("A", "B", "C") or style not in ("", "cons", "assert"):
         raise ValueError(f"biến thể không hợp lệ: {v!r}")
-    return strategy, (canon_signal(signal) if signal else None), fs
+    return strategy, (canon_signal(signal) if signal else None), fs, style or "cons"
 
 
 def _run_variant(backend, a, ids: list[str], st: Settings, out: Path) -> None:
@@ -145,11 +146,11 @@ def cmd_correct_cache(a):
     print(f"nạp {a.model} ({a.quant}) trên cuda:{a.device}: {getattr(backend, 'load_seconds', 0):.0f}s", flush=True)
     for v in variants:  # nhiều biến thể dùng chung MỘT lần nạp model
         st = settings_from(a)
-        st.strategy, signal, st.fewshot = parse_variant(v)
+        st.strategy, signal, st.fewshot, st.style = parse_variant(v)
         if signal:
             st.flag_signal = signal
         st.tag = v
-        tag_dir = v.replace("=", "_").replace("+", "_")
+        tag_dir = v.replace("=", "_").replace("+", "_").replace("@", "_")
         _run_variant(backend, a, ids, st, Path(f"{a.out}__{tag_dir}") if a.variants else Path(a.out))
     backend.close()
 

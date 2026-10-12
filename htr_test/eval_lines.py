@@ -220,6 +220,8 @@ def ten_bo(data: str | None) -> str:
     if not data:
         return "Omar Al-Saleh"
     n = Path(data).name.lower()
+    if "giu_lai" in n:
+        return "Muharaf — nhóm tài liệu GIỮ RIÊNG (người viết lạ với ft3+)"
     return "Muharaf" if "muharaf" in n else "Omar Al-Saleh" if "omar" in n else Path(data).name
 
 

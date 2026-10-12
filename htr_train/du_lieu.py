@@ -11,6 +11,12 @@ Nguồn:
 Chống rò rỉ: bỏ mọi dòng huấn luyện có nhãn (đã chuẩn hoá) TRÙNG một nhãn của tập chấm (Omar blind_test, Muharaf
 test) — tập chấm được tải lại để so (Omar blind_test cần HF_TOKEN; thiếu thì cảnh báo, bỏ qua phần đó).
 Chạy lại = dùng lại dữ liệu đã tải.
+
+--giu-muharaf tu_dong: GIỮ RIÊNG các nhóm tài liệu Muharaf (nhóm = tiền tố chữ của tên trang, vd. BEK, YFS) KHÔNG có
+trong Muharaf test → không đưa vào train/val; ghi <goc>/giu_lai_muharaf/danh_sach.csv (tập "giu_lai") để chấm "người
+viết lạ" bằng eval_lines --data <goc>/giu_lai_muharaf --split giu_lai. Vì các nhóm này không có trong test nên điểm
+Muharaf test vẫn so được với các lần trước. (Baseer gốc và ft1/ft2 ĐÃ học các dòng này → so với chúng là bất lợi cho
+model mới: model mới vẫn thắng thì chắc chắn.)
 """
 
 from __future__ import annotations
@@ -19,6 +25,7 @@ import argparse
 import csv
 import json
 import random
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -62,12 +69,51 @@ def lay_omar(goc: Path) -> dict[str, list[dict]]:
     return {"train": o["train"] + o["test"], "val": []}
 
 
-def lay_muharaf(goc: Path) -> dict[str, list[dict]]:
+def nhom_muharaf(trang: str) -> str:
+    """Nhóm tài liệu (≈ bộ sưu tập / người viết) từ tên trang: tiền tố chữ (BEK1A_27_02r → BEK, kc0061_… → kc,
+    KEllis2018-139d → KEllis); tên bắt đầu bằng số → phần đầu (2015 5-03 El-Khouri… → 2015). Gộp thô = an toàn hơn."""
+    m = re.match(r"[A-Za-z]+", trang)
+    return m.group(0) if m else re.split(r"[ _-]", trang)[0]
+
+
+def lay_muharaf(goc: Path, giu: set[str] = frozenset()) -> dict[str, list[dict]]:
     d = goc / "muharaf"
     if not (d / "danh_sach.csv").exists():
         _tai(["htr_test.tai_muharaf", str(d), "--splits", "train,validation"])
-    m = _tu_thu_muc(d, ["train", "validation"], "muharaf")
-    return {"train": m["train"], "val": m["validation"]}
+    res: dict[str, list[dict]] = {"train": [], "val": [], "giu_lai": []}
+    for r in csv.DictReader(open(d / "danh_sach.csv", encoding="utf-8")):
+        if r["tap"] not in ("train", "validation"):
+            continue
+        nhan = (d / r["nhan"]).read_text(encoding="utf-8").strip()
+        if not nhan:
+            continue
+        x = {"anh": str((d / r["anh"]).resolve()), "nhan": nhan, "nguon": "muharaf", "trang": r["trang"],
+             "nhan_file": str((d / r["nhan"]).resolve()), "mau": r["mau"]}
+        tap = "giu_lai" if nhom_muharaf(r["trang"]) in giu else ("train" if r["tap"] == "train" else "val")
+        res[tap].append(x)
+    return res
+
+
+def nhom_muharaf_test(goc: Path) -> set[str]:
+    m = goc / "cham_muharaf"
+    return {nhom_muharaf(r["trang"]) for r in csv.DictReader(open(m / "danh_sach.csv", encoding="utf-8"))
+            if r["tap"] == "test"}
+
+
+def ghi_giu_lai(goc: Path, ds: list[dict], nhom: set[str]) -> Path:
+    """Tập chấm "người viết lạ" theo bố cục eval_lines (danh_sach.csv; đường dẫn tuyệt đối)."""
+    d = goc / "giu_lai_muharaf"
+    d.mkdir(parents=True, exist_ok=True)
+    with open(d / "danh_sach.csv", "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["tap", "mau", "trang", "anh", "nhan"])
+        w.writeheader()
+        for x in ds:
+            w.writerow({"tap": "giu_lai", "mau": x["mau"], "trang": x["trang"], "anh": x["anh"], "nhan": x["nhan_file"]})
+    (d / "NGUON.md").write_text(
+        f"# Muharaf — nhóm tài liệu giữ riêng (không có trong huấn luyện từ ft3)\n\nNhóm: {', '.join(sorted(nhom))}\n"
+        f"Số dòng: {len(ds)} (train + validation của các nhóm này). Không nhóm nào có trong Muharaf test.\n",
+        encoding="utf-8")
+    return d
 
 
 def _giai_nen(repo: str, ten: str, dich: Path) -> Path:
@@ -146,12 +192,27 @@ def main() -> int:
     ap.add_argument("goc")
     ap.add_argument("--nguon", default="omar,muharaf,arams,khatt")
     ap.add_argument("--val-omar", type=int, default=300, help="giữ riêng N dòng Omar (train/test) làm val")
+    ap.add_argument("--giu-muharaf", default="", help='"tu_dong" = giữ riêng mọi nhóm Muharaf KHÔNG có trong test; '
+                    'hoặc danh sách nhóm "BEK,YFS"; rỗng = không giữ (như ft1/ft2)')
     a = ap.parse_args()
     goc = Path(a.goc).expanduser().resolve()
     goc.mkdir(parents=True, exist_ok=True)
-    lay = {"omar": lay_omar, "muharaf": lay_muharaf, "arams": lay_arams, "khatt": lay_khatt}
     train, val, tk = [], [], []
     cam = nhan_tap_cham(goc)
+    giu: set[str] = set()
+    if a.giu_muharaf == "tu_dong":
+        mu = goc / "muharaf"
+        if not (mu / "danh_sach.csv").exists():
+            _tai(["htr_test.tai_muharaf", str(mu), "--splits", "train,validation"])
+        co = {nhom_muharaf(r["trang"]) for r in csv.DictReader(open(mu / "danh_sach.csv", encoding="utf-8"))}
+        giu = co - nhom_muharaf_test(goc)
+    elif a.giu_muharaf:
+        giu = {x.strip() for x in a.giu_muharaf.split(",") if x.strip()}
+        if giu & nhom_muharaf_test(goc):
+            sys.exit(f"✘ nhóm {sorted(giu & nhom_muharaf_test(goc))} có trong Muharaf test — không giữ riêng được")
+    if giu:
+        print(f"== giữ riêng nhóm Muharaf: {', '.join(sorted(giu))}", flush=True)
+    lay = {"omar": lay_omar, "muharaf": lambda g: lay_muharaf(g, giu), "arams": lay_arams, "khatt": lay_khatt}
     for n in [x.strip() for x in a.nguon.split(",") if x.strip()]:
         print(f"== {n}", flush=True)
         r = lay[n](goc)
@@ -167,10 +228,14 @@ def main() -> int:
                 ds.append(x)
         tk.append(f"| {n} | {len(r['train'])} | {len(r['val'])} | {bo} |")
         print(f"   train {len(r['train'])} · val {len(r['val'])} · bỏ vì trùng nhãn tập chấm {bo}", flush=True)
+        if r.get("giu_lai"):
+            d = ghi_giu_lai(goc, r["giu_lai"], giu)
+            tk.append(f"| muharaf GIỮ RIÊNG ({', '.join(sorted(giu))}) | — | — | {len(r['giu_lai'])} dòng → {d.name}/ |")
+            print(f"   GIỮ RIÊNG {len(r['giu_lai'])} dòng → {d}", flush=True)
     for ten, ds in (("train", train), ("val", val)):
         with open(goc / f"{ten}.jsonl", "w", encoding="utf-8") as fo:
             for x in ds:
-                fo.write(json.dumps(x, ensure_ascii=False) + "\n")
+                fo.write(json.dumps({k: x[k] for k in ("anh", "nhan", "nguon")}, ensure_ascii=False) + "\n")
     (goc / "thong_ke.md").write_text(
         "# Dữ liệu huấn luyện\n\n| Nguồn | train | val | bỏ (trùng nhãn tập chấm) |\n|---|---:|---:|---:|\n" + "\n".join(tk)
         + f"\n\nTổng: train {len(train)} · val {len(val)}. Tập chấm (Omar blind_test, Muharaf test) KHÔNG có trong dữ liệu này.\n",

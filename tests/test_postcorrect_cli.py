@@ -51,3 +51,14 @@ def test_analyze_without_model_runs_on_dots_signals(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "dots_lp" in out and "AUROC" in out
     assert "Trần ứng viên" in out and "1/1" not in out
+
+
+def test_pick_devices_collapses_to_single_gpu():
+    import pytest
+
+    from postcorrect.cli import pick_devices
+
+    assert pick_devices(0, 1, 2) == (0, 1)      # hai card: dots ở 0, LLM ở 1
+    assert pick_devices(0, 1, 1) == (0, 0)      # một card: cả hai về 0 (dots được giải phóng trước khi nạp LLM)
+    with pytest.raises(RuntimeError):
+        pick_devices(0, 1, 0)

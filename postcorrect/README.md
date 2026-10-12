@@ -38,6 +38,15 @@ python -m postcorrect analyze --ocr OCR --manifest M --split dev --model Qwen/Qw
 python -m postcorrect correct-image trang.png --model Qwen/Qwen3-8B --strategy C
 ```
 
+Công cụ phân tích (không cần GPU trừ khi có `--model`):
+
+```bash
+python -m postcorrect oracle  --ocr OCR --manifest M --split dev   # trần: CER nếu sửa HOÀN HẢO mọi từ trong tầm chốt chặn (1–4 ký tự)
+python -m postcorrect analyze --ocr OCR --manifest M --split dev --no-model   # tín hiệu dots (ngần ngừ) khoanh từ sai-gần-đúng + trần ứng viên từ top-3 của dots
+python -m postcorrect refilter --run RUN_A --out RUN_A2 --max-char-edit 3    # áp lại chốt chặn lên đầu ra thô đã lưu (không chạy lại LLM)
+python -m postcorrect vote --runs RUN_A RUN_B --out RUN_V --min-votes 2       # đồng thuận giữa lượt chạy (khác prompt / khác model)
+```
+
 Mỗi trang ra một JSON: `{id, original, corrected, edits:[{index, span, from, to, chunk, block}], flags, rejected, chunks, settings}`;
 `index` là chỉ số từ (tách theo khoảng trắng) trong `original`; `rejected` ghi lý do từng sửa bị chốt chặn loại.
 

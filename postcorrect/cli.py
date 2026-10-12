@@ -144,24 +144,41 @@ def cmd_correct_text(a):
     print(json.dumps(res, ensure_ascii=False, indent=1))
 
 
+def pick_devices(ocr_dev: int, llm_dev: int, n_gpu: int) -> tuple[int, int]:
+    """Máy chỉ có 1 GPU: cả OCR lẫn LLM về cuda:0 (khi đó dots chạy trước rồi PHẢI được giải phóng: ~14 GiB + ~6 GiB không
+    vừa một card 15 GiB)."""
+    if n_gpu <= 0:
+        raise RuntimeError("không thấy GPU CUDA")
+    return min(ocr_dev, n_gpu - 1), min(llm_dev, n_gpu - 1)
+
+
 def cmd_correct_image(a):
+    import gc
+
+    import torch
     from PIL import Image, ImageOps
 
     from .ocr_cache import ROOT, make_adapter
 
+    od, ld = pick_devices(a.ocr_device, a.llm_device, torch.cuda.device_count())
     adapter, _ = make_adapter(Path(a.config or ROOT / "inference/config.yaml"), a.ocr_model,
-                              {"device_map": {"": f"cuda:{a.ocr_device}"}})
+                              {"device_map": {"": f"cuda:{od}"}})
     adapter.load()
     img = ImageOps.exif_transpose(Image.open(a.image)).convert("RGB")
     t = time.perf_counter()
     ocr = adapter.parse_image(img)
     ocr_s = time.perf_counter() - t
     page = page_text_from_cells(Path(a.image).stem, ocr["cells"])
-    backend = load_backend(a, a.llm_device)
+    if od == ld:  # một card: trả VRAM của dots trước khi nạp LLM
+        adapter.close()
+        del adapter
+        gc.collect()
+        torch.cuda.empty_cache()
+    backend = load_backend(a, ld)
     res = correct_pages([page], backend, settings_from(a))[0]
-    res["ocr"] = {"seconds": round(ocr_s, 1), "flags": {k: v for k, v in ocr["extra"].items() if k != "blocks"}}
+    res["ocr"] = {"seconds": round(ocr_s, 1), "flags": {k: v for k, v in ocr["extra"].items() if k != "blocks"},
+                  "devices": {"ocr": od, "llm": ld}}
     print(json.dumps(res, ensure_ascii=False, indent=1))
-
 
 
 # ---------------------------------------------------------------- analyze

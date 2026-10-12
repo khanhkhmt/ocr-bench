@@ -150,6 +150,25 @@ def luu(model, opt, sch, scaler, out: Path, buoc: int, vi_tri: int, giu: int = 2
     return d
 
 
+def viet_tom_tat(out: Path, buoc_toi_da: int, ghi_chu: str) -> None:
+    """<out>/tom_tat.md từ nhat_ky.jsonl: bước, loss gần nhất, bảng các lần đánh giá (đọc được trên GitHub)."""
+    rows = [json.loads(x) for x in (out / "nhat_ky.jsonl").read_text(encoding="utf-8").splitlines() if x.strip()]
+    hl = [r for r in rows if "buoc" in r and "loss" in r]
+    dg = [r["danh_gia"] for r in rows if "danh_gia" in r]
+    L = [f"# Huấn luyện {out.name} — {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}", "", f"Trạng thái: {ghi_chu}", ""]
+    if hl:
+        r = hl[-1]
+        L += [f"Bước {r['buoc']}/{buoc_toi_da} · loss {r['loss']} · {r['s_buoc']} s/bước · lr {r['lr']:.2e}", ""]
+    L += ["| bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |", "|---:|---:|---:|---:|---:|---:|"]
+    L += [f"| {d['buoc']} | {max(0.0, 100 - 100 * d['cer']):.1f}% | {max(0.0, 100 - 100 * d['wer']):.1f}% | {d['ngan']} | "
+          f"{d['dai']} | {d['n']} |" for d in dg]
+    p = out / "tham_so.json"
+    if p.exists():
+        L += ["", "Tham số: `" + json.dumps({k: v for k, v in json.loads(p.read_text()).items()
+                                             if k not in ("data", "out")}, ensure_ascii=False) + "`"]
+    (out / "tom_tat.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+
+
 def main(argv=None, nap=nap_model) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", required=True)
@@ -174,6 +193,8 @@ def main(argv=None, nap=nap_model) -> int:
     ap.add_argument("--eval-every", type=int, default=400)
     ap.add_argument("--eval-n", type=int, default=150)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--push", action="store_true",
+                    help="đẩy nhat_ky.jsonl + tom_tat.md (KHÔNG đẩy model) lên nhánh results-htr/<tên thư mục out> mỗi 10 phút")
     a = ap.parse_args(argv)
     dev = f"cuda:{a.gpu}" if a.gpu >= 0 else "cpu"
     out = Path(a.out)
@@ -227,6 +248,16 @@ def main(argv=None, nap=nap_model) -> int:
         best = json.loads(bf.read_text())["cer"]
     gom = Gom(proc, train, a.lam_cu, random.Random(a.seed + buoc))
     nk = open(out / "nhat_ky.jsonl", "a", encoding="utf-8")
+    sync = None
+    if a.push:
+        from htr_test.sync import Sync
+
+        sync = Sync(out, every_min=10)
+
+    def day(ghi_chu: str, ep: bool = False) -> None:
+        if sync and (ep or sync.due()):
+            viet_tom_tat(out, buoc_toi_da, ghi_chu)
+            sync.push(ghi_chu)
     model.train()
     t_buoc, lo_mat = time.time(), []
     while buoc < buoc_toi_da:
@@ -255,6 +286,7 @@ def main(argv=None, nap=nap_model) -> int:
             nk.write(json.dumps(rec) + "\n")
             nk.flush()
             t_buoc, lo_mat = time.time(), []
+            day(f"bước {buoc}/{buoc_toi_da} · loss {rec['loss']}")
         if buoc % a.save_every == 0 or buoc == buoc_toi_da:
             d = luu(model, opt, sch, scaler, out, buoc, vi_tri)
             print(f"✔ lưu {d.name}", flush=True)
@@ -270,7 +302,9 @@ def main(argv=None, nap=nap_model) -> int:
                 model.save_pretrained(out / "best")
                 (out / "best" / "diem.json").write_text(json.dumps(s), encoding="utf-8")
                 print(f"★ tốt nhất mới → {out / 'best'}", flush=True)
+            day(f"đánh giá bước {buoc}: đúng ký tự {max(0.0, 100 - 100 * s['cer']):.1f}%", ep=True)
     print("✔ XONG HUẤN LUYỆN", flush=True)
+    day("XONG HUẤN LUYỆN", ep=True)
     return 0
 
 

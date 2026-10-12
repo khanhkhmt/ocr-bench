@@ -13,7 +13,7 @@ Mục tiêu đo: Muharaf test (giấy cũ màu) > 79,1% đúng ký tự (Baseer 
 ```bash
 cd /kaggle/working/ocr-bench; PY=/kaggle/working/venvs/dots/bin/python
 $PY -m htr_train.du_lieu /tmp/htr_data                      # cần HF_TOKEN (Omar); ~8 GB, 20–40 phút
-$PY -m htr_train.huan_luyen --data /tmp/htr_data --out /kaggle/working/ft1 --gpu 0 --max-steps 600
+$PY -m htr_train.huan_luyen --data /tmp/htr_data --out /kaggle/working/ft1 --gpu 0 --max-steps 600 --push   # --push: nhật ký lên results-htr/ft1
 # chấm model mới bằng đúng benchmark (500 dòng cố định):
 $PY -m htr_test.eval_lines --out /kaggle/working/htr_eval_muharaf_n500 --data /kaggle/working/du_lieu_muharaf \
     --split test --n 500 --models baseer_ft1 --lora /kaggle/working/ft1/best --push

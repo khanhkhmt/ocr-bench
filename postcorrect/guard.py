@@ -47,6 +47,7 @@ class GuardConfig:
     max_drift: float = 0.10         # chunk: lệch số từ tối đa (tỉ lệ; luôn cho phép ≥ 2 từ)
     min_core_len: int = 2           # từ có lõi ngắn hơn (vd. "و") không bao giờ bị sửa
     block_convention: bool = True   # chặn sửa chỉ khác quy ước (أ/ا, ى/ي, ة/ه)
+    enabled: bool = True            # False = KHÔNG chốt chặn: nhận nguyên bản LLM viết lại (chỉ để đo giá trị của chốt chặn)
     max_diacritic_ratio: float = 0.05  # chunk có tashkeel dày hơn mức này = dots đang bịa → không sửa gì (0 = tắt)
 
 
@@ -101,6 +102,8 @@ def filter_edits(src: list[str], hyp: list[str], cfg: GuardConfig, allowed: set[
     """So src (từ gốc của chunk) với hyp (từ LLM trả về) → sửa được nhận / bị từ chối. Chỉ số theo src."""
     raw = explode_equal_blocks(diff_words(src, hyp))
     n = len(src)
+    if not cfg.enabled:
+        return Filtered([finalize(e) for e in raw], [])
     if cfg.max_diacritic_ratio and diacritic_ratio(src) > cfg.max_diacritic_ratio:
         return Filtered([], [(e, "chunk_rejected") for e in raw], "diacritics")
     if abs(len(hyp) - n) > max(2, cfg.max_drift * n):

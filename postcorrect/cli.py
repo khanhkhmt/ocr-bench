@@ -328,7 +328,8 @@ def cmd_refilter(a):
     dst.mkdir(parents=True, exist_ok=True)
     guard = GuardConfig(max_char_edit=a.max_char_edit, max_char_ratio=a.max_char_ratio, max_edit_ratio=a.max_edit_ratio,
                         max_drift=a.max_drift, allow_split_merge=not a.no_split_merge,
-                        block_convention=not a.no_block_convention, max_diacritic_ratio=a.max_diacritic_ratio)
+                        block_convention=not a.no_block_convention, max_diacritic_ratio=a.max_diacritic_ratio,
+                        enabled=not a.no_guard)
     n = 0
     for f in sorted(src.glob("*.json")):
         if f.name.startswith("run_meta"):
@@ -625,6 +626,7 @@ def main(argv=None):
     p.add_argument("--no-split-merge", action="store_true")
     p.add_argument("--no-block-convention", action="store_true", help="cho phép sửa chỉ khác quy ước (hamza, ى/ي, ة/ه)")
     p.add_argument("--max-diacritic-ratio", type=float, default=0.05, help="bỏ chunk có tashkeel dày hơn mức này (0 = tắt)")
+    p.add_argument("--no-guard", action="store_true", help="TẮT chốt chặn: nhận nguyên bản LLM viết lại (để đo giá trị của chốt chặn)")
     p.add_argument("--d-tau", type=float, help="(chiến lược D) ngưỡng Δ NLL mới")
     p.add_argument("--d-margin", type=float, help="(chiến lược D) lề so với ứng viên thứ hai mới")
     p.set_defaults(func=cmd_refilter)

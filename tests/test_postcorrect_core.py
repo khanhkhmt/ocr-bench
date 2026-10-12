@@ -230,3 +230,11 @@ def test_filter_edits_skips_chunks_with_dense_diacritics():
     plain = "الى الاخ العزيز جبيلي المحتزم اني بخير".split()
     assert filter_edits(plain, "الى الاخ العزيز جبيلي المحترم اني بخير".split(), CFG).accepted
     assert filter_edits(src, hyp, GuardConfig(max_diacritic_ratio=0)).chunk_reason != "diacritics"
+
+
+def test_guard_disabled_accepts_everything_the_llm_rewrote():
+    src = "الى الاخ العزيز جبيلي المحتزم اني بخير".split()
+    out = "إلى الأخ العزيز جبيلي المحترم إنني بخير تماما جدا".split()
+    assert filter_edits(src, out, CFG).accepted == []                                 # có chốt chặn: bỏ cả chunk (lệch số từ)
+    f = filter_edits(src, out, GuardConfig(enabled=False))
+    assert f.chunk_reason is None and f.rejected == [] and len(f.accepted) >= 4       # không chốt chặn: nhận hết

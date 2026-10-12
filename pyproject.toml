@@ -27,10 +27,15 @@ app = ["gradio>=4", "pypdfium2>=4", "python-docx>=1", "lxml>=5", "fonttools>=4.4
 dev = ["pytest", "apted>=1.0.3", "lxml>=5"]
 # postcorrect: LLM sửa lỗi OCR chạy cục bộ (xem postcorrect/README.md). nf4 cần bitsandbytes; dựng dữ liệu cần datasets
 postcorrect = ["torch", "transformers>=4.51", "accelerate", "bitsandbytes>=0.43", "datasets>=3"]
+# legalocr: pipeline OCR có kiểm chứng cho hồ sơ pháp lý (xem legalocr/README.md). Tách dòng kraken: venv riêng
+# (inference/setup_kraken.sh); Tesseract cần binary + gói ngôn ngữ ara (heb cho dòng Hebrew)
+legalocr = ["torch", "transformers>=4.51", "accelerate", "bitsandbytes>=0.43", "numpy", "scipy", "opencv-python-headless",
+            "pytesseract", "huggingface-hub"]
 
 [project.scripts]
 ocrbench = "ocrbench.cli:main"
 postcorrect = "postcorrect.cli:main"
+legalocr = "legalocr.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["ocrbench*", "postcorrect*"]
+include = ["ocrbench*", "postcorrect*", "legalocr*"]

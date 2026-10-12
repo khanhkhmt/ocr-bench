@@ -15,8 +15,8 @@
    chữ đúng là gì**: 58% từ OCR sai xa (> 2 ký tự), 30% trang bị dots *bịa* văn bản kiểu Qur'an đầy tashkeel, và phần lỗi "sai ít" phần lớn cần
    nhìn ảnh để quyết định (`الرابعة` / `السابعة` / `التاسعة` chỉ khác nét).
 4. **Khuyến nghị:** không triển khai LLM hậu xử lý như "tự sửa" trên đầu ra dots ở mức nhiễu này. Làm theo thứ tự: (a) **cải thiện bước đọc ảnh**
-   (đây mới là đòn bẩy lớn: 15 trang dev có CER > 50%), (b) **kiểm chứng ứng viên bằng ảnh** (cho chính VLM chấm lại từng ứng viên trên ảnh cắt của
-   dòng) thay vì chỉ bằng ngôn ngữ, (c) nếu vẫn dùng LLM thì chỉ ở chế độ **gợi ý có người duyệt** (JSON `edits` đã có chỉ số từ) và dùng
+   (đây mới là đòn bẩy lớn: 15 trang dev có CER > 50%), (b) **kiểm chứng ứng viên bằng ảnh qua một model đọc ảnh KHÁC dots** (HTR theo dòng chấm xác suất của từng ứng viên
+   trên ảnh cắt của dòng) thay vì chỉ bằng ngôn ngữ, (c) nếu vẫn dùng LLM thì chỉ ở chế độ **gợi ý có người duyệt** (JSON `edits` đã có chỉ số từ) và dùng
    **cờ chất lượng rẻ** (tashkeel > 10%, lặp vòng) để loại trang đọc hỏng ra trước khi nhờ LLM.
 
 ## 1. Câu hỏi và cách trả lời
@@ -121,7 +121,7 @@ nên câu hỏi không phải "LLM sửa được bao nhiêu" mà là "**sau khi
 
 **Ba việc tiếp theo (theo thứ tự ưu tiên):**
 1. **Nâng chất lượng đọc ảnh trước khi nhờ LLM.** Thử các OCR khác đã có trong benchmark của repo (Qari, sherif_handwriting, kraken cho chữ viết tay), đọc lại theo từng khối cắt ở độ phân giải cao, và/hoặc đồng thuận nhiều lượt đọc. Mỗi điểm CER giảm ở bước này lớn hơn toàn bộ những gì LLM hậu xử lý đạt được ở đây (−0,13).
-2. **Kiểm chứng ứng viên bằng ảnh (VLM chấm lại).** LLM đề xuất, rồi cho **chính VLM** chấm xác suất của từng ứng viên trên ảnh cắt của dòng (teacher forcing). Chẩn đoán ở mục 6 cho thấy nút thắt là thiếu bằng chứng, và đây là cách thêm đúng bằng chứng đó, giữ chốt chặn hiện có. Chưa đo trong báo cáo này.
+2. **Kiểm chứng ứng viên bằng ảnh qua MỘT MODEL ĐỌC ẢNH KHÁC dots.** LLM (hoặc từ điển) đề xuất ứng viên, rồi một model HTR theo dòng (Baseer, Qari, HATFormer… có trong benchmark của repo) chấm xác suất của từng ứng viên trên ảnh cắt của dòng; chỉ nhận khi cả LM lẫn ảnh đồng ý, giữ chốt chặn hiện có. Chẩn đoán ở mục 6 cho thấy nút thắt là thiếu bằng chứng, và đây là cách thêm đúng bằng chứng đó. **Không dùng chính dots để chấm**: dots đã giải mã tham lam nên bản OCR chính là chữ nó ưa nhất (top-3 phương án của nó chứa chữ đúng ở chỉ 6,7% từ sai-gần-đúng), chấm lại chỉ lặp lại lựa chọn ấy. Chưa đo trong báo cáo này.
 3. **Fine-tune nhỏ (QLoRA) trên cặp (đầu ra dots, phiên âm) của chính loại tài liệu**, nếu có vài trăm trang có phiên âm: dạy mô hình kiểu lỗi của dots và từ vựng pháp lý cổ. Ví dụ few-shot thật đã cho dấu hiệu theo hướng này (số sửa tăng 3–4 lần, không tăng sửa nhầm), dù mức giảm CER còn nhỏ. Khung đánh giá, chốt chặn và dữ liệu cặp đã sẵn sàng; **chưa làm** vì ngoài phạm vi giai đoạn này.
 
 **Nếu vẫn muốn dùng LLM ngay:** dùng ở chế độ *gợi ý có người duyệt* (JSON `{index, from, to}` đã có), chỉ trên trang có tashkeel ≤ 10% và không lặp vòng, với ALLaM-7B đồng thuận ≥ 2/3 (precision 0,80 trên dev); loại hẳn chiến lược B và D.

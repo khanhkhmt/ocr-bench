@@ -1,8 +1,8 @@
-# Huấn luyện ft4 — 2026-10-12 22:50 UTC
+# Huấn luyện ft4 — 2026-10-12 23:00 UTC
 
-Trạng thái: đánh giá bước 1600: đúng ký tự 91.3%
+Trạng thái: bước 1650/2000 · loss 0.2599
 
-Bước 1600/2000 · loss 0.3019 · 12.49 s/bước · lr 1.05e-05
+Bước 1650/2000 · loss 0.2599 · 11.72 s/bước · lr 8.14e-06
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|

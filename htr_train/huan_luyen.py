@@ -11,6 +11,9 @@
 - Lưu checkpoint mỗi --save-every bước vào <out>/ckpt-<bước> (adapter + trạng thái optimizer) → chạy lại = đi tiếp
   (Kaggle / Colab ngắt). Mỗi --eval-every bước: đọc --eval-n dòng val (đọc từng dòng, như lúc dùng thật) → CER;
   checkpoint tốt nhất chép sang <out>/best. Nhật ký: <out>/nhat_ky.jsonl.
+- --hf-ckpt <repo HF riêng tư>: mỗi lần lưu còn đẩy ckpt + best + nhật ký lên HF (htr_train/guong_hf.py) → server sập,
+  phiên mới gom lại dữ liệu (cùng lệnh) rồi chạy LẠI ĐÚNG LỆNH CŨ là tự tải ckpt mới nhất về đi tiếp. Dữ liệu khác lúc lưu
+  (vân tay train.jsonl) → dừng báo lỗi thay vì đi tiếp sai.
 - Tập CHẤM (Omar blind_test, Muharaf test) không có trong dữ liệu (du_lieu.py đã loại).
 Đọc bằng model mới: htr_test eval_lines --models baseer_ft --lora <out>/best.
 """
@@ -159,11 +162,19 @@ def _ckpts(out: Path) -> list[Path]:
     return sorted(out.glob("ckpt-*"), key=lambda p: int(p.name.split("-")[1]))
 
 
-def luu(model, opt, sch, scaler, out: Path, buoc: int, vi_tri: int, giu: int = 2) -> Path:
+def van_tay_du_lieu(data: Path) -> str:
+    """md5 của train.jsonl — chạy tiếp từ checkpoint chỉ đúng khi dữ liệu (thứ tự dòng) y hệt lúc lưu."""
+    import hashlib
+
+    return hashlib.md5((Path(data) / "train.jsonl").read_bytes()).hexdigest()
+
+
+def luu(model, opt, sch, scaler, out: Path, buoc: int, vi_tri: int, giu: int = 2, thu_tu: list[int] | None = None,
+        van_tay: str = "") -> Path:
     d = out / f"ckpt-{buoc}"
     model.save_pretrained(d)
     torch.save({"opt": opt.state_dict(), "sch": sch.state_dict(), "scaler": scaler.state_dict(), "buoc": buoc,
-                "vi_tri": vi_tri}, d / "trang_thai.pt")
+                "vi_tri": vi_tri, "thu_tu": thu_tu, "van_tay_du_lieu": van_tay}, d / "trang_thai.pt")
     for old in _ckpts(out)[:-giu]:
         shutil.rmtree(old, ignore_errors=True)
     return d
@@ -212,6 +223,8 @@ def main(argv=None, nap=nap_model) -> int:
     ap.add_argument("--eval-every", type=int, default=400)
     ap.add_argument("--eval-n", type=int, default=150)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--hf-ckpt", default="", help="repo HF RIÊNG TƯ để gương checkpoint (vd. khanh99/htr-ckpt): mỗi lần lưu "
+                    "đẩy ckpt + best + nhật ký lên <repo>/<tên thư mục out>; phiên mới chưa có ckpt → tự tải về chạy tiếp")
     ap.add_argument("--push", action="store_true",
                     help="đẩy nhat_ky.jsonl + tom_tat.md (KHÔNG đẩy model) lên nhánh results-htr/<tên thư mục out> mỗi 10 phút")
     a = ap.parse_args(argv)
@@ -247,12 +260,22 @@ def main(argv=None, nap=nap_model) -> int:
     amp = dev != "cpu" and resolve_dtype(a.dtype) == torch.float16
     scaler = torch.amp.GradScaler("cuda", enabled=amp)
     buoc, vi_tri, best = 0, 0, None
+    van_tay = van_tay_du_lieu(Path(a.data))
+    guong = None
+    if a.hf_ckpt:
+        from htr_train.guong_hf import GuongHF
+
+        guong = GuongHF(a.hf_ckpt, out)
+        guong.khoi_phuc()
     ck = _ckpts(out)
     if ck:  # chạy lại = đi tiếp
         from peft import set_peft_model_state_dict
         from safetensors.torch import load_file
 
         st = torch.load(ck[-1] / "trang_thai.pt", map_location="cpu", weights_only=False)
+        if st.get("van_tay_du_lieu") and st["van_tay_du_lieu"] != van_tay:
+            sys.exit(f"✘ LỖI: dữ liệu {a.data}/train.jsonl KHÁC lúc lưu {ck[-1].name} (vân tay {van_tay[:8]} ≠ "
+                     f"{st['van_tay_du_lieu'][:8]}) — chạy tiếp sẽ sai thứ tự mẫu. Gom lại dữ liệu đúng lệnh cũ, hoặc đổi --out.")
         set_peft_model_state_dict(model, load_file(str(ck[-1] / "adapter_model.safetensors")))
         for p in model.parameters():
             if p.requires_grad:
@@ -261,6 +284,8 @@ def main(argv=None, nap=nap_model) -> int:
         sch.load_state_dict(st["sch"])
         scaler.load_state_dict(st["scaler"])
         buoc, vi_tri = st["buoc"], st["vi_tri"]
+        if st.get("thu_tu"):  # thứ tự mẫu của epoch đang dở (epoch sau epoch đầu được xáo lại theo bước)
+            thu_tu = st["thu_tu"]
         print(f"✔ đi tiếp từ {ck[-1].name} (bước {buoc}, mẫu thứ {vi_tri})", flush=True)
     bf = out / "best" / "diem.json"
     if bf.exists():
@@ -316,7 +341,7 @@ def main(argv=None, nap=nap_model) -> int:
                 day(f"LỖI: loss nan liên tục tới bước {buoc}", ep=True)
                 sys.exit(f"✘ LỖI: loss nan/inf ở MỌI lô trong 10 bước tới bước {buoc} — model phân kỳ, dừng")
         if buoc % a.save_every == 0 or buoc == buoc_toi_da:
-            d = luu(model, opt, sch, scaler, out, buoc, vi_tri)
+            d = luu(model, opt, sch, scaler, out, buoc, vi_tri, thu_tu=thu_tu, van_tay=van_tay)
             print(f"✔ lưu {d.name}", flush=True)
         if buoc % a.eval_every == 0 or buoc == buoc_toi_da:
             s = danh_gia(model, proc, val, dev)
@@ -327,10 +352,16 @@ def main(argv=None, nap=nap_model) -> int:
                   f"· sót {s['ngan']} · dài {s['dai']} ({s['n']} dòng val)", flush=True)
             if best is None or s["cer"] < best:
                 best = s["cer"]
+                if guong:
+                    guong.cho()  # không ghi đè best/ khi đang đẩy nó lên HF
                 model.save_pretrained(out / "best")
                 (out / "best" / "diem.json").write_text(json.dumps(s), encoding="utf-8")
                 print(f"★ tốt nhất mới → {out / 'best'}", flush=True)
             day(f"đánh giá bước {buoc}: đúng ký tự {max(0.0, 100 - 100 * s['cer']):.1f}%", ep=True)
+        if guong and (buoc % a.save_every == 0 or buoc == buoc_toi_da):  # sau cả lưu lẫn đánh giá → best/ mới nhất
+            guong.day(buoc)
+    if guong:
+        guong.cho()
     print("✔ XONG HUẤN LUYỆN", flush=True)
     day("XONG HUẤN LUYỆN", ep=True)
     return 0

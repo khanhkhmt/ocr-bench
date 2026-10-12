@@ -1,6 +1,6 @@
 # Huấn luyện ft1 — 2026-10-12 08:43 UTC
 
-Trạng thái: đánh giá bước 600: đúng ký tự 88.9%
+Trạng thái: XONG HUẤN LUYỆN
 
 Bước 600/600 · loss 0.308 · 9.94 s/bước · lr 0.00e+00
 

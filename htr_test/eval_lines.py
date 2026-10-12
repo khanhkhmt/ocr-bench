@@ -70,7 +70,7 @@ def make_reader(name: str, gpu: int, dtype: str = "auto", batch: int = 1, ketaba
     if name.startswith("baseer_ft"):  # Baseer + adapter tự huấn luyện (htr_train) — cần --lora
         from htr_test.models import BaseerNakba
         if not lora:
-            raise SystemExit("baseer_ft cần --lora <thư mục adapter, vd. <out>/best>")
+            raise SystemExit("baseer_ft cần --lora <thư mục adapter, vd. <out>/best> hoặc ft1 / ft2 (HF)")
         m = BaseerNakba(device=dev, dtype=dtype, lora=lora).load()
         return lambda ims: m.read(ims, batch=batch)
     if name == "baseer":
@@ -267,7 +267,8 @@ def main() -> int:
                     help="số ảnh model đọc cùng lúc (baseer/ketaba). 1 = đúng; >1 làm Qwen2.5-VL dừng sớm (xem models.py)")
     ap.add_argument("--dtype", default="auto", choices=["auto", "fp16", "bf16", "fp32"],
                     help="baseer / ketaba: auto = bf16 nếu GPU hỗ trợ, không thì fp16 (T4)")
-    ap.add_argument("--lora", default=None, help="baseer_ft*: thư mục adapter (htr_train), vd. /kaggle/working/ft1/best")
+    ap.add_argument("--lora", default=None, help="baseer_ft*: thư mục adapter (htr_train), vd. /kaggle/working/ft1/best, "
+                    "hoặc ft1 / ft2 (tải từ HF khanh99/htr-baseer-nakba-ft)")
     ap.add_argument("--shard", default="", help="i/k: chạy song song k phần (vd. 0/2 trên --gpu 0, 1/2 trên --gpu 1); "
                     "mỗi phần ghi <model>.shard<i>of<k>.jsonl, bảng / chi tiết tự gộp mọi phần")
     ap.add_argument("--push", action="store_true", help="đẩy kết quả lên nhánh GitHub results-htr (cần GITHUB_TOKEN)")

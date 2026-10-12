@@ -225,9 +225,13 @@ class BaseerNakba:
                 "<|im_start|>assistant\n")
 
     def __init__(self, device: str = "cuda:0", quant4: bool = False, max_new_tokens: int = 128, dtype: str = "auto",
-                 lora: str | None = None):
-        """lora: thư mục adapter do htr_train/huan_luyen.py tạo (vd. <out>/best) → model đã huấn luyện tiếp."""
-        self.device, self.quant4, self.max_new_tokens, self.dtype, self.lora = device, quant4, max_new_tokens, dtype, lora
+                 lora: str | list[str] | None = None):
+        """lora: adapter do htr_train/huan_luyen.py tạo → model đã huấn luyện tiếp. Mỗi mục: thư mục (vd. <out>/best),
+        "ft1" / "ft2" (repo HF_FT) hoặc "hf:<chủ>/<repo>/<thư mục con>". Nhiều mục → nạp CHUNG một nền Baseer, đổi
+        adapter khi đọc: read(..., adapter="ft2"); adapter="goc" = Baseer gốc (tắt adapter). Mặc định: mục đầu."""
+        self.device, self.quant4, self.max_new_tokens, self.dtype = device, quant4, max_new_tokens, dtype
+        self.lora = [lora] if isinstance(lora, str) else list(lora or [])
+        self.adapters: list[str] = []
         self.model = self.processor = None
 
     def load(self):
@@ -243,15 +247,43 @@ class BaseerNakba:
 
         cfg = self._fix_config(AutoConfig.from_pretrained(self.REPO))
         self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(self.REPO, config=cfg, **kw).eval()
-        if self.lora:
-            from peft import PeftModel
-
-            KetabaOCR._peft_khong_torchao()
-            self.model = PeftModel.from_pretrained(self.model, self.lora).eval()
+        self._nap_adapter()
         self.processor = AutoProcessor.from_pretrained(self.REPO, min_pixels=28 * 28, max_pixels=1280 * 28 * 28)
         self.processor.tokenizer.padding_side = "left"
         self.load_s = round(time.time() - t, 1)
         return self
+
+    def _nap_adapter(self) -> None:
+        """Gắn các adapter self.lora lên self.model (cùng một nền); adapter đầu tiên đang bật."""
+        if not self.lora:
+            return
+        from peft import PeftModel
+
+        KetabaOCR._peft_khong_torchao()
+        for i, spec in enumerate(self.lora):
+            ten = spec if spec in HF_FT_ADAPTERS else f"a{i}"
+            if i == 0:
+                self.model = PeftModel.from_pretrained(self.model, lora_dir(spec), adapter_name=ten).eval()
+            else:
+                self.model.load_adapter(lora_dir(spec), adapter_name=ten)
+            self.adapters.append(ten)
+        self.model.set_adapter(self.adapters[0])
+
+    def _adapter(self, adapter: str | None):
+        """Ngữ cảnh chọn adapter (gọi trong _LOCK — các luồng web không giẫm lên nhau)."""
+        import contextlib
+
+        if not self.adapters:
+            if adapter not in (None, "goc"):
+                raise ValueError(f"chưa nạp adapter nào (lora=…) — không đọc được bằng {adapter}")
+            return contextlib.nullcontext()
+        if adapter == "goc":
+            return self.model.disable_adapter()
+        ten = adapter or self.adapters[0]
+        if ten not in self.adapters:
+            raise ValueError(f"adapter {ten} chưa nạp (có: {self.adapters})")
+        self.model.set_adapter(ten)
+        return contextlib.nullcontext()
 
     TOKEN_KEYS = ("image_token_id", "video_token_id", "vision_start_token_id", "vision_end_token_id", "vision_token_id")
 
@@ -266,7 +298,8 @@ class BaseerNakba:
                 setattr(cfg, k, v)
         return cfg
 
-    def read(self, lines: list[Image.Image], batch: int = 1) -> list[str]:
+    def read(self, lines: list[Image.Image], batch: int = 1, adapter: str | None = None) -> list[str]:
+        """adapter: tên adapter đã nạp (vd. "ft1", "ft2"), "goc" = Baseer gốc; None = adapter đầu tiên."""
         # batch = 1 MẶC ĐỊNH: ghép nhiều ảnh dòng vào một lô (đệm trái) làm Qwen2.5-VL trên transformers 4.56.1 dừng sớm /
         # lặp dòng — chẩn đoán 32 dòng Omar: Baseer lô 16 → 72,1% đúng ký tự, lô 1 → 91,2% (= công bố); fp16 = fp32.
         if self.model is None:
@@ -277,7 +310,7 @@ class BaseerNakba:
             chunk = [im.convert("RGB") for im in lines[i:i + batch]]
             inputs = self.processor(text=[prompt] * len(chunk), images=chunk, return_tensors="pt", padding=True)
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
-            with _LOCK, torch.no_grad():
+            with _LOCK, torch.no_grad(), self._adapter(adapter):
                 ids = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, do_sample=False,
                                           repetition_penalty=1.1, eos_token_id=[151645, 151643],
                                           pad_token_id=151643)
@@ -285,6 +318,28 @@ class BaseerNakba:
             out += [clean_repeated_substrings(self.processor.decode(r[n_in:], skip_special_tokens=True).strip())
                     for r in ids]
         return out
+
+
+HF_FT = "khanh99/htr-baseer-nakba-ft"  # adapter đã huấn luyện tiếp (công khai, CC BY-NC-SA)
+HF_FT_ADAPTERS = ("ft1", "ft2")  # ft1: LoRA ngôn ngữ + ảnh (Muharaf 89,1%) · ft2: chỉ ngôn ngữ (87,3%)
+
+
+def lora_dir(spec: str) -> str:
+    """Thư mục adapter: đường dẫn có sẵn → giữ nguyên; "ft1"/"ft2" → tải từ HF_FT; "hf:<chủ>/<repo>[/<thư mục con>]"."""
+    p = Path(spec).expanduser()
+    if p.exists():
+        return str(p)
+    if spec in HF_FT_ADAPTERS:
+        repo, sub = HF_FT, spec
+    elif spec.startswith("hf:"):
+        parts = spec[3:].strip("/").split("/")
+        repo, sub = "/".join(parts[:2]), "/".join(parts[2:])
+    else:
+        raise FileNotFoundError(f"không thấy adapter {spec} (thư mục, ft1/ft2 hoặc hf:<chủ>/<repo>/<thư mục con>)")
+    from huggingface_hub import snapshot_download
+
+    d = Path(snapshot_download(repo, allow_patterns=[f"{sub}/*"] if sub else None))
+    return str(d / sub) if sub else str(d)
 
 
 def free_cuda():

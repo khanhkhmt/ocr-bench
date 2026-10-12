@@ -3,7 +3,7 @@
     <python venv dots> -m htr_test.app [--port 7861] [--gpu 0] [--no-quant4]
 
 Tab "Trang tài liệu": ảnh / PDF → dots chia khối → tách dòng trong từng khối chữ → từng model đọc từng dòng →
-so sánh cạnh nhau (chữ của dots | Ketaba-OCR | sherif gốc | ArTrOCR), xem ảnh từng dòng, tải kết quả JSON / TXT.
+so sánh cạnh nhau (chữ của dots | Baseer ft1 | ft2 | Baseer gốc | Ketaba-OCR | sherif gốc | ArTrOCR); ft1/ft2 tải từ HF khanh99/htr-baseer-nakba-ft, xem ảnh từng dòng, tải kết quả JSON / TXT.
 Tab "Một dòng": thả một ảnh dòng chữ → kết quả từng model (thử nhanh, không cần dots).
 """
 
@@ -27,9 +27,13 @@ from .models import ArTrOCR, BaseerNakba, KetabaOCR, free_cuda
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}
-M_BASEER = "Baseer-Nakba (hạng 1 NAKBA, phi thương mại)"
+M_FT1 = "Baseer ft1 — huấn luyện tiếp, giấy cũ (khuyên dùng)"
+M_FT2 = "Baseer ft2 — bản thứ hai, để kiểm chéo"
+M_BASEER = "Baseer-Nakba gốc"
 M_KETABA, M_SHERIF, M_TROCR = "Ketaba-OCR (LoRA)", "sherif gốc (tắt LoRA)", "ArTrOCR"
-ALL_MODELS = [M_BASEER, M_KETABA, M_SHERIF, M_TROCR]
+# thứ tự = ưu tiên: model chọn ĐẦU TIÊN là bộ đọc chính của DOCX, model thứ hai là bộ đọc kiểm chéo (tô vàng)
+ALL_MODELS = [M_FT1, M_FT2, M_BASEER, M_KETABA, M_SHERIF, M_TROCR]
+BASEER_ADAPTER = {M_FT1: "ft1", M_FT2: "ft2", M_BASEER: "goc"}  # ba lựa chọn dùng CHUNG một nền Baseer trên GPU
 DOTS_FULL, DOTS_LAYOUT = "dots đọc cả chữ (để so sánh)", "dots chỉ chia khối (nhanh hơn)"
 
 GR6 = int(gr.__version__.split(".")[0]) >= 6
@@ -53,7 +57,7 @@ def ketaba():
 
 def baseer():
     if S["baseer"] is None:
-        S["baseer"] = BaseerNakba(device=f"cuda:{S['gpu']}", quant4=S["baseer_quant4"]).load()
+        S["baseer"] = BaseerNakba(device=f"cuda:{S['gpu']}", quant4=S["baseer_quant4"], lora=["ft1", "ft2"]).load()
     return S["baseer"]
 
 
@@ -83,8 +87,9 @@ def read_lines(models: list[str], crops: list[Image.Image]) -> dict[str, list[st
     out = {}
     if not crops:
         return {m: [] for m in models}
-    if M_BASEER in models:
-        out[M_BASEER] = baseer().read(crops)
+    for m, ad in BASEER_ADAPTER.items():
+        if m in models:
+            out[m] = baseer().read(crops, adapter=ad)
     if M_KETABA in models:
         out[M_KETABA] = ketaba().read(crops, use_lora=True)
     if M_SHERIF in models:
@@ -115,6 +120,7 @@ def run_page(file, page_no, models, dots_mode, seg_method, progress=gr.Progress(
         return None, "<p>Chưa có file.</p>", "", None
     if not models:
         return None, "<p>Chọn ít nhất một model.</p>", "", None
+    models = [m for m in ALL_MODELS if m in models]  # thứ tự cố định (Gradio trả theo thứ tự bấm) → bộ đọc chính ổn định
     t0 = time.time()
     pages = load_pages(file if isinstance(file, str) else file.name)
     k = min(max(1, int(page_no or 1)), len(pages)) - 1
@@ -250,7 +256,7 @@ def build() -> gr.Blocks:
                 with gr.Column(scale=1):
                     f = gr.File(label="Ảnh hoặc PDF", file_types=["image", ".pdf"], type="filepath")
                     page = gr.Number(value=1, precision=0, label="Trang (PDF)")
-                    models = gr.CheckboxGroup(ALL_MODELS, value=[M_BASEER, M_KETABA], label="Model đọc chữ")
+                    models = gr.CheckboxGroup(ALL_MODELS, value=[M_FT1, M_FT2], label="Model đọc chữ")
                     dmode = gr.Radio([DOTS_FULL, DOTS_LAYOUT], value=DOTS_FULL, label="dots")
                     seg = gr.Radio([("Kraken + model Muharaf, cả trang (tốt nhất cho chữ tay)", "kraken_muharaf"),
                                     ("Chiếu ngang (nhanh, thô)", "chieu_ngang"), ("Kraken mặc định, từng khối", "kraken")],

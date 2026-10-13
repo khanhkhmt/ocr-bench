@@ -9,8 +9,14 @@ chữ của dots rồi cho model đọc từng dòng.
 | [Ketaba-OCR-LoRA](https://huggingface.co/HassanB4/Ketaba-OCR-LoRA) | LoRA trên sherif1313/Arabic-English-handwritten-OCR-v3 (Qwen2.5-VL-3B), 4-bit | dòng bản thảo viết tay 1951–1965, Ruq'ah / Naskh (hồi ký Omar Al-Saleh, NakbaNLP 2026) | CER 8,19% · WER 25,88% |
 | [ArTrOCR-HTR](https://huggingface.co/BushraAlmod03/ArTrOCR-HTR) | microsoft/trocr-base-handwritten | chữ tổng hợp → 11.000 dòng KHATT | CER 12,61% (KHATT) |
 | sherif gốc | Ketaba TẮT LoRA | — | để so LoRA giúp bao nhiêu |
+| **Baseer ft1 độ mạnh 0,5** (bộ đọc chính) | Baseer-Nakba + LoRA tự huấn luyện (`khanh99/htr-baseer-nakba-ft/ft1`, công khai) | Muharaf + Omar + AraMS + KHATT, làm cũ ảnh — xem htr_train/README.md | Omar 93,4% · Muharaf 87,0% đúng ký tự (500 dòng) |
+| Baseer ft2 (kiểm chéo) | như trên, chỉ LoRA ngôn ngữ (`…/ft2`) | như trên | Omar 92,3% · Muharaf 87,3% |
 
 Gọi model đúng như code mẫu của tác giả (`htr_test/models.py`).
+
+Web: ft1@0,5 đọc chính; ft2 đọc lại cùng dòng — dòng hai bản đọc KHÁC nhau được tô vàng trong DOCX (89% lỗi trên Omar,
+97% trên Muharaf nằm ở các dòng này). ft1 / ft2 / Baseer gốc dùng CHUNG một nền Baseer trên GPU (đổi adapter khi đọc).
+Độ mạnh từng adapter: `FT_SCALE` trong `app.py`.
 
 ## Chạy
 ```bash
@@ -59,3 +65,36 @@ cd /kaggle/working/ocr-bench && $PY $A
 # bảng benchmark gộp 2 bộ (cần đủ kết quả cả Omar + Muharaf ở máy chạy): python -m htr_test.benchmark --tag n500 --n 500 --chi-bang --push
 ```
 Mỗi phần ghi `<model>.shard<i>of<k>.jsonl`; bảng / chi tiết tự gộp mọi phần; chạy lại = đi tiếp.
+
+## Chấm adapter tự huấn luyện (`cham_ft.sh`) và lấy lại kết quả cũ (`lay_kq_cu.sh`)
+```bash
+bash htr_test/cham_ft.sh <gpu> <ft3|ft4|…> <baseer|ft1s050>
+```
+Chấm `hf:khanh99/htr-ckpt/<ft>/best` trên Omar blind_test → Muharaf người viết lạ (`/tmp/htr_data/giu_lai_muharaf`) →
+Muharaf test (`/tmp/htr_data/cham_muharaf`), 500 dòng mỗi tập, rồi model đối chứng trên tập người viết lạ. Kết thúc in
+`✔ XONG CHẤM <ft>`. Cần `/tmp/htr_data` từ `htr_train.du_lieu --giu-muharaf tu_dong`.
+`bash htr_test/lay_kq_cu.sh htr_eval_n500 htr_eval_muharaf_n500`: chép các `<model>.jsonl` đã chấm từ `results-htr` về
+`/kaggle/working/` (không ghi đè) — phiên Kaggle mới vẫn có đủ model cũ trong bảng tóm tắt.
+
+## Hộp thư: giám sát server + nhận lệnh qua GitHub (`hop_thu.py`, nhánh `dieu-khien`)
+Server Kaggle không có người ngồi canh → mọi việc dài đăng ký qua hộp thư.
+
+**Trên server** (python hệ thống, chạy ngầm):
+```bash
+tmux new -d -s hop_thu -e GITHUB_TOKEN="$GITHUB_TOKEN" -e HF_TOKEN="$HF_TOKEN" \
+  "cd /kaggle/working/ocr-bench && python3 -m htr_test.hop_thu chay --phut 20 --kiem-lenh 3 2>&1 | tee -a /kaggle/working/hop_thu.log"
+python3 -m htr_test.hop_thu viec <tên> --log /kaggle/working/<tên>.log --xong "<dòng báo xong>" -- <lệnh…>
+```
+- mỗi `--phut` phút đẩy `trang_thai/STATUS.md` (GPU, phiên tmux, commit code, dòng cuối log — đã che token);
+- mỗi `--kiem-lenh` phút xem các việc: xong → ghi XONG; chết vì **lỗi mạng** → tự chạy lại đúng lệnh (tối đa 2 lần,
+  huấn luyện / chấm tự đi tiếp); lỗi khác (hết VRAM, `✘ LỖI`, lỗi code) → đẩy ngay `su_co/<giờ>-<việc>.md` (40 dòng cuối
+  log) và chờ lệnh;
+- chỉ nhận 5 lệnh cố định từ `lenh/LENH.md`: `keo_code`, `chay_lai <việc>`, `dung <việc>`, `log <việc> [n]`, `trang_thai`
+  — không có lệnh shell tuỳ ý. Phiên mới không chạy lại lệnh cũ.
+
+**Trên máy điều khiển** (thư mục repo, có quyền push):
+```bash
+python -m htr_test.hop_thu doc                          # trạng thái + sự cố + kết quả lệnh mới nhất
+python -m htr_test.hop_thu theo_doi                     # chạy mãi, có sự cố / kết quả lệnh → thông báo desktop
+python -m htr_test.hop_thu lenh keo_code "chay_lai c3"  # sửa code xong → server kéo code, chạy lại việc c3
+```

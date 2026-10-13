@@ -1,6 +1,6 @@
 # Huấn luyện ft4 — 2026-10-13 00:19 UTC
 
-Trạng thái: đánh giá bước 2000: đúng ký tự 91.4%
+Trạng thái: XONG HUẤN LUYỆN
 
 Bước 2000/2000 · loss 0.2866 · 11.57 s/bước · lr 0.00e+00
 

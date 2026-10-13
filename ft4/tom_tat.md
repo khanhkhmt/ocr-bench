@@ -1,8 +1,8 @@
-# Huấn luyện ft4 — 2026-10-13 00:02 UTC
+# Huấn luyện ft4 — 2026-10-13 00:19 UTC
 
-Trạng thái: bước 1950/2000 · loss 0.2855
+Trạng thái: đánh giá bước 2000: đúng ký tự 91.4%
 
-Bước 1950/2000 · loss 0.2855 · 12.19 s/bước · lr 1.71e-07
+Bước 2000/2000 · loss 0.2866 · 11.57 s/bước · lr 0.00e+00
 
 | bước | đúng ký tự (val) | đúng từ | dòng sót | dòng dài | số dòng |
 |---:|---:|---:|---:|---:|---:|
@@ -10,5 +10,6 @@ Bước 1950/2000 · loss 0.2855 · 12.19 s/bước · lr 1.71e-07
 | 800 | 90.1% | 73.6% | 1 | 0 | 148 |
 | 1200 | 90.4% | 75.5% | 1 | 0 | 148 |
 | 1600 | 91.3% | 77.4% | 1 | 0 | 148 |
+| 2000 | 91.4% | 77.6% | 1 | 0 | 148 |
 
 Tham số: `{"base": "Misraj/Baseer__Nakba", "gpu": 1, "dtype": "auto", "lora_r": 32, "lora_alpha": 64, "dropout": 0.05, "vision": 1, "lr": 0.0001, "lr_vision": 2e-05, "batch": 2, "accum": 8, "warmup": 100, "max_steps": 2000, "max_mau": 0, "trong_so": "muharaf=2,omar=1,arams=1,khatt=1", "lam_cu": 0.5, "save_every": 200, "eval_every": 400, "eval_n": 150, "seed": 0, "hf_ckpt": "khanh99/htr-ckpt", "push": true}`

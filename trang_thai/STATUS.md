@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-14 07:33 UTC
+# Trạng thái server — 2026-10-14 07:48 UTC
 
-**Còn sống** · ĐÃ CHẠY lệnh 20261014-073148: ✔ keo_code → f13093d thu_dots: nạp dots lần lượt trên từng GPU (hai luồng cùng snapshot_download → tqdm AttributeError '_lock', GPU thứ hai không nạp được); ✔ chay_lai td (lần chạy 2)
+**Còn sống** · td có lỗi trong log (vẫn chạy)
 
-- máy: `0b994473a1f2` · up 1 hour, 43 minutes
+- máy: `0b994473a1f2` · up 1 hour, 58 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
 - code: `f13093d thu_dots: nạp dots lần lượt trên từng GPU (hai luồng cùng snapshot_download → tqdm AttributeError '_lock', GPU thứ hai không nạp được)` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
@@ -10,9 +10,10 @@
 
 ## GPU
 ```
-Tesla T4, 0 MiB, 15360 MiB, 0 %
-Tesla T4, 0 MiB, 15360 MiB, 0 %
-(không có tiến trình)
+Tesla T4, 12029 MiB, 15360 MiB, 100 %
+Tesla T4, 11929 MiB, 15360 MiB, 100 %
+26575, 12026 MiB, /kaggle/working/venvs/dots/bin/python
+26575, 11926 MiB, /kaggle/working/venvs/dots/bin/python
 ```
 
 ## Phiên tmux
@@ -26,21 +27,21 @@ td: 1 windows (created Wed Oct 14 07:33:29 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | ct | XONG | 1 | 0 | 2026-10-14 06:10 UTC | `✔ XONG CHẤM TRANG` |
-| td | đang chạy | 2 | 0 | 2026-10-14 07:33 UTC | `` |
+| td | LỖI | 2 | 0 | 2026-10-14 07:33 UTC | `✔ GITHUB: đã đẩy lên nhánh results-htr/thu_dots (commit 04e5d2b) — thử dots: image_3 khoi ×2 (14/36)` |
 
-## td.log (sửa 4 phút trước)
+## td.log (sửa 2 phút trước)
 ```
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-✔ image_3 khoi ×1 [cuda:1]: 7.7% · 1292 token · 68 s
-✔ GITHUB: đã đẩy lên nhánh results-htr/thu_dots (commit b2b302f) — thử dots: image_3 khoi ×1 (2/36)
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+    attn_output, attn_weights = attention_interface(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/kaggle/working/venvs/dots/lib/python3.12/site-packages/transformers/integrations/sdpa_attention.py", line 83, in sdpa_attention_forward
+    attn_output = torch.nn.functional.scaled_dot_product_attention(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.26 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.73 GiB is free. Including non-PyTorch memory, this process has 12.83 GiB memory in use. Of the allocated memory 11.95 GiB is allocated by PyTorch, and 766.28 MiB is reserved by 
+✔ image_3 khoi ×2 [cuda:0]: — · ? token · ? s · LỖI OutOfMemoryError: CUDA out of memory. Tried to allocate 3.26 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.73 GiB is free. Including non-PyTorch memory, this process has 12.83 GiB memory in use. Of the allocated memory 11.95 GiB is alloca
+✔ GITHUB: đã đẩy lên nhánh results-htr/thu_dots (commit 04e5d2b) — thử dots: image_3 khoi ×2 (14/36)
 ```
 
-## ct.log (sửa 36 phút trước)
+## ct.log (sửa 51 phút trước)
 ```
 ## Chi tiết chạy
 | trang | khối dots | dòng | tách dòng | dots (s) | đọc dòng 4 model (s) |

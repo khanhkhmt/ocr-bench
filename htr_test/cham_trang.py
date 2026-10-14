@@ -161,7 +161,9 @@ def main() -> int:
     from htr_test.models import BaseerNakba
 
     print(f"== {len(trang)} trang · nạp dots (GPU {a.gpu_dots}) + Baseer & 3 adapter (GPU {a.gpu_htr})", flush=True)
-    conv = Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(a.gpu_dots))
+    # ghim dots vào ĐÚNG một GPU: mặc định device_map="auto" rải model sang cả GPU của Baseer → hết VRAM (T4 15 GB)
+    conv = Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(a.gpu_dots),
+                     params={"device_map": {"": f"cuda:{a.gpu_dots}"}})
     baseer = BaseerNakba(device=f"cuda:{a.gpu_htr}", lora=LORA, lora_scale={"ft1": 0.5}).load()
     if baseer.adapters != ["ft1", "a1", "a2"]:
         sys.exit(f"✘ LỖI adapter nạp ra {baseer.adapters}, cần ['ft1', 'a1', 'a2']")

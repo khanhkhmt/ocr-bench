@@ -103,7 +103,7 @@ def doc_song_song(nen: list, crops: list, ten_trang: str) -> dict:
 
 def bao_cao(out: Path, ket: list[dict]) -> str:
     cot = ["dots", *DOC]
-    rows = ["# Chấm cả trang — tài liệu thật (4 trang mẫu)", "",
+    rows = ["# Chấm cả trang — tài liệu thật", "",
             f"Cập nhật: {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())} · {len(ket)} trang", "",
             "Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồi từ (không tính thứ tự). "
             "dots = dots tự đọc cả khối (bộ đọc ĐÁNH MÁY); các cột còn lại = model chữ tay đọc từng dòng do dots + "
@@ -154,11 +154,14 @@ def main() -> int:
                     help="như web: Kraken + model Muharaf (cả trang) nếu đã cài (htr_test/cai_kraken.sh), không có → chiếu ngang")
     ap.add_argument("--canh-dots", type=int, default=2400, help="dots đọc trên ảnh phóng tới cạnh dài N px "
                     "(htr_test/trang.py); 0 = không phóng (như lần chấm đầu, results-htr/cham_trang_that)")
+    ap.add_argument("--trang", default="", help="chỉ chấm các trang này, vd. image_3 (mặc định: mọi image_*)")
     ap.add_argument("--push", action="store_true")
     a = ap.parse_args()
     data, out = Path(a.data), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     trang = sorted(p for p in data.glob("image_*") if (p / "anh.jpeg").exists())
+    if a.trang:
+        trang = [p for p in trang if p.name in a.trang.split(",")]
     if not trang:
         sys.exit(f"✘ LỖI không thấy {data}/image_*/anh.jpeg")
     sync = None

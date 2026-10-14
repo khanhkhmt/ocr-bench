@@ -1,6 +1,6 @@
 # Chấm cả trang — tài liệu thật (4 trang mẫu)
 
-Cập nhật: 2026-10-14 06:55 UTC · 3 trang
+Cập nhật: 2026-10-14 06:57 UTC · 4 trang
 
 Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồi từ (không tính thứ tự). dots = dots tự đọc cả khối (bộ đọc ĐÁNH MÁY); các cột còn lại = model chữ tay đọc từng dòng do dots + tách dòng cắt ra. Trang đánh máy → xem cột dots (yêu cầu ≥ 90%); trang viết tay → so ft3 / ft4 với Baseer gốc.
 
@@ -11,6 +11,7 @@ Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồ
 | image_1 | printed | **77.6%** / 38.0% · 40% | **78.2%** / 53.3% · 57% | **77.3%** / 50.5% · 55% | **79.0%** / 57.6% · 61% | **76.0%** / 51.1% · 54% |
 | image_2 | handwritten | **43.9%** / 8.9% · 13% | **62.8%** / 30.1% · 40% | **69.4%** / 41.8% · 50% | **72.6%** / 46.8% · 53% | **72.9%** / 47.5% · 55% |
 | image_3 | printed + stamps + Hebrew notary block | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% |
+| image_4 | typed + handwritten notes + watermark | **88.7%** / 70.9% · 78% | **83.5%** / 70.9% · 79% | **84.9%** / 74.4% · 83% | **80.1%** / 62.8% · 78% | **77.7%** / 66.3% · 80% |
 
 ## So với nhãn Claude (`nhan_claude.json`)
 
@@ -19,6 +20,7 @@ Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồ
 | image_1 | printed | **77.6%** / 38.0% · 40% | **78.4%** / 53.3% · 57% | **77.6%** / 50.5% · 55% | **78.8%** / 57.1% · 61% | **76.3%** / 51.1% · 54% |
 | image_2 | handwritten | **43.2%** / 7.5% · 13% | **63.1%** / 28.2% · 40% | **70.5%** / 41.4% · 49% | **73.4%** / 47.5% · 53% | **73.5%** / 46.8% · 55% |
 | image_3 | printed + stamps + Hebrew notary block | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% | **0.0%** / 0.0% · 0% |
+| image_4 | typed + handwritten notes + watermark | **89.3%** / 72.1% · 79% | **83.7%** / 70.9% · 79% | **85.1%** / 74.4% · 83% | **80.3%** / 62.8% · 78% | **78.3%** / 67.4% · 81% |
 
 ## Chi tiết chạy
 
@@ -27,3 +29,4 @@ Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồ
 | image_1 | 12 {'Page-header': 1, 'List-item': 3, 'Text': 5, 'Picture': 3} | 24 | chieu_ngang, kraken_muharaf | 85 | 142 |
 | image_2 | 40 {'Section-header': 2, 'Text': 33, 'Picture': 5} | 36 | chieu_ngang, kraken_muharaf | 165 | 247 |
 | image_3 | 0 {} | 0 |  | 1589 | 0 |
+| image_4 | 11 {'Text': 7, 'Picture': 2, 'Caption': 1, 'Page-footer': 1} | 19 | chieu_ngang, kraken_muharaf | 39 | 91 |

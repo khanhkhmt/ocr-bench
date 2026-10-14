@@ -1,20 +1,20 @@
-# Trạng thái server — 2026-10-14 03:22 UTC
+# Trạng thái server — 2026-10-14 03:43 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `68056ead96f7` · up 39 minutes
+- máy: `68056ead96f7` · up 1 hour
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
 - code: `bc0d024 README htr_train / htr_test: bảng các bản đã huấn luyện (ft1–ft4, độ mạnh, nơi để adapter), cách chạy dữ liệu → huấn luyện → chấm qua hộp thư, --hf-ckpt, tập người viết lạ, cham_ft.sh, hop_thu` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  809M   19G   5% /kaggle/working
+- ổ /kaggle/working: /dev/loop2       20G  816M   19G   5% /kaggle/working
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
 ```
-Tesla T4, 8383 MiB, 15360 MiB, 0 %
-Tesla T4, 7687 MiB, 15360 MiB, 35 %
-5432, 434 MiB, /kaggle/working/venvs/dots/bin/python
-9759, 7946 MiB, /kaggle/working/venvs/dots/bin/python
-5432, 7684 MiB, /kaggle/working/venvs/dots/bin/python
+Tesla T4, 8399 MiB, 15360 MiB, 36 %
+Tesla T4, 7687 MiB, 15360 MiB, 31 %
+9759, 7962 MiB, /kaggle/working/venvs/dots/bin/python
+10051, 434 MiB, /kaggle/working/venvs/dots/bin/python
+10051, 7684 MiB, /kaggle/working/venvs/dots/bin/python
 ```
 
 ## Phiên tmux
@@ -29,34 +29,34 @@ hop_thu: 1 windows (created Wed Oct 14 02:55:28 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | dl | XONG | 1 | 0 | 2026-10-14 02:58 UTC | `✔ train 19997 · val 998 → /tmp/htr_data` |
-| c3 | đang chạy | 1 | 0 | 2026-10-14 03:00 UTC | ``torch_dtype` is deprecated! Use `dtype` instead!` |
-| c4 | đang chạy | 1 | 0 | 2026-10-14 03:00 UTC | `   baseer_ft4: 464/484 · 2.64 s/dòng` |
+| c3 | đang chạy | 1 | 0 | 2026-10-14 03:00 UTC | `   baseer_ft3: 448/500 · 2.73 s/dòng` |
+| c4 | đang chạy | 1 | 0 | 2026-10-14 03:00 UTC | `   baseer_ft4: 432/500 · 2.76 s/dòng` |
 
-## c3.log (sửa 0 phút trước)
+## c4.log (sửa 0 phút trước)
 ```
-E0000 00:00:1791948140.402408    9759 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-W0000 00:00:1791948140.422092    9759 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791948140.422116    9759 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791948140.422118    9759 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-W0000 00:00:1791948140.422121    9759 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
-2026-10-14 03:22:20.427489: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-`torch_dtype` is deprecated! Use `dtype` instead!
-```
-
-## c4.log (sửa 1 phút trước)
-```
-   baseer_ft4: 352/484 · 2.57 s/dòng
-   baseer_ft4: 368/484 · 2.59 s/dòng
-   baseer_ft4: 384/484 · 2.60 s/dòng
-   baseer_ft4: 400/484 · 2.61 s/dòng
-   baseer_ft4: 416/484 · 2.64 s/dòng
-   baseer_ft4: 432/484 · 2.63 s/dòng
-   baseer_ft4: 448/484 · 2.64 s/dòng
-   baseer_ft4: 464/484 · 2.64 s/dòng
+   baseer_ft4: 320/500 · 2.62 s/dòng
+   baseer_ft4: 336/500 · 2.64 s/dòng
+   baseer_ft4: 352/500 · 2.67 s/dòng
+   baseer_ft4: 368/500 · 2.66 s/dòng
+   baseer_ft4: 384/500 · 2.70 s/dòng
+   baseer_ft4: 400/500 · 2.70 s/dòng
+   baseer_ft4: 416/500 · 2.71 s/dòng
+   baseer_ft4: 432/500 · 2.76 s/dòng
 ```
 
-## dl.log (sửa 23 phút trước)
+## c3.log (sửa 1 phút trước)
+```
+   baseer_ft3: 336/500 · 2.61 s/dòng
+   baseer_ft3: 352/500 · 2.63 s/dòng
+   baseer_ft3: 368/500 · 2.62 s/dòng
+   baseer_ft3: 384/500 · 2.66 s/dòng
+   baseer_ft3: 400/500 · 2.66 s/dòng
+   baseer_ft3: 416/500 · 2.67 s/dòng
+   baseer_ft3: 432/500 · 2.73 s/dòng
+   baseer_ft3: 448/500 · 2.73 s/dòng
+```
+
+## dl.log (sửa 45 phút trước)
 ```
   train: 22092 dòng
   validation: 1069 dòng

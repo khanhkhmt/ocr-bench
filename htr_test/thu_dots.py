@@ -47,11 +47,15 @@ def cuu_khoi(raw: str) -> str:
     return "\n".join(out)
 
 
+_KHOA_NAP = threading.Lock()
+
+
 def nap(gpu: int, tran: int):
     from ocrbench.convert import Converter
 
-    return Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(gpu),
-                     params={"device_map": {"": f"cuda:{gpu}"}, "max_new_tokens": tran})
+    with _KHOA_NAP:  # nạp lần lượt: hai luồng cùng snapshot_download → tqdm "_lock" AttributeError (lỗi tranh chấp của tqdm)
+        return Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(gpu),
+                         params={"device_map": {"": f"cuda:{gpu}"}, "max_new_tokens": tran})
 
 
 def _sinh(ad, img, mode: str) -> dict:

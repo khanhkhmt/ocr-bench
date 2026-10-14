@@ -1,11 +1,11 @@
-# Trạng thái server — 2026-10-14 04:10 UTC
+# Trạng thái server — 2026-10-14 04:31 UTC
 
-**Còn sống** · c4 XONG
+**Còn sống** · định kỳ
 
-- máy: `68056ead96f7` · up 1 hour, 27 minutes
+- máy: `68056ead96f7` · up 1 hour, 48 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
-- code: `bc0d024 README htr_train / htr_test: bảng các bản đã huấn luyện (ft1–ft4, độ mạnh, nơi để adapter), cách chạy dữ liệu → huấn luyện → chấm qua hộp thư, --hf-ckpt, tập người viết lạ, cham_ft.sh, hop_thu` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  844M   19G   5% /kaggle/working
+- code: `4f92fce htr_test/cham_trang.py: chấm cả TRANG tài liệu thật (đường đi như web: dots chia khối + đọc đánh máy; tách dòng; Baseer gốc / ft1@0,5 / ft3 / ft4 đọc từng dòng) so với 2 bộ nhãn — đúng ký tự / từ + thu hồi từ không tính thứ tự` (nhánh `thu-2-model-htr`)
+- ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
@@ -28,7 +28,7 @@ hop_thu: 1 windows (created Wed Oct 14 02:55:28 2026)
 | c3 | XONG | 1 | 0 | 2026-10-14 03:00 UTC | `✔ XONG CHẤM ft3` |
 | c4 | XONG | 1 | 0 | 2026-10-14 03:00 UTC | `✔ XONG CHẤM ft4` |
 
-## c4.log (sửa 2 phút trước)
+## c4.log (sửa 23 phút trước)
 ```
 | baseer_ft4 | 500/500 | **95.0%** | **86.0%** | 5.7% | 16.1% | 5.0% | 14.0% | 6.0% | 1.01 | 3 | 1 |
 | baseer_ft3 | 500/500 | **94.7%** | **85.0%** | 6.0% | 17.6% | 5.3% | 15.0% | 5.6% | 1.00 | 1 | 1 |
@@ -40,7 +40,7 @@ Từng dòng: /kaggle/working/htr_eval_giu_lai_n500/chi_tiet.csv  ·  /kaggle/wo
 ✔ XONG CHẤM ft4
 ```
 
-## c3.log (sửa 14 phút trước)
+## c3.log (sửa 35 phút trước)
 ```
 | baseer_ft4 | 500/500 | **95.0%** | **86.0%** | 5.7% | 16.1% | 5.0% | 14.0% | 6.0% | 1.01 | 3 | 1 |
 | baseer_ft3 | 500/500 | **94.7%** | **85.0%** | 6.0% | 17.6% | 5.3% | 15.0% | 5.6% | 1.00 | 1 | 1 |
@@ -52,7 +52,7 @@ Từng dòng: /kaggle/working/htr_eval_giu_lai_n500/chi_tiet.csv  ·  /kaggle/wo
 ✔ XONG CHẤM ft3
 ```
 
-## dl.log (sửa 72 phút trước)
+## dl.log (sửa 93 phút trước)
 ```
   train: 22092 dòng
   validation: 1069 dòng

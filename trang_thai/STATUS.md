@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-14 10:57 UTC
+# Trạng thái server — 2026-10-14 11:18 UTC
 
-**Còn sống** · ct3 XONG
+**Còn sống** · định kỳ
 
-- máy: `9c2cedb12555` · up 55 minutes
+- máy: `9c2cedb12555` · up 1 hour, 16 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
 - code: `c54f487 cham_trang: --trang (chỉ chấm các trang chọn, vd. image_3)` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
@@ -10,9 +10,10 @@
 
 ## GPU
 ```
-Tesla T4, 0 MiB, 15360 MiB, 0 %
-Tesla T4, 0 MiB, 15360 MiB, 0 %
-(không có tiến trình)
+Tesla T4, 12857 MiB, 15360 MiB, 0 %
+Tesla T4, 8019 MiB, 15360 MiB, 0 %
+15270, 12854 MiB, /kaggle/working/venvs/dots/bin/python
+15270, 8016 MiB, /kaggle/working/venvs/dots/bin/python
 ```
 
 ## Phiên tmux
@@ -27,7 +28,7 @@ web: 1 windows (created Wed Oct 14 10:56:20 2026)
 |---|---|---:|---:|---|---|
 | ct3 | XONG | 1 | 0 | 2026-10-14 10:39 UTC | `✔ XONG CHẤM TRANG` |
 
-## ct3.log (sửa 2 phút trước)
+## ct3.log (sửa 23 phút trước)
 ```
 | trang | loại | dots | baseer_goc | ft1_s050 | ft3 | ft4 |
 |---|---|---:|---:|---:|---:|---:|

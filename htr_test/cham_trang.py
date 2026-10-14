@@ -41,6 +41,7 @@ NHOM = [(["ft1"], {"ft1": 0.5}, {"baseer_goc": "goc", "ft1_s050": "ft1"}),
         (["hf:khanh99/htr-ckpt/ft3/best", "hf:khanh99/htr-ckpt/ft4/best"], 1.0, {"ft3": "a0", "ft4": "a1"})]
 DOC = {ten: ad for _, _, m in NHOM for ten, ad in m.items()}  # baseer_goc, ft1_s050, ft3, ft4
 NHAN = {"nhan.json": "nhãn anh", "nhan_claude.json": "nhãn Claude"}
+HEBREW = re.compile(r"[\u0590-\u05FF]+")  # nhãn không chép khối công chứng Hebrew → chữ Hebrew dots đọc không tính
 DAU_CAU = re.compile(r"[.,،؛:;!?؟()\[\]{}«»\"'“”•\-–—ـ*/\\]+")
 
 
@@ -48,7 +49,7 @@ def sach(s: str) -> str:
     s = re.sub(r"\[\?([^\]]*)\]", r"\1", s or "")
     s = re.sub(r"\[[^\]]*\]|\.\.\.|…", " ", s)
     s = re.sub(r"([0-9٠-٩]+)/([0-9٠-٩]+)/([0-9٠-٩]+)", lambda m: " ".join(sorted(m.groups(), key=lambda x: (len(x), x))), s)
-    return " ".join(DAU_CAU.sub(" ", _norm(s)).split())
+    return " ".join(DAU_CAU.sub(" ", _norm(HEBREW.sub(" ", s))).split())
 
 
 def diem(nhan: str, doc: str) -> dict:
@@ -69,7 +70,7 @@ def bo_cuc(conv, path: Path, tach: str, canh: int | None) -> tuple[dict, list]:
     khoi_chu = [bi for bi, b in enumerate(blocks) if b.get("category") in TEXT_CATS]
     info = {"dots": "\n".join(blocks[bi].get("text") or "" for bi in khoi_chu), "khoi_chu": khoi_chu,
             "so_khoi": len(blocks), "loai_khoi": dict(Counter(str(b.get("category")) for b in blocks)),
-            "so_dong": len(r["jobs"]), "tach_dong": r["tach"], "giay_dots": r["giay_dots"], "phong_dots": r["phong"],
+            "so_dong": len(r["jobs"]), "tach_dong": r["tach"], "giay_dots": r["giay_dots"], "phong_dots": r["phong"], "khoi_hebrew": r["so_khoi_hebrew"],
             "ghi_chu": r["ghi_chu"], "dots_extra": r["dots_extra"]}
     return info, r["jobs"]
 
@@ -124,7 +125,9 @@ def bao_cao(out: Path, ket: list[dict]) -> str:
              "|---|---|---:|---|---:|---:|---:|---|"]
     for k in ket:
         rows.append(f"| {k['trang_id']} | {k['so_khoi']} {k['loai_khoi']} | {k['so_dong']} | {', '.join(k['tach_dong'])} | "
-                    f"{k.get('phong_dots', 1):g} | {k['giay_dots']} | {k['giay_doc']} | {'; '.join(k.get('ghi_chu') or [])} |")
+                    f"{k.get('phong_dots', 1):g} | {k['giay_dots']} | {k['giay_doc']} | "
+                    + "; ".join([*(k.get("ghi_chu") or []), *([f"{k['khoi_hebrew']} khối Hebrew: giữ chữ dots, model chữ tay "
+                                                               "không đọc"] if k.get("khoi_hebrew") else [])]) + " |")
     md = "\n".join(rows) + "\n"
     (out / "tom_tat.md").write_text(md, encoding="utf-8")
     (out / "tom_tat.json").write_text(json.dumps([{x: k[x] for x in ("trang_id", "loai", "diem")} for k in ket],

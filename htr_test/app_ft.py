@@ -5,7 +5,7 @@
 
 Tab "Trang tài liệu": ảnh / PDF → dots chia khối (ảnh phóng tới 2400 px; dots hỏng → cả trang một khối) → Kraken tách
 dòng → ft3 và ft4 đọc TỪNG dòng → bảng từng dòng: ảnh dòng | ft3 (từ ft4 đọc khác tô vàng, rê chuột xem ft4 đọc gì) |
-ft4; khung dòng trên ảnh trang: xanh lá = hai bản đọc trùng, cam = khác (cần soát). Tải DOCX (chữ ft3, tô vàng +
+ft4; khối Hebrew (khối công chứng) giữ chữ dots, không đưa cho ft3/ft4; khung dòng trên ảnh trang: xanh lá = hai bản đọc trùng, cam = khác (cần soát). Tải DOCX (chữ ft3, tô vàng +
 chú thích chỗ ft4 đọc khác), TXT, JSON.
 Tab "Một dòng": thả ảnh một dòng → ft3 / ft4.
 
@@ -95,8 +95,9 @@ def ve(r: dict):
     for bi, b in enumerate(r["blocks"]):
         bb = b.get("bbox")
         if bb and len(bb) == 4:
-            dr.rectangle([int(round(v)) for v in bb], outline=(30, 90, 220), width=3)
-            dr.text((bb[0] + 4, bb[1] + 2), str(bi + 1), fill=(30, 90, 220))
+            mau = (147, 51, 234) if b.get("hebrew") else (30, 90, 220)
+            dr.rectangle([int(round(v)) for v in bb], outline=mau, width=3)
+            dr.text((bb[0] + 4, bb[1] + 2), str(bi + 1), fill=mau)
     for n, (bi, box, _, poly) in enumerate(r["jobs"]):
         trung = ty_le_trung(r["doc"]["ft3"][n], r["doc"]["ft4"][n]) >= 0.999
         mau = (26, 127, 55) if trung else (234, 88, 12)
@@ -117,6 +118,10 @@ def bang(r: dict, k: int, n_trang: int, chu_dots: bool) -> tuple[str, dict]:
         if cat not in TEXT_CATS:
             rows.append(f"<tr class=khoi><td colspan=3>Khối {bi + 1} · {html.escape(str(cat))} — không phải chữ "
                         "(giữ nguyên ảnh trong DOCX)</td></tr>")
+            continue
+        if b.get("hebrew"):
+            rows.append(f"<tr class=khoi><td colspan=3>Khối {bi + 1} · HEBREW — ft3/ft4 chỉ đọc chữ Ả Rập nên KHÔNG đọc "
+                        f"khối này; chữ dots đọc (chưa kiểm):<div class=ar>{html.escape(b.get('text') or '')}</div></td></tr>")
             continue
         dots_txt = (f"<details><summary>chữ dots đọc khối này (bộ đọc đánh máy)</summary><div class=ar>"
                     f"{html.escape(b.get('text') or '')}</div></details>") if chu_dots and b.get("text") else ""
@@ -162,11 +167,12 @@ def run_page(file, page_no, tat_ca, dots_mode, progress=gr.Progress()):
         h, st = bang(r, k, len(pages), chu_dots)
         htmls.append(h)
         jobs = r["jobs"]
-        per = {ten: {bi: "\n".join(r["doc"][ten][n] for n, j in enumerate(jobs) if j[0] == bi)
-                     for bi in range(len(r["blocks"]))} for ten in ("ft3", "ft4")}
+        per = {ten: {bi: (b.get("text") or "") if b.get("hebrew") else  # khối Hebrew: chữ dots (cả hai bên → không tô)
+                          "\n".join(r["doc"][ten][n] for n, j in enumerate(jobs) if j[0] == bi)
+                     for bi, b in enumerate(r["blocks"])} for ten in ("ft3", "ft4")}
         txt.append(f"===== Trang {k + 1} — ft3 =====\n" + "\n\n".join(t for t in per["ft3"].values() if t.strip()))
         data.append({"trang": k + 1, **st, "ghi_chu": r["ghi_chu"], "dots_phong": r["phong"],
-                     "khoi": [{"so": bi + 1, "loai": b.get("category"), "bbox": b.get("bbox"),
+                     "khoi": [{"so": bi + 1, "loai": b.get("category"), "hebrew": bool(b.get("hebrew")), "bbox": b.get("bbox"),
                                "dots": b.get("text") if chu_dots else None,
                                "dong": [{"bbox": list(jobs[n][1]), "ft3": r["doc"]["ft3"][n], "ft4": r["doc"]["ft4"][n]}
                                         for n, j in enumerate(jobs) if j[0] == bi]}
@@ -210,7 +216,7 @@ def build() -> gr.Blocks:
                     dmode = gr.Radio([DOTS_FULL, DOTS_LAYOUT], value=DOTS_FULL, label="dots")
                     go = gr.Button("Đọc", variant="primary")
                 with gr.Column(scale=2):
-                    vis = gr.Image(label="Khối dots (xanh dương) · dòng: xanh lá = ft3/ft4 trùng, cam = khác", type="pil")
+                    vis = gr.Image(label="Khối dots (xanh dương; tím = Hebrew) · dòng: xanh lá = ft3/ft4 trùng, cam = khác", type="pil")
             out = gr.HTML()
             with gr.Accordion("Văn bản ft3 ghép cả trang", open=False):
                 txt = gr.Textbox(lines=18, rtl=True)

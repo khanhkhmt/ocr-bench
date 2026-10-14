@@ -12,7 +12,9 @@ Sửa sau buổi thử dots trên 4 trang thật (htr_test/thu_dots.py, results-
   2. dots không ra khối chữ nào (JSON hỏng / chạy vòng tới trần token) → DỰ PHÒNG: cả trang là một khối, Kraken tách
      dòng cả trang, model chữ tay đọc từng dòng — trước đây trang như vậy ra rỗng.
   3. Chặn vòng lặp dài hơn: dots từng lặp nguyên một dòng (~100 token) tới trần — bộ chặn cũ chỉ bắt chu kỳ ≤ 60 token.
-  4. sua_chu: dots ở ảnh phóng hay ra chữ Ba Tư (ی ک ۃ ۸…) thay chữ Ả Rập (ي ك ة ٨) và tách "و" khỏi từ sau
+  4. Khối HEBREW (khối công chứng): dots đọc ra chữ Hebrew → KHÔNG đưa cho model chữ tay Ả Rập (chúng bịa chữ Ả Rập ở
+     đó: image_3 cả trang 64% → ~80% khi bỏ), giữ chữ dots, đánh dấu b["hebrew"] = True.
+  5. sua_chu: dots ở ảnh phóng hay ra chữ Ba Tư (ی ک ۃ ۸…) thay chữ Ả Rập (ي ك ة ٨) và tách "و" khỏi từ sau
      ("و نحن") — đổi về chữ Ả Rập chuẩn (cùng hình chữ, đúng mã; "و" không bao giờ đứng riêng một từ).
 """
 
@@ -35,6 +37,16 @@ _BA_TU = str.maketrans({"ی": "ي", "ک": "ك", "ۃ": "ة", "ہ": "ه", "ۀ": "�
                         **{chr(0x06F0 + i): chr(0x0660 + i) for i in range(10)}})
 _CHU = "ء-يٮ-ۓ"
 _WAW = re.compile(rf"(?<![{_CHU}ً-ْ])و([ً-ْ]*)\s+(?=[{_CHU}])")
+
+
+_HE = re.compile(r"[\u05D0-\u05EA]")
+_AR = re.compile(r"[\u0621-\u064A]")
+
+
+def la_hebrew(s: str) -> bool:
+    """Khối chủ yếu chữ Hebrew (≥ 4 chữ Hebrew và không ít hơn chữ Ả Rập — số / ngày trong khối không tính)."""
+    he = len(_HE.findall(s or ""))
+    return he >= 4 and he >= len(_AR.findall(s or ""))
 
 
 def sua_chu(s: str) -> str:
@@ -84,6 +96,8 @@ def phan_trang(conv, page: Image.Image, path: Path, tach: str = "kraken_muharaf"
         bb = b.get("bbox")
         blocks.append({**b, "bbox": [v / f for v in bb] if bb and len(bb) == 4 else bb,
                        "text": sua_chu(b.get("text") or "")})
+        if blocks[-1].get("category") in TEXT_CATS and la_hebrew(blocks[-1]["text"]):
+            blocks[-1]["hebrew"] = True
     co_chu = [b for b in blocks if b.get("category") in TEXT_CATS and len(b.get("bbox") or []) == 4]
     du_phong = None
     if not co_chu:
@@ -105,7 +119,7 @@ def phan_trang(conv, page: Image.Image, path: Path, tach: str = "kraken_muharaf"
         if b.get("category") not in TEXT_CATS or not bb or len(bb) != 4:
             continue
         x0, y0, x1, y1 = [int(round(v)) for v in bb]
-        if x1 - x0 < 8 or y1 - y0 < 8:
+        if x1 - x0 < 8 or y1 - y0 < 8 or b.get("hebrew"):  # Hebrew: dòng Kraken trong khối bị bỏ, giữ chữ dots
             continue
         if by_block.get(bi):
             dung_tach.add("kraken_muharaf")
@@ -117,5 +131,5 @@ def phan_trang(conv, page: Image.Image, path: Path, tach: str = "kraken_muharaf"
             box = (x0 + lx0, y0 + ly0, x0 + lx1, y0 + ly1)
             jobs.append((bi, box, img.crop(box), None))
     return {"img": img, "blocks": blocks, "jobs": jobs, "tach": sorted(dung_tach), "giay_dots": round(t_dots),
-            "phong": round(f, 3), "du_phong": du_phong, "ghi_chu": ghi,
+            "phong": round(f, 3), "du_phong": du_phong, "so_khoi_hebrew": sum(bool(b.get("hebrew")) for b in blocks), "ghi_chu": ghi,
             "dots_extra": {k: extra.get(k) for k in ("new_tokens", "hit_max_tokens", "stopped_loop", "layout")}}

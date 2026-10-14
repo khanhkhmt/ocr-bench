@@ -1,11 +1,11 @@
-# Trạng thái server — 2026-10-14 04:31 UTC
+# Trạng thái server — 2026-10-14 04:40 UTC
 
-**Còn sống** · định kỳ
+**Còn sống** · ct CHẾT (lỗi không tự sửa được) → chờ lệnh
 
-- máy: `68056ead96f7` · up 1 hour, 48 minutes
+- máy: `68056ead96f7` · up 1 hour, 57 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
 - code: `4f92fce htr_test/cham_trang.py: chấm cả TRANG tài liệu thật (đường đi như web: dots chia khối + đọc đánh máy; tách dòng; Baseer gốc / ft1@0,5 / ft3 / ft4 đọc từng dòng) so với 2 bộ nhãn — đúng ký tự / từ + thu hồi từ không tính thứ tự` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
+- ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  12% /kaggle/working
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
@@ -27,8 +27,21 @@ hop_thu: 1 windows (created Wed Oct 14 02:55:28 2026)
 | dl | XONG | 1 | 0 | 2026-10-14 02:58 UTC | `✔ train 19997 · val 998 → /tmp/htr_data` |
 | c3 | XONG | 1 | 0 | 2026-10-14 03:00 UTC | `✔ XONG CHẤM ft3` |
 | c4 | XONG | 1 | 0 | 2026-10-14 03:00 UTC | `✔ XONG CHẤM ft4` |
+| ct | CHỜ LỆNH | 1 | 0 | 2026-10-14 04:32 UTC | `torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 136.00 MiB. GPU 1 has a total capacity of 14.56 GiB of which 62.81 MiB is free. Including non-PyTo` |
 
-## c4.log (sửa 23 phút trước)
+## ct.log (sửa 1 phút trước)
+```
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/accelerate/hooks.py", line 175, in new_forward
+    output = module._old_forward(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.cache/huggingface/modules/transformers_modules/DotsMOCR/modeling_dots_vision.py", line 229, in forward
+    x = F.silu(self.fc1(x)) * self.fc3(x)
+        ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 136.00 MiB. GPU 1 has a total capacity of 14.56 GiB of which 62.81 MiB is free. Including non-PyTorch memory, this process has 14.50 GiB memory in use. Of the allocated memory 13.98 GiB is allocated by PyTorch, and 398.92 MiB is reserved 
+```
+
+## c4.log (sửa 32 phút trước)
 ```
 | baseer_ft4 | 500/500 | **95.0%** | **86.0%** | 5.7% | 16.1% | 5.0% | 14.0% | 6.0% | 1.01 | 3 | 1 |
 | baseer_ft3 | 500/500 | **94.7%** | **85.0%** | 6.0% | 17.6% | 5.3% | 15.0% | 5.6% | 1.00 | 1 | 1 |
@@ -40,7 +53,7 @@ Từng dòng: /kaggle/working/htr_eval_giu_lai_n500/chi_tiet.csv  ·  /kaggle/wo
 ✔ XONG CHẤM ft4
 ```
 
-## c3.log (sửa 35 phút trước)
+## c3.log (sửa 44 phút trước)
 ```
 | baseer_ft4 | 500/500 | **95.0%** | **86.0%** | 5.7% | 16.1% | 5.0% | 14.0% | 6.0% | 1.01 | 3 | 1 |
 | baseer_ft3 | 500/500 | **94.7%** | **85.0%** | 6.0% | 17.6% | 5.3% | 15.0% | 5.6% | 1.00 | 1 | 1 |
@@ -52,7 +65,7 @@ Từng dòng: /kaggle/working/htr_eval_giu_lai_n500/chi_tiet.csv  ·  /kaggle/wo
 ✔ XONG CHẤM ft3
 ```
 
-## dl.log (sửa 93 phút trước)
+## dl.log (sửa 102 phút trước)
 ```
   train: 22092 dòng
   validation: 1069 dòng

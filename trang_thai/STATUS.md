@@ -1,10 +1,10 @@
-# Trạng thái server — 2026-10-14 07:00 UTC
+# Trạng thái server — 2026-10-14 07:21 UTC
 
-**Còn sống** · ct XONG
+**Còn sống** · định kỳ
 
-- máy: `0b994473a1f2` · up 1 hour, 10 minutes
+- máy: `0b994473a1f2` · up 1 hour, 31 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
-- code: `262fe62 cham_trang: 2 pha (dots mọi trang rồi trả VRAM → 2 nền Baseer song song: GPU0 gốc+ft1@0,5, GPU1 ft3+ft4), ghi + đẩy từng trang, chạy lại = đi tiếp; BaseerNakba._lock (mặc định khoá chung như cũ, mỗi nền một GPU đặt khoá riêng)` (nhánh `thu-2-model-htr`)
+- code: `a527f19 htr_test/thu_dots.py: thử dots trên trang thật — phóng ảnh ×1/×2/×1,5 × 3 cách đọc (bố cục đầy đủ / bố cục rồi đọc từng khối / chỉ chữ), lưu output thô + cứu khối từ JSON bị cắt; 2 GPU chung hàng đợi, lỗi một lượt không dừng, chạy lại = đi tiếp (lượt lỗi chạy lại)` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
 - prompt đã nhận gần nhất: `(chưa có)`
 
@@ -26,7 +26,7 @@ hop_thu: 1 windows (created Wed Oct 14 06:06:05 2026)
 |---|---|---:|---:|---|---|
 | ct | XONG | 1 | 0 | 2026-10-14 06:10 UTC | `✔ XONG CHẤM TRANG` |
 
-## ct.log (sửa 3 phút trước)
+## ct.log (sửa 24 phút trước)
 ```
 ## Chi tiết chạy
 | trang | khối dots | dòng | tách dòng | dots (s) | đọc dòng 4 model (s) |

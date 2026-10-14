@@ -1,6 +1,6 @@
 # Chấm cả trang — tài liệu thật (4 trang mẫu)
 
-Cập nhật: 2026-10-14 06:51 UTC · 1 trang
+Cập nhật: 2026-10-14 06:55 UTC · 2 trang
 
 Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồi từ (không tính thứ tự). dots = dots tự đọc cả khối (bộ đọc ĐÁNH MÁY); các cột còn lại = model chữ tay đọc từng dòng do dots + tách dòng cắt ra. Trang đánh máy → xem cột dots (yêu cầu ≥ 90%); trang viết tay → so ft3 / ft4 với Baseer gốc.
 
@@ -9,15 +9,18 @@ Mỗi ô: **đúng ký tự** / đúng từ (theo thứ tự đọc) · thu hồ
 | trang | loại | dots | baseer_goc | ft1_s050 | ft3 | ft4 |
 |---|---|---:|---:|---:|---:|---:|
 | image_1 | printed | **77.6%** / 38.0% · 40% | **78.2%** / 53.3% · 57% | **77.3%** / 50.5% · 55% | **79.0%** / 57.6% · 61% | **76.0%** / 51.1% · 54% |
+| image_2 | handwritten | **43.9%** / 8.9% · 13% | **62.8%** / 30.1% · 40% | **69.4%** / 41.8% · 50% | **72.6%** / 46.8% · 53% | **72.9%** / 47.5% · 55% |
 
 ## So với nhãn Claude (`nhan_claude.json`)
 
 | trang | loại | dots | baseer_goc | ft1_s050 | ft3 | ft4 |
 |---|---|---:|---:|---:|---:|---:|
 | image_1 | printed | **77.6%** / 38.0% · 40% | **78.4%** / 53.3% · 57% | **77.6%** / 50.5% · 55% | **78.8%** / 57.1% · 61% | **76.3%** / 51.1% · 54% |
+| image_2 | handwritten | **43.2%** / 7.5% · 13% | **63.1%** / 28.2% · 40% | **70.5%** / 41.4% · 49% | **73.4%** / 47.5% · 53% | **73.5%** / 46.8% · 55% |
 
 ## Chi tiết chạy
 
 | trang | khối dots | dòng | tách dòng | dots (s) | đọc dòng 4 model (s) |
 |---|---|---:|---|---:|---:|
 | image_1 | 12 {'Page-header': 1, 'List-item': 3, 'Text': 5, 'Picture': 3} | 24 | chieu_ngang, kraken_muharaf | 85 | 142 |
+| image_2 | 40 {'Section-header': 2, 'Text': 33, 'Picture': 5} | 36 | chieu_ngang, kraken_muharaf | 165 | 247 |

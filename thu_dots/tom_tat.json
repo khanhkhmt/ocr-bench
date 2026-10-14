@@ -592,5 +592,31 @@
   "tok": 421,
   "giay": 79,
   "loi": null
+ },
+ {
+  "trang_id": "image_1",
+  "cach": "khoi",
+  "phong": 1.5,
+  "diem": {
+   "nhan.json": {
+    "dung": 0.8922934076137419,
+    "dung_tu": 0.6956521739130435,
+    "thu_hoi_tu": 0.7010869565217391,
+    "chinh_xac_tu": 0.7049180327868853,
+    "tu_nhan": 184
+   },
+   "nhan_claude.json": {
+    "dung": 0.8933209647495362,
+    "dung_tu": 0.6956521739130435,
+    "thu_hoi_tu": 0.7010869565217391,
+    "chinh_xac_tu": 0.7049180327868853,
+    "tu_nhan": 184
+   }
+  },
+  "cuu": null,
+  "co": [],
+  "tok": 765,
+  "giay": 99,
+  "loi": null
  }
 ]

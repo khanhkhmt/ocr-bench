@@ -9,8 +9,10 @@ ft3 / ft4 đọc từng dòng → ghép lại thành chữ cả trang → so v�
 ngày a/b/c không tính thứ tự (nhãn ghi lẫn ngày-trước / năm-trước); chuẩn hoá hamza / ى… như eval_lines.
 Chỉ số mỗi trang: đúng ký tự / đúng từ (theo THỨ TỰ đọc — thứ tự khối của dots khác nhãn thì bị trừ) và "thu hồi từ"
 (KHÔNG tính thứ tự: bao nhiêu % từ của nhãn có trong chữ model đọc) — xem cả hai trước khi kết luận.
-dots trên GPU --gpu-dots, Baseer + 3 adapter (một nền) trên GPU --gpu-htr. Ra: <out>/tom_tat.md, ket_qua.jsonl
-(chữ cả trang + từng dòng của mọi model), xem_ket_qua.html; --push → nhánh results-htr/<tên out>/.
+Chạy 2 pha: (1) dots chia khối + tách dòng MỌI trang (GPU --gpu-dots) rồi trả VRAM; (2) hai nền Baseer song song —
+GPU 0: Baseer gốc + ft1@0,5, GPU 1: ft3 + ft4 — đọc từng trang; xong trang nào ghi + (--push) đẩy trang đó ngay.
+Chạy lại = đi tiếp (bỏ trang đã có trong ket_qua.jsonl; --push tự kéo bản trên GitHub về khi server mới mất ổ).
+Ra: <out>/tom_tat.md, ket_qua.jsonl (chữ cả trang + từng dòng của mọi model), xem_ket_qua.html → results-htr/<tên out>/.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ import html
 import json
 import re
 import sys
+import threading
 import time
 from collections import Counter
 from pathlib import Path
@@ -33,9 +36,10 @@ from htr_test.lines import assign_to_blocks, crop_poly, kraken_page, split_lines
 from ocrbench.metrics import edit_stats  # noqa: E402
 
 TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}  # = app.py
-# tên cột → (adapter trong BaseerNakba, mô tả); thứ tự lora khi nạp: ft1, ft3, ft4 → tên adapter ft1, a1, a2
-LORA = ["ft1", "hf:khanh99/htr-ckpt/ft3/best", "hf:khanh99/htr-ckpt/ft4/best"]
-DOC = {"baseer_goc": "goc", "ft1_s050": "ft1", "ft3": "a1", "ft4": "a2"}
+# hai nền Baseer song song: (adapter nạp, độ mạnh, {tên cột: tên adapter khi đọc}); tên adapter hf:… = a<thứ tự>
+NHOM = [(["ft1"], {"ft1": 0.5}, {"baseer_goc": "goc", "ft1_s050": "ft1"}),
+        (["hf:khanh99/htr-ckpt/ft3/best", "hf:khanh99/htr-ckpt/ft4/best"], 1.0, {"ft3": "a0", "ft4": "a1"})]
+DOC = {ten: ad for _, _, m in NHOM for ten, ad in m.items()}  # baseer_goc, ft1_s050, ft3, ft4
 NHAN = {"nhan.json": "nhãn anh", "nhan_claude.json": "nhãn Claude"}
 DAU_CAU = re.compile(r"[.,،؛:;!?؟()\[\]{}«»\"'“”•\-–—ـ*/\\]+")
 
@@ -58,7 +62,8 @@ def diem(nhan: str, doc: str) -> dict:
             "tu_nhan": sum(cr.values())}
 
 
-def doc_trang(conv, baseer, path: Path, tach: str) -> dict:
+def bo_cuc(conv, path: Path, tach: str) -> tuple[dict, list]:
+    """Pha 1: dots chia khối (+ chữ dots) và tách dòng → (thông tin trang, [(khối, hộp, ảnh dòng)])."""
     page = Image.open(path).convert("RGB")
     t0 = time.time()
     conv.set_mode("Bố cục đầy đủ")
@@ -88,16 +93,38 @@ def doc_trang(conv, baseer, path: Path, tach: str) -> dict:
         for lx0, ly0, lx1, ly1 in ds:
             box = (x0 + lx0, y0 + ly0, x0 + lx1, y0 + ly1)
             jobs.append((bi, box, img.crop(box)))
-    t1 = time.time()
-    res = {ten: baseer.read([j[2] for j in jobs], adapter=ad) if jobs else [] for ten, ad in DOC.items()}
-    t_doc = time.time() - t1
     khoi_chu = [bi for bi, b in enumerate(blocks) if b.get("category") in TEXT_CATS]
-    trang = {"dots": "\n".join(blocks[bi].get("text") or "" for bi in khoi_chu)}
+    info = {"dots": "\n".join(blocks[bi].get("text") or "" for bi in khoi_chu), "khoi_chu": khoi_chu,
+            "so_khoi": len(blocks), "loai_khoi": dict(Counter(str(b.get("category")) for b in blocks)),
+            "so_dong": len(jobs), "tach_dong": sorted(dung_tach), "giay_dots": round(t_dots)}
+    return info, jobs
+
+
+def ghep(info: dict, jobs: list, res: dict, t_doc: float) -> dict:
+    """Pha 2 xong một trang: chữ cả trang của từng model = các dòng ghép theo thứ tự khối của dots."""
+    trang = {"dots": info["dots"]}
     for ten in DOC:
-        trang[ten] = "\n".join(res[ten][n] for bi in khoi_chu for n, j in enumerate(jobs) if j[0] == bi)
-    return {"trang": trang, "so_khoi": len(blocks), "loai_khoi": dict(Counter(str(b.get("category")) for b in blocks)),
-            "so_dong": len(jobs), "tach_dong": sorted(dung_tach), "giay_dots": round(t_dots), "giay_doc": round(t_doc),
+        trang[ten] = "\n".join(res[ten][n] for bi in info["khoi_chu"] for n, j in enumerate(jobs) if j[0] == bi)
+    return {"trang": trang, **{k: v for k, v in info.items() if k not in ("dots", "khoi_chu")}, "giay_doc": round(t_doc),
             "dong": [{"khoi": j[0], "bbox": j[1], **{t: res[t][n] for t in DOC}} for n, j in enumerate(jobs)]}
+
+
+def doc_song_song(nen: list, crops: list, ten_trang: str) -> dict:
+    """Mỗi nền Baseer (một GPU) đọc mọi dòng bằng các adapter của nó; hai GPU chạy song song (luồng)."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    def chay(i):
+        b, cot = nen[i]
+        out = {}
+        for ten, ad in cot.items():
+            t = time.time()
+            out[ten] = b.read(crops, adapter=ad) if crops else []
+            print(f"   {ten_trang} · {ten}: {len(crops)} dòng · {(time.time() - t) / max(1, len(crops)):.1f} s/dòng", flush=True)
+        return out
+
+    with ThreadPoolExecutor(len(nen)) as ex:
+        kq = list(ex.map(chay, range(len(nen))))
+    return {k: v for d in kq for k, v in d.items()}
 
 
 def bao_cao(out: Path, ket: list[dict]) -> str:
@@ -147,7 +174,8 @@ def main() -> int:
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--gpu-dots", type=int, default=0)
-    ap.add_argument("--gpu-htr", type=int, default=1)
+    ap.add_argument("--gpus", default="0,1", help="GPU cho 2 nền Baseer (GPU 0: gốc + ft1@0,5; GPU 1: ft3 + ft4); "
+                    "một số (vd. 0) = cả 4 trên một GPU, đọc lần lượt")
     ap.add_argument("--tach-dong", default="kraken_muharaf", choices=["kraken_muharaf", "chieu_ngang"],
                     help="như web: Kraken + model Muharaf (cả trang) nếu đã cài (htr_test/cai_kraken.sh), không có → chiếu ngang")
     ap.add_argument("--push", action="store_true")
@@ -157,34 +185,71 @@ def main() -> int:
     trang = sorted(p for p in data.glob("image_*") if (p / "anh.jpeg").exists())
     if not trang:
         sys.exit(f"✘ LỖI không thấy {data}/image_*/anh.jpeg")
-    from ocrbench.convert import Converter
-    from htr_test.models import BaseerNakba
-
-    print(f"== {len(trang)} trang · nạp dots (GPU {a.gpu_dots}) + Baseer & 3 adapter (GPU {a.gpu_htr})", flush=True)
-    # ghim dots vào ĐÚNG một GPU: mặc định device_map="auto" rải model sang cả GPU của Baseer → hết VRAM (T4 15 GB)
-    conv = Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(a.gpu_dots),
-                     params={"device_map": {"": f"cuda:{a.gpu_dots}"}})
-    baseer = BaseerNakba(device=f"cuda:{a.gpu_htr}", lora=LORA, lora_scale={"ft1": 0.5}).load()
-    if baseer.adapters != ["ft1", "a1", "a2"]:
-        sys.exit(f"✘ LỖI adapter nạp ra {baseer.adapters}, cần ['ft1', 'a1', 'a2']")
-    ket = []
-    for p in trang:
-        nhan = {f: json.loads((p / f).read_text(encoding="utf-8")) for f in NHAN if (p / f).exists()}
-        r = doc_trang(conv, baseer, p / "anh.jpeg", a.tach_dong)
-        r.update(trang_id=p.name, loai=next(iter(nhan.values())).get("type", "?") if nhan else "?",
-                 nhan={f: v["text"] for f, v in nhan.items()})
-        r["diem"] = {f: {m: diem(t, r["trang"][m]) for m in ["dots", *DOC]} for f, t in r["nhan"].items()}
-        ket.append(r)
-        d = r["diem"].get("nhan.json") or next(iter(r["diem"].values()))
-        print(f"   {p.name}: {r['so_dong']} dòng · " + " · ".join(f"{m} {100 * d[m]['dung']:.1f}%" for m in d), flush=True)
-    with open(out / "ket_qua.jsonl", "w", encoding="utf-8") as fo:
-        for r in ket:
-            fo.write(json.dumps(r, ensure_ascii=False) + "\n")
-    print(bao_cao(out, ket), flush=True)
+    sync = None
     if a.push:
         from htr_test.sync import Sync
 
-        Sync(out).push("chấm cả trang tài liệu thật — XONG")
+        sync = Sync(out)
+        sync.restore()  # server mới mất ổ → lấy các trang đã chấm từ GitHub
+    f_kq = out / "ket_qua.jsonl"
+    ket = [json.loads(x) for x in f_kq.read_text(encoding="utf-8").splitlines() if x.strip()] if f_kq.exists() else []
+    xong = {k["trang_id"] for k in ket}
+    con = [p for p in trang if p.name not in xong]
+    print(f"== {len(trang)} trang · đã có {len(xong)} · còn {len(con)}", flush=True)
+    if con:
+        import torch
+
+        from ocrbench.convert import Converter
+        from htr_test.models import BaseerNakba, free_cuda
+
+        # pha 1 — ghim dots vào ĐÚNG một GPU (device_map "auto" rải sang GPU khác → hết VRAM khi nạp Baseer)
+        conv = Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(a.gpu_dots),
+                         params={"device_map": {"": f"cuda:{a.gpu_dots}"}})
+        pha1 = {}
+        for p in con:
+            pha1[p.name] = bo_cuc(conv, p / "anh.jpeg", a.tach_dong)
+            print(f"   dots {p.name}: {pha1[p.name][0]['so_khoi']} khối · {pha1[p.name][0]['so_dong']} dòng · "
+                  f"tách {', '.join(pha1[p.name][0]['tach_dong'])} · {pha1[p.name][0]['giay_dots']} s", flush=True)
+        conv.close()
+        del conv
+        free_cuda()
+        # pha 2 — hai nền Baseer (mỗi GPU một nền) hoặc một nền mang cả 3 adapter
+        gpus = [int(x) for x in a.gpus.split(",") if x.strip()][: torch.cuda.device_count()]
+        if len(gpus) >= 2:
+            nen = []
+            for g, (lora, sc, cot) in zip(gpus, NHOM):
+                b = BaseerNakba(device=f"cuda:{g}", lora=lora, lora_scale=sc).load()
+                b._lock = threading.Lock()  # khoá riêng → hai GPU đọc song song thật
+                nen.append((b, cot))
+        else:
+            b = BaseerNakba(device=f"cuda:{gpus[0]}", lora=["ft1", *NHOM[1][0]], lora_scale={"ft1": 0.5}).load()
+            nen = [(b, {"baseer_goc": "goc", "ft1_s050": "ft1", "ft3": "a1", "ft4": "a2"})]
+        for b, cot in nen:
+            thieu = {ad for ad in cot.values() if ad != "goc"} - set(b.adapters)
+            if thieu:
+                sys.exit(f"✘ LỖI adapter nạp ra {b.adapters}, thiếu {sorted(thieu)}")
+        print(f"== đọc dòng: " + " | ".join(f"{b.device}: {', '.join(c)}" for b, c in nen), flush=True)
+        for p in con:
+            info, jobs = pha1[p.name]
+            t = time.time()
+            res = doc_song_song(nen, [j[2] for j in jobs], p.name)
+            r = ghep(info, jobs, res, time.time() - t)
+            nhan = {f: json.loads((p / f).read_text(encoding="utf-8")) for f in NHAN if (p / f).exists()}
+            r.update(trang_id=p.name, loai=next(iter(nhan.values())).get("type", "?") if nhan else "?",
+                     nhan={f: v["text"] for f, v in nhan.items()})
+            r["diem"] = {f: {m: diem(t_, r["trang"][m]) for m in ["dots", *DOC]} for f, t_ in r["nhan"].items()}
+            ket.append(r)
+            with open(f_kq, "a", encoding="utf-8") as fo:
+                fo.write(json.dumps(r, ensure_ascii=False) + "\n")
+            d = r["diem"].get("nhan.json") or next(iter(r["diem"].values()))
+            print(f"✔ {p.name}: {r['so_dong']} dòng · " + " · ".join(f"{m} {100 * d[m]['dung']:.1f}%" for m in d), flush=True)
+            bao_cao(out, sorted(ket, key=lambda k: k["trang_id"]))
+            if sync:
+                sync.push(f"chấm cả trang: xong {p.name} ({len(ket)}/{len(trang)})")
+    ket.sort(key=lambda k: k["trang_id"])
+    print(bao_cao(out, ket), flush=True)
+    if sync:
+        sync.push("chấm cả trang tài liệu thật — XONG")
     print("✔ XONG CHẤM TRANG", flush=True)
     return 0
 

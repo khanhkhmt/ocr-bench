@@ -237,6 +237,7 @@ class BaseerNakba:
         self.lora_scale = lora_scale
         self.adapters: list[str] = []
         self.model = self.processor = None
+        self._lock = _LOCK  # mặc định khoá chung (web: nhiều model cùng một GPU); mỗi nền một GPU → đặt khoá riêng
 
     def load(self):
         from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
@@ -330,7 +331,7 @@ class BaseerNakba:
             chunk = [im.convert("RGB") for im in lines[i:i + batch]]
             inputs = self.processor(text=[prompt] * len(chunk), images=chunk, return_tensors="pt", padding=True)
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
-            with _LOCK, torch.no_grad(), self._adapter(adapter):
+            with self._lock, torch.no_grad(), self._adapter(adapter):
                 ids = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, do_sample=False,
                                           repetition_penalty=1.1, eos_token_id=[151645, 151643],
                                           pad_token_id=151643)

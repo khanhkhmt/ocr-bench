@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-14 08:09 UTC
+# Trạng thái server — 2026-10-14 08:18 UTC
 
-**Còn sống** · định kỳ
+**Còn sống** · td XONG
 
-- máy: `0b994473a1f2` · up 2 hours, 19 minutes
+- máy: `0b994473a1f2` · up 2 hours, 28 minutes
 - ngrok (SSH): tcp://8.tcp.ngrok.io:26650
 - code: `f13093d thu_dots: nạp dots lần lượt trên từng GPU (hai luồng cùng snapshot_download → tqdm AttributeError '_lock', GPU thứ hai không nạp được)` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
@@ -10,16 +10,14 @@
 
 ## GPU
 ```
-Tesla T4, 12797 MiB, 15360 MiB, 100 %
-Tesla T4, 11597 MiB, 15360 MiB, 99 %
-26575, 12794 MiB, /kaggle/working/venvs/dots/bin/python
-26575, 11594 MiB, /kaggle/working/venvs/dots/bin/python
+Tesla T4, 0 MiB, 15360 MiB, 0 %
+Tesla T4, 0 MiB, 15360 MiB, 0 %
+(không có tiến trình)
 ```
 
 ## Phiên tmux
 ```
 hop_thu: 1 windows (created Wed Oct 14 06:06:05 2026)
-td: 1 windows (created Wed Oct 14 07:33:29 2026)
 ```
 
 ## Việc (giám sát)
@@ -27,21 +25,21 @@ td: 1 windows (created Wed Oct 14 07:33:29 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | ct | XONG | 1 | 0 | 2026-10-14 06:10 UTC | `✔ XONG CHẤM TRANG` |
-| td | LỖI | 2 | 0 | 2026-10-14 07:33 UTC | `Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.` |
+| td | XONG | 2 | 0 | 2026-10-14 07:33 UTC | `✔ XONG THỬ DOTS` |
 
-## td.log (sửa 0 phút trước)
+## td.log (sửa 3 phút trước)
 ```
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-✔ image_1 chi_chu ×1.5 [cuda:0]: 89.6% · 421 token · 79 s
-✔ GITHUB: đã đẩy lên nhánh results-htr/thu_dots (commit 4bbfa2c) — thử dots: image_1 chi_chu ×1.5 (29/36)
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:151643 for open-end generation.
+| image_4 | chi_chu | 2 |  |  |  |  | 0 |  LỖI: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.54 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.44  |
+| image_4 | day_du | 1 | 1165×1500 | 11 | 611 | 50 | 1 |  |
+| image_4 | day_du | 1.5 | 1748×2250 | 11 | 625 | 95 | 0 |  |
+| image_4 | day_du | 2 |  |  |  |  | 0 |  LỖI: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.70 GiB. GPU 0 has a total capacity of 14.56 GiB of which 1.27  |
+| image_4 | khoi | 1 | 1165×1500 | 12 | 597 | 46 | 1 |  |
+| image_4 | khoi | 1.5 | 1748×2250 | 11 | 578 | 98 | 1 |  |
+| image_4 | khoi | 2 |  |  |  |  | 1 |  LỖI: OutOfMemoryError: CUDA out of memory. Tried to allocate 3.61 GiB. GPU 1 has a total capacity of 14.56 GiB of which 1.27  |
+✔ XONG THỬ DOTS
 ```
 
-## ct.log (sửa 72 phút trước)
+## ct.log (sửa 81 phút trước)
 ```
 ## Chi tiết chạy
 | trang | khối dots | dòng | tách dòng | dots (s) | đọc dòng 4 model (s) |

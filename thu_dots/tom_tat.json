@@ -462,5 +462,31 @@
   "tok": null,
   "giay": null,
   "loi": "OutOfMemoryError: CUDA out of memory. Tried to allocate 3.19 GiB. GPU 1 has a total capacity of 14.56 GiB of which 1.74 GiB is free. Including non-PyTorch memory, this process has 12.82 GiB memory in use. Of the allocated memory 11.87 GiB is allocated by PyTorch, and 835.44 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)"
+ },
+ {
+  "trang_id": "image_3",
+  "cach": "day_du",
+  "phong": 1.5,
+  "diem": {
+   "nhan.json": {
+    "dung": 0.5282275711159737,
+    "dung_tu": 0.0,
+    "thu_hoi_tu": 0.4125,
+    "chinh_xac_tu": 0.2578125,
+    "tu_nhan": 400
+   },
+   "nhan_claude.json": {
+    "dung": 0.555316401205338,
+    "dung_tu": 0.0,
+    "thu_hoi_tu": 0.41379310344827586,
+    "chinh_xac_tu": 0.2625,
+    "tu_nhan": 406
+   }
+  },
+  "cuu": null,
+  "co": [],
+  "tok": 2659,
+  "giay": 217,
+  "loi": null
  }
 ]

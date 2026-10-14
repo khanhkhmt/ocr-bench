@@ -158,5 +158,85 @@
     }
    }
   }
+ },
+ {
+  "trang_id": "image_3",
+  "loai": "printed + stamps + Hebrew notary block",
+  "diem": {
+   "nhan.json": {
+    "dots": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 400
+    },
+    "baseer_goc": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 400
+    },
+    "ft1_s050": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 400
+    },
+    "ft3": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 400
+    },
+    "ft4": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 400
+    }
+   },
+   "nhan_claude.json": {
+    "dots": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 406
+    },
+    "baseer_goc": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 406
+    },
+    "ft1_s050": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 406
+    },
+    "ft3": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 406
+    },
+    "ft4": {
+     "dung": 0.0,
+     "dung_tu": 0.0,
+     "thu_hoi_tu": 0.0,
+     "chinh_xac_tu": 0.0,
+     "tu_nhan": 406
+    }
+   }
+  }
  }
 ]

@@ -1,0 +1,46 @@
+[
+ {
+  "trang_id": "image_3",
+  "cach": "day_du",
+  "phong": 1.0,
+  "diem": {
+   "nhan.json": {
+    "dung": 0.0,
+    "dung_tu": 0.0,
+    "thu_hoi_tu": 0.0,
+    "chinh_xac_tu": 0.0,
+    "tu_nhan": 400
+   },
+   "nhan_claude.json": {
+    "dung": 0.0,
+    "dung_tu": 0.0,
+    "thu_hoi_tu": 0.0,
+    "chinh_xac_tu": 0.0,
+    "tu_nhan": 406
+   }
+  },
+  "cuu": {
+   "nhan.json": {
+    "dung": 0.004376367614879695,
+    "dung_tu": 0.0024999999999999467,
+    "thu_hoi_tu": 0.0025,
+    "chinh_xac_tu": 0.5,
+    "tu_nhan": 400
+   },
+   "nhan_claude.json": {
+    "dung": 0.0043047783039174,
+    "dung_tu": 0.0024630541871921707,
+    "thu_hoi_tu": 0.0024630541871921183,
+    "chinh_xac_tu": 0.5,
+    "tu_nhan": 406
+   }
+  },
+  "co": [
+   "chạm trần",
+   "JSON hỏng"
+  ],
+  "tok": 6000,
+  "giay": 340,
+  "loi": null
+ }
+]

@@ -1,6 +1,6 @@
 # Dòng chữ viết tay Muharaf — nhóm tài liệu GIỮ RIÊNG (người viết lạ với ft3+) — giu_lai (500 dòng)
 
-Cập nhật: 2026-10-14 03:22 UTC — xong baseer_ft3
+Cập nhật: 2026-10-14 03:22 UTC — XONG tất cả
 
 | Model | đã chấm | **đúng ký tự** | **đúng từ** | CER gốc | WER gốc | CER chuẩn hoá | WER chuẩn hoá | CER TB theo dòng (chuẩn hoá) | độ dài TB | dòng dài ≥1,5× | dòng ngắn ≤0,5× |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|

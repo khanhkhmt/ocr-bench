@@ -25,6 +25,15 @@ tmux new -d -s htr "cd /kaggle/working/ocr-bench && bash htr_test/start.sh 2>&1 
 ```
 VRAM (T4 15 GB): dots ~7–8 GB + Ketaba 4-bit ~3 GB + ArTrOCR ~1,3 GB. Nút "Giải phóng model đọc dòng" trả VRAM.
 
+### Web ft3 + ft4 (`app_ft.py`)
+```bash
+tmux new -d -s web -e HF_TOKEN="$HF_TOKEN" "cd /kaggle/working/ocr-bench && APP=app_ft bash htr_test/start.sh 2>&1 | tee /kaggle/working/web.log"
+# VS Code: Ports → Forward 7862 → http://localhost:7862
+```
+ft3 đọc chính, ft4 kiểm chéo: từ hai bên đọc khác tô vàng (web + DOCX có chú thích). dots ở GPU 0, ft3/ft4 ở GPU 1.
+Chia trang dùng `trang.py` (chung với `cham_trang.py`): dots đọc ảnh phóng tới 2400 px (đánh máy image_1 77,6% → 90,3%,
+`thu_dots.py`), dots không ra khối chữ → cả trang một khối, chữ Ba Tư (ی ک ۸) → chữ Ả Rập, "و" rời → dính từ sau.
+
 ## Tách dòng (`htr_test/lines.py`)
 - Chiếu ngang (mặc định, nhanh): bỏ đường kẻ của giấy kẻ dòng, tách dòng dính, gộp dấu chấm lẻ.
 - Kraken blla (chính xác hơn với chữ tay cổ) nếu có `/kaggle/working/venvs/kraken/bin/kraken`

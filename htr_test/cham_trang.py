@@ -1,5 +1,6 @@
 """Chấm cả TRANG tài liệu thật (ảnh + nhãn tay) — đúng đường đi của web (htr_test/app.py):
-dots.mocr chia khối (và tự đọc chữ — bộ đọc khối ĐÁNH MÁY) → tách dòng trong từng khối chữ → Baseer gốc / ft1@0,5 /
+dots.mocr chia khối (và tự đọc chữ — bộ đọc khối ĐÁNH MÁY; ảnh phóng tới 2400 px, dự phòng khi dots hỏng —
+htr_test/trang.py) → tách dòng trong từng khối chữ → Baseer gốc / ft1@0,5 /
 ft3 / ft4 đọc từng dòng → ghép lại thành chữ cả trang → so với nhãn.
 
     <python venv dots> -m htr_test.cham_trang --data <thư mục> --out /kaggle/working/cham_trang_that [--push]
@@ -32,10 +33,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from htr_test.eval_lines import _norm  # noqa: E402
-from htr_test.lines import assign_to_blocks, crop_poly, kraken_page, split_lines  # noqa: E402
+from htr_test.trang import TEXT_CATS, nap_dots, phan_trang, sua_chu  # noqa: E402
 from ocrbench.metrics import edit_stats  # noqa: E402
 
-TEXT_CATS = {"Text", "Title", "Section-header", "List-item", "Caption", "Footnote", "Page-header", "Page-footer"}  # = app.py
 # hai nền Baseer song song: (adapter nạp, độ mạnh, {tên cột: tên adapter khi đọc}); tên adapter hf:… = a<thứ tự>
 NHOM = [(["ft1"], {"ft1": 0.5}, {"baseer_goc": "goc", "ft1_s050": "ft1"}),
         (["hf:khanh99/htr-ckpt/ft3/best", "hf:khanh99/htr-ckpt/ft4/best"], 1.0, {"ft3": "a0", "ft4": "a1"})]
@@ -62,51 +62,25 @@ def diem(nhan: str, doc: str) -> dict:
             "tu_nhan": sum(cr.values())}
 
 
-def bo_cuc(conv, path: Path, tach: str) -> tuple[dict, list]:
-    """Pha 1: dots chia khối (+ chữ dots) và tách dòng → (thông tin trang, [(khối, hộp, ảnh dòng)])."""
-    page = Image.open(path).convert("RGB")
-    t0 = time.time()
-    conv.set_mode("Bố cục đầy đủ")
-    img, item = conv._prepare(page, path, 1, "text")
-    blocks = (conv.adapter.predict(img, item).extra or {}).get("blocks") or []
-    t_dots = time.time() - t0
-    jobs, dung_tach = [], set()
-    by_block = {}
-    if tach == "kraken_muharaf":
-        lines = kraken_page(img)
-        boxes = {bi: tuple(int(round(v)) for v in b["bbox"]) for bi, b in enumerate(blocks)
-                 if b.get("category") in TEXT_CATS and len(b.get("bbox") or []) == 4}
-        by_block = assign_to_blocks(lines, boxes) if lines else {}
-    for bi, b in enumerate(blocks):
-        bb = b.get("bbox")
-        if b.get("category") not in TEXT_CATS or not bb or len(bb) != 4:
-            continue
-        x0, y0, x1, y1 = [int(round(v)) for v in bb]
-        if x1 - x0 < 8 or y1 - y0 < 8:
-            continue
-        if by_block.get(bi):
-            dung_tach.add("kraken_muharaf")
-            jobs += [(bi, L["box"], crop_poly(img, L)) for L in by_block[bi]]
-            continue
-        ds, used = split_lines(img.crop((x0, y0, x1, y1)), "chieu_ngang")
-        dung_tach.add(used)
-        for lx0, ly0, lx1, ly1 in ds:
-            box = (x0 + lx0, y0 + ly0, x0 + lx1, y0 + ly1)
-            jobs.append((bi, box, img.crop(box)))
+def bo_cuc(conv, path: Path, tach: str, canh: int | None) -> tuple[dict, list]:
+    """Pha 1: dots chia khối (+ chữ dots) và tách dòng — htr_test/trang.py, như web ft3/ft4 → (thông tin trang, jobs)."""
+    r = phan_trang(conv, Image.open(path).convert("RGB"), path, tach, canh)
+    blocks = r["blocks"]
     khoi_chu = [bi for bi, b in enumerate(blocks) if b.get("category") in TEXT_CATS]
     info = {"dots": "\n".join(blocks[bi].get("text") or "" for bi in khoi_chu), "khoi_chu": khoi_chu,
             "so_khoi": len(blocks), "loai_khoi": dict(Counter(str(b.get("category")) for b in blocks)),
-            "so_dong": len(jobs), "tach_dong": sorted(dung_tach), "giay_dots": round(t_dots)}
-    return info, jobs
+            "so_dong": len(r["jobs"]), "tach_dong": r["tach"], "giay_dots": r["giay_dots"], "phong_dots": r["phong"],
+            "ghi_chu": r["ghi_chu"], "dots_extra": r["dots_extra"]}
+    return info, r["jobs"]
 
 
 def ghep(info: dict, jobs: list, res: dict, t_doc: float) -> dict:
     """Pha 2 xong một trang: chữ cả trang của từng model = các dòng ghép theo thứ tự khối của dots."""
     trang = {"dots": info["dots"]}
     for ten in DOC:
-        trang[ten] = "\n".join(res[ten][n] for bi in info["khoi_chu"] for n, j in enumerate(jobs) if j[0] == bi)
+        trang[ten] = "\n".join(sua_chu(res[ten][n]) for bi in info["khoi_chu"] for n, j in enumerate(jobs) if j[0] == bi)
     return {"trang": trang, **{k: v for k, v in info.items() if k not in ("dots", "khoi_chu")}, "giay_doc": round(t_doc),
-            "dong": [{"khoi": j[0], "bbox": j[1], **{t: res[t][n] for t in DOC}} for n, j in enumerate(jobs)]}
+            "dong": [{"khoi": j[0], "bbox": j[1], **{t: sua_chu(res[t][n]) for t in DOC}} for n, j in enumerate(jobs)]}
 
 
 def doc_song_song(nen: list, crops: list, ten_trang: str) -> dict:
@@ -146,11 +120,11 @@ def bao_cao(out: Path, ket: list[dict]) -> str:
                 o.append(f"**{100 * d['dung']:.1f}%** / {100 * d['dung_tu']:.1f}% · {100 * d['thu_hoi_tu']:.0f}%")
             rows.append(f"| {k['trang_id']} | {k['loai']} | " + " | ".join(o) + " |")
         rows.append("")
-    rows += ["## Chi tiết chạy", "", "| trang | khối dots | dòng | tách dòng | dots (s) | đọc dòng 4 model (s) |",
-             "|---|---|---:|---|---:|---:|"]
+    rows += ["## Chi tiết chạy", "", "| trang | khối dots | dòng | tách dòng | dots ×phóng | dots (s) | đọc dòng 4 model (s) | ghi chú |",
+             "|---|---|---:|---|---:|---:|---:|---|"]
     for k in ket:
         rows.append(f"| {k['trang_id']} | {k['so_khoi']} {k['loai_khoi']} | {k['so_dong']} | {', '.join(k['tach_dong'])} | "
-                    f"{k['giay_dots']} | {k['giay_doc']} |")
+                    f"{k.get('phong_dots', 1):g} | {k['giay_dots']} | {k['giay_doc']} | {'; '.join(k.get('ghi_chu') or [])} |")
     md = "\n".join(rows) + "\n"
     (out / "tom_tat.md").write_text(md, encoding="utf-8")
     (out / "tom_tat.json").write_text(json.dumps([{x: k[x] for x in ("trang_id", "loai", "diem")} for k in ket],
@@ -178,6 +152,8 @@ def main() -> int:
                     "một số (vd. 0) = cả 4 trên một GPU, đọc lần lượt")
     ap.add_argument("--tach-dong", default="kraken_muharaf", choices=["kraken_muharaf", "chieu_ngang"],
                     help="như web: Kraken + model Muharaf (cả trang) nếu đã cài (htr_test/cai_kraken.sh), không có → chiếu ngang")
+    ap.add_argument("--canh-dots", type=int, default=2400, help="dots đọc trên ảnh phóng tới cạnh dài N px "
+                    "(htr_test/trang.py); 0 = không phóng (như lần chấm đầu, results-htr/cham_trang_that)")
     ap.add_argument("--push", action="store_true")
     a = ap.parse_args()
     data, out = Path(a.data), Path(a.out)
@@ -199,17 +175,16 @@ def main() -> int:
     if con:
         import torch
 
-        from ocrbench.convert import Converter
         from htr_test.models import BaseerNakba, free_cuda
 
         # pha 1 — ghim dots vào ĐÚNG một GPU (device_map "auto" rải sang GPU khác → hết VRAM khi nạp Baseer)
-        conv = Converter(ROOT / "inference" / "config.yaml", "dots_mocr", gpus=str(a.gpu_dots),
-                         params={"device_map": {"": f"cuda:{a.gpu_dots}"}})
+        conv = nap_dots(a.gpu_dots)
         pha1 = {}
         for p in con:
-            pha1[p.name] = bo_cuc(conv, p / "anh.jpeg", a.tach_dong)
+            pha1[p.name] = bo_cuc(conv, p / "anh.jpeg", a.tach_dong, a.canh_dots or None)
             print(f"   dots {p.name}: {pha1[p.name][0]['so_khoi']} khối · {pha1[p.name][0]['so_dong']} dòng · "
-                  f"tách {', '.join(pha1[p.name][0]['tach_dong'])} · {pha1[p.name][0]['giay_dots']} s", flush=True)
+                  f"tách {', '.join(pha1[p.name][0]['tach_dong'])} · dots ×{pha1[p.name][0]['phong_dots']:g} · "
+                  f"{pha1[p.name][0]['giay_dots']} s" + "".join(f" · {g}" for g in pha1[p.name][0]["ghi_chu"]), flush=True)
         conv.close()
         del conv
         free_cuda()

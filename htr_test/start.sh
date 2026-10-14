@@ -2,10 +2,13 @@
 # Web thử 2 model chữ viết tay (Ketaba-OCR-LoRA, ArTrOCR-HTR) + bố cục dots.mocr — nhánh thu-2-model-htr.
 #   bash htr_test/start.sh                 # mở web 127.0.0.1:7861 (GPU 0)
 #   PORT=7862 GPU=0 NO_QUANT4=1 bash htr_test/start.sh
+#   APP=app_ft bash htr_test/start.sh      # web ft3 + ft4 (127.0.0.1:7862; dots GPU 0, ft3/ft4 GPU 1) — cần HF_TOKEN
 # Dùng chung venv của dots (transformers 4.56.1) — Qwen2.5-VL (Ketaba) và TrOCR đều chạy được trên bản này.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
-PORT="${PORT:-7861}"; GPU="${GPU:-0}"
+APP="${APP:-app}"
+case "$APP" in app) PORT="${PORT:-7861}" ;; app_ft) PORT="${PORT:-7862}" ;; *) echo "APP chỉ nhận app | app_ft"; exit 1 ;; esac
+GPU="${GPU:-0}"
 VENV="${DOTS_VENV:-/kaggle/working/venvs/dots}"
 if [ ! -x "$VENV/bin/python" ]; then
   echo "== Tạo venv $VENV (transformers==4.56.1, dùng chung torch hệ thống)"
@@ -39,7 +42,11 @@ for n in ('torch', 'torchvision', 'torchaudio', 'triton'):
 echo "   ghim: $(tr '\n' ' ' < "$CONS")"
 "$PY" -m pip install -q -c "$CONS" "transformers==4.56.1" peft bitsandbytes
 "$PY" -c "import torch, torchvision, transformers, peft, bitsandbytes; torchvision.ops.nms(torch.zeros(1, 4), torch.zeros(1), 0.5); print('   torch', torch.__version__, '(' + torch.__file__.split('/site-packages')[0] + ') | torchvision', torchvision.__version__, '| transformers', transformers.__version__, '| peft', peft.__version__, '| bnb', bitsandbytes.__version__, '| GPU', torch.cuda.device_count())"
-ARGS=(--port "$PORT" --gpu "$GPU")
-[ -n "${NO_QUANT4:-}" ] && ARGS+=(--no-quant4)
+if [ "$APP" = app ]; then
+  ARGS=(--port "$PORT" --gpu "$GPU")
+  [ -n "${NO_QUANT4:-}" ] && ARGS+=(--no-quant4)
+else
+  ARGS=(--port "$PORT" --gpu-dots "$GPU")
+fi
 echo "== Mở web: http://127.0.0.1:${PORT}  (VS Code: Ports → Forward ${PORT})"
-exec "$PY" -m htr_test.app "${ARGS[@]}"
+exec "$PY" -m "htr_test.$APP" "${ARGS[@]}"

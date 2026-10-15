@@ -450,7 +450,10 @@ def main(argv=None) -> int:
                                                 for p, r in zip(a.images, res)], ensure_ascii=False, indent=1),
                                     encoding="utf-8")
         return 0
+    stems = [Path(p).stem for p in a.images]
+    dup = len(set(stems)) < len(stems)  # e.g. many folders each with page.jpg → <folder>_<name>
     for p in a.images:
+        name = f"{Path(p).parent.name}_{Path(p).stem}" if dup else Path(p).stem
         page = Image.open(p).convert("RGB")
         t0 = time.time()
         lines, method = segment(page, a.kraken_bin, a.seg_model, not a.no_kraken)
@@ -458,9 +461,9 @@ def main(argv=None) -> int:
         print(f"{p}: {len(lines)} lines ({method}) — reading…", file=sys.stderr)
         res = (reader.read_check(crops, names[0], names[1]) if check else
                [{"text": t, "words": []} for t in reader.read(crops, names[0])])
-        d = write_page(Path(a.out), Path(p).stem, page, lines, crops, res, method, check)
+        d = write_page(Path(a.out), name, page, lines, crops, res, method, check)
         print(f"{p}: {d['lines']} lines" + (f", {d['suspicious_words']}/{d['words']} words highlighted" if check else "")
-              + f" · {time.time() - t0:.0f}s → {a.out}/{Path(p).stem}.{{txt,json,html}}, _lines.jpg")
+              + f" · {time.time() - t0:.0f}s → {a.out}/{name}.{{txt,json,html}}, _lines.jpg")
     return 0
 
 

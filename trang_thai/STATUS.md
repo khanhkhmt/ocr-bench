@@ -1,42 +1,22 @@
-# Trạng thái server — 2026-10-14 11:18 UTC
+# Trạng thái server — 2026-10-15 02:27 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `9c2cedb12555` · up 1 hour, 16 minutes
-- ngrok (SSH): tcp://8.tcp.ngrok.io:26650
-- code: `c54f487 cham_trang: --trang (chỉ chấm các trang chọn, vd. image_3)` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  2.2G   18G  11% /kaggle/working
+- máy: `6f4169b1f2b2` · up 16 minutes
+- ngrok (SSH): tcp://2.tcp.ngrok.io:19107
+- code: `2d47a23 app_ft: loại chữ (viết tay → ft3/ft4; đánh máy → dots/ft3 kiểm chéo; hỗn hợp → tự chọn theo khối, thử nghiệm) + tải về đủ (ZIP, DOCX, TXT chính/ft3/ft4, HTML bảng soát, JSON, ảnh khung; tab một dòng → JSON); hf_repo/inference.py: tên kết quả không trùng khi nhiều trang cùng tên file` (nhánh `thu-2-model-htr`)
+- ổ /kaggle/working: /dev/loop2       20G   40M   20G   1% /kaggle/working
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
 ```
-Tesla T4, 12857 MiB, 15360 MiB, 0 %
-Tesla T4, 8019 MiB, 15360 MiB, 0 %
-15270, 12854 MiB, /kaggle/working/venvs/dots/bin/python
-15270, 8016 MiB, /kaggle/working/venvs/dots/bin/python
+Tesla T4, 0 MiB, 15360 MiB, 0 %
+Tesla T4, 0 MiB, 15360 MiB, 0 %
+(không có tiến trình)
 ```
 
 ## Phiên tmux
 ```
-hop_thu: 1 windows (created Wed Oct 14 10:26:55 2026)
-web: 1 windows (created Wed Oct 14 10:56:20 2026)
-```
-
-## Việc (giám sát)
-
-| việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
-|---|---|---:|---:|---|---|
-| ct3 | XONG | 1 | 0 | 2026-10-14 10:39 UTC | `✔ XONG CHẤM TRANG` |
-
-## ct3.log (sửa 23 phút trước)
-```
-| trang | loại | dots | baseer_goc | ft1_s050 | ft3 | ft4 |
-|---|---|---:|---:|---:|---:|---:|
-| image_3 | printed + stamps + Hebrew notary block | **63.8%** / 22.4% · 63% | **68.0%** / 35.7% · 57% | **69.2%** / 38.2% · 60% | **65.9%** / 33.3% · 59% | **63.8%** / 33.5% · 62% |
-## Chi tiết chạy
-| trang | khối dots | dòng | tách dòng | dots ×phóng | dots (s) | đọc dòng 4 model (s) | ghi chú |
-|---|---|---:|---|---:|---:|---:|---|
-| image_3 | 27 {'Section-header': 1, 'Text': 21, 'Picture': 5} | 55 | chieu_ngang, kraken_muharaf | 1.5 | 215 | 482 |  |
-✔ XONG CHẤM TRANG
+hop_thu: 1 windows (created Thu Oct 15 02:27:09 2026)
 ```
 

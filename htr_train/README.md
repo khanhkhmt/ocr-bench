@@ -21,8 +21,8 @@ Chung: rsLoRA r=32, α=64, dropout 0,05; ngôn ngữ q/k/v/o/gate/up/down (LR 1e
 | ft1 | có | 600 | 2 / 1 / 1 / 1 | 92,0% | 89,1% | `khanh99/htr-baseer-nakba-ft/ft1` (công khai) |
 | **ft1 độ mạnh 0,5** | có | 600 | 2 / 1 / 1 / 1 | **93,4%** | **87,0%** | như trên + `--lora-scale 0.5` — **bộ đọc chính** |
 | ft2 | **không** | 600 | 2 / 1 / 1 / 1 | 92,3% | 87,3% | `khanh99/htr-baseer-nakba-ft/ft2` (công khai) — kiểm chéo tô vàng |
-| ft3 | có | 2000 | 2 / **2** / 1 / 1 | đang chấm | đang chấm | `khanh99/htr-ckpt/ft3/best` (riêng tư) |
-| ft4 | có | 2000 | 2 / 1 / 1 / 1 | đang chấm | đang chấm | `khanh99/htr-ckpt/ft4/best` (riêng tư) |
+| **ft3** | có | 2000 | 2 / **2** / 1 / 1 | 93,4% | 91,4% | `khanh99/htr-baseer-nakba-ft/ft3` (công khai) — **bộ đọc chính** (web `app_ft.py`) |
+| ft4 | có | 2000 | 2 / 1 / 1 / 1 | 92,8% | 92,0% | `khanh99/htr-baseer-nakba-ft/ft4` (công khai) — kiểm chéo tô vàng |
 
 ft3 và ft4 chỉ khác trọng số Omar: ft4 = ft1 chạy lâu hơn; ft3 cho thấy Omar gấp đôi để thử bớt "quên" Omar.
 Độ mạnh adapter (kiểu WiSE-FT): 1 = như huấn luyện, 0,5 = nửa đường về Baseer gốc — đổi được lúc đọc, không cần huấn luyện lại.

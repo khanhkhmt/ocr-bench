@@ -1,0 +1,7 @@
+torch
+transformers>=4.49
+peft
+pillow
+numpy
+huggingface_hub
+# page mode, optional (own venv recommended): kraken>=5

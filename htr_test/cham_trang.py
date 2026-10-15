@@ -38,7 +38,7 @@ from ocrbench.metrics import edit_stats  # noqa: E402
 
 # hai nền Baseer song song: (adapter nạp, độ mạnh, {tên cột: tên adapter khi đọc}); tên adapter hf:… = a<thứ tự>
 NHOM = [(["ft1"], {"ft1": 0.5}, {"baseer_goc": "goc", "ft1_s050": "ft1"}),
-        (["hf:khanh99/htr-ckpt/ft3/best", "hf:khanh99/htr-ckpt/ft4/best"], 1.0, {"ft3": "a0", "ft4": "a1"})]
+        (["hf:khanh99/htr-baseer-nakba-ft/ft3", "hf:khanh99/htr-baseer-nakba-ft/ft4"], 1.0, {"ft3": "a0", "ft4": "a1"})]
 DOC = {ten: ad for _, _, m in NHOM for ten, ad in m.items()}  # baseer_goc, ft1_s050, ft3, ft4
 NHAN = {"nhan.json": "nhãn anh", "nhan_claude.json": "nhãn Claude"}
 HEBREW = re.compile(r"[\u0590-\u05FF]+")  # nhãn không chép khối công chứng Hebrew → chữ Hebrew dots đọc không tính

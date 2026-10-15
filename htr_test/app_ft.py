@@ -9,7 +9,7 @@ ft4; khối Hebrew (khối công chứng) giữ chữ dots, không đưa cho ft3
 chú thích chỗ ft4 đọc khác), TXT, JSON.
 Tab "Một dòng": thả ảnh một dòng → ft3 / ft4.
 
-ft3, ft4 = Baseer-Nakba + LoRA (htr_train/README.md), adapter ở repo HF riêng tư khanh99/htr-ckpt → cần HF_TOKEN.
+ft3, ft4 = Baseer-Nakba + LoRA (htr_train/README.md), adapter ở repo HF công khai khanh99/htr-baseer-nakba-ft (ft3/, ft4/; bản gốc khanh99/htr-ckpt/ft*/best).
 500 dòng mỗi tập (đúng ký tự): ft3 Omar 93,4% · người viết lạ 94,7% · Muharaf 91,4%; ft4 92,8% · 95,0% · 92,0%.
 Tô vàng theo từ (ft3 + ft4): tô ~13–19% số từ, bắt 57–75% số từ sai; ~2/3 từ bị tô là sai thật.
 Trang thật viết tay (image_2): ft3 72,6% · ft4 72,9% · Baseer gốc 62,8% — vẫn là bản nháp cần người soát.
@@ -33,7 +33,7 @@ from .models import BaseerNakba
 from .trang import TEXT_CATS, nap_dots, phan_trang, sua_chu
 from .xuat_docx import xuat_docx
 
-FT = {"ft3": "hf:khanh99/htr-ckpt/ft3/best", "ft4": "hf:khanh99/htr-ckpt/ft4/best"}
+FT = {"ft3": "hf:khanh99/htr-baseer-nakba-ft/ft3", "ft4": "hf:khanh99/htr-baseer-nakba-ft/ft4"}
 AD = {"ft3": "a0", "ft4": "a1"}  # tên adapter trong BaseerNakba (theo thứ tự nạp)
 DOTS_FULL, DOTS_LAYOUT = "dots đọc cả chữ (để so với khối đánh máy)", "dots chỉ chia khối (nhanh hơn)"
 S = {"dots": None, "baseer": None, "gpu_dots": 0, "gpu_doc": 0}

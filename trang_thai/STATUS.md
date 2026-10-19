@@ -1,19 +1,19 @@
-# Trạng thái server — 2026-10-19 04:41 UTC
+# Trạng thái server — 2026-10-19 04:52 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `e6a5044ee560` · up 51 minutes
+- máy: `e6a5044ee560` · up 1 hour, 1 minute
 - ngrok (SSH): tcp://0.tcp.ngrok.io:28751
 - code: `72dcb7b hop_thu: RAM trong STATUS; prompt LLM: báo trạng thái mỗi 10 phút, server sập → làm lại từ BƯỚC 0` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  391M   20G   2% /kaggle/working
+- ổ /kaggle/working: /dev/loop2       20G  392M   20G   2% /kaggle/working
 - RAM: Mem:              31           3           0           0          26          26 (cột: tổng / đã dùng / trống / … / còn dùng được, GB)
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
 ```
-Tesla T4, 10545 MiB, 15360 MiB, 100 %
+Tesla T4, 14621 MiB, 15360 MiB, 98 %
 Tesla T4, 3 MiB, 15360 MiB, 0 %
-15354, 10542 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
+15354, 14618 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
 ```
 
 ## Phiên tmux
@@ -28,7 +28,7 @@ hop_thu: 1 windows (created Mon Oct 19 04:01:52 2026)
 |---|---|---:|---:|---|---|
 | adoc | đang chạy | 1 | 0 | 2026-10-19 04:02 UTC | `================ BƯỚC 6: đọc 4 trang mẫu, chế độ one_gpu_unload (04:30:22 UTC)` |
 
-## adoc_run_all.log (sửa 12 phút trước)
+## adoc_run_all.log (sửa 22 phút trước)
 ```
 | page | type | main | dots | ft3 | ft4 |
 |---|---|---:|---:|---:|---:|

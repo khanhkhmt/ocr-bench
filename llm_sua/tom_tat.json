@@ -640,5 +640,7 @@
    "seconds": 30.9
   }
  },
- "errors": {}
+ "errors": {
+  "gemma4-12b": "OSError: [Errno 30] Read-only file system: '/tmp/llm_sua_cache/models--google--gemma-4-12B-it/blobs/5a84cb313260ac447237b890387116dfa8682e49a6b44bc585ae8353abbff18d.9f709b67.incomplete'"
+ }
 }

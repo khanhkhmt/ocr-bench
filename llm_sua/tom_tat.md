@@ -1,6 +1,6 @@
 # LLM sửa lỗi OCR — 4 trang mẫu
 
-Cập nhật 2026-10-19 09:32 UTC. Điểm = % ký tự đúng / % từ đúng (mã chấm của arabic-doc-ocr `scripts/evaluate.py`, văn bản chính). Nhãn chỉ dùng để chấm, không đưa vào LLM.
+Cập nhật 2026-10-19 09:34 UTC. Điểm = % ký tự đúng / % từ đúng (mã chấm của arabic-doc-ocr `scripts/evaluate.py`, văn bản chính). Nhãn chỉ dùng để chấm, không đưa vào LLM.
 
 Loại trang: page_1 = đánh máy, page_2 = viết tay, page_3 = đánh máy, page_4 = đánh máy
 
@@ -41,5 +41,9 @@ Loại trang: page_1 = đánh máy, page_2 = viết tay, page_3 = đánh máy, p
 | qwen3.5-9b | chon | ĐẠT (từ +5.4 · ký tự tệ nhất +0.0 · sửa đúng 33 / làm hỏng 8) | ĐẠT (từ +5.0 · ký tự tệ nhất +2.8 · sửa đúng 11 / làm hỏng 1) |
 | qwen3.5-9b | sua | ĐẠT (từ +9.1 · ký tự tệ nhất +1.8 · sửa đúng 70 / làm hỏng 2) | không đạt (từ +0.4 · ký tự tệ nhất -0.1 · sửa đúng 2 / làm hỏng 1) |
 | qwen3.5-9b | chon_sua | ĐẠT (từ +10.8 · ký tự tệ nhất +1.1 · sửa đúng 77 / làm hỏng 10) | ĐẠT (từ +5.3 · ký tự tệ nhất +3.0 · sửa đúng 12 / làm hỏng 2) |
+
+## Model không chạy được
+
+- **gemma4-12b**: OSError: [Errno 30] Read-only file system: '/tmp/llm_sua_cache/models--google--gemma-4-12B-it/blobs/5a84cb313260ac447237b890387116dfa8682e49a6b44bc585ae8353abbff18d.9f709b67.incomplete'
 
 Chi tiết từng từ bị đổi: `chi_tiet.csv`.

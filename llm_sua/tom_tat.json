@@ -1,0 +1,199 @@
+{
+ "—|khong": {
+  "page_1": {
+   "chars": 0.9025069637883009,
+   "words": 0.7010869565217391,
+   "word_recall": 0.717391304347826,
+   "changes": {}
+  },
+  "page_2": {
+   "chars": 0.7222586999343401,
+   "words": 0.46453900709219853,
+   "word_recall": 0.5354609929078015,
+   "changes": {}
+  },
+  "page_3": {
+   "chars": 0.7899343544857769,
+   "words": 0.43999999999999995,
+   "word_recall": 0.6275,
+   "changes": {}
+  },
+  "page_4": {
+   "chars": 0.9094567404426559,
+   "words": 0.7093023255813953,
+   "word_recall": 0.7558139534883721,
+   "changes": {}
+  }
+ },
+ "—|tran_chon": {
+  "page_1": {
+   "chars": 0.9136490250696379,
+   "words": 0.75,
+   "word_recall": 0.7663043478260869,
+   "changes": {}
+  },
+  "page_2": {
+   "chars": 0.7445830597504924,
+   "words": 0.5177304964539007,
+   "word_recall": 0.5886524822695035,
+   "changes": {}
+  },
+  "page_3": {
+   "chars": 0.8052516411378556,
+   "words": 0.515,
+   "word_recall": 0.7,
+   "changes": {}
+  },
+  "page_4": {
+   "chars": 0.9275653923541247,
+   "words": 0.7906976744186046,
+   "word_recall": 0.8372093023255814,
+   "changes": {}
+  }
+ },
+ "qwen2.5-7b|chon": {
+  "page_1": {
+   "chars": 0.903435468895079,
+   "words": 0.7445652173913043,
+   "word_recall": 0.7608695652173914,
+   "changes": {
+    "sửa đúng": 6,
+    "không rõ": 8
+   },
+   "seconds": 6.9
+  },
+  "page_2": {
+   "chars": 0.7504924491135916,
+   "words": 0.5141843971631206,
+   "word_recall": 0.5815602836879432,
+   "changes": {
+    "không rõ": 13,
+    "sửa đúng": 11,
+    "làm hỏng": 1
+   },
+   "seconds": 8.1
+  },
+  "page_3": {
+   "chars": 0.8004376367614879,
+   "words": 0.48750000000000004,
+   "word_recall": 0.6675,
+   "changes": {
+    "sửa đúng": 23,
+    "không rõ": 10,
+    "làm hỏng": 7
+   },
+   "seconds": 15.2
+  },
+  "page_4": {
+   "chars": 0.9255533199195171,
+   "words": 0.7790697674418605,
+   "word_recall": 0.8255813953488372,
+   "changes": {
+    "sửa đúng": 4,
+    "không rõ": 1
+   },
+   "seconds": 2.3
+  }
+ },
+ "qwen2.5-7b|sua": {
+  "page_1": {
+   "chars": 0.9062209842154132,
+   "words": 0.7445652173913043,
+   "word_recall": 0.7608695652173914,
+   "changes": {
+    "sửa đúng": 8,
+    "không đổi khi chấm": 4,
+    "không rõ": 8,
+    "bị luật chặn": 6
+   },
+   "seconds": 34.0
+  },
+  "page_2": {
+   "chars": 0.7216021011162179,
+   "words": 0.46808510638297873,
+   "word_recall": 0.5390070921985816,
+   "changes": {
+    "bị luật chặn": 8,
+    "không đổi khi chấm": 11,
+    "không rõ": 10
+   },
+   "seconds": 49.7
+  },
+  "page_3": {
+   "chars": 0.7929978118161926,
+   "words": 0.47,
+   "word_recall": 0.6575,
+   "changes": {
+    "sửa đúng": 12,
+    "bị luật chặn": 3,
+    "không rõ": 7,
+    "không đổi khi chấm": 6
+   },
+   "seconds": 94.3
+  },
+  "page_4": {
+   "chars": 0.9215291750503019,
+   "words": 0.7790697674418605,
+   "word_recall": 0.8255813953488372,
+   "changes": {
+    "sửa đúng": 6,
+    "bị luật chặn": 2,
+    "không đổi khi chấm": 1
+   },
+   "seconds": 17.0
+  }
+ },
+ "qwen2.5-7b|chon_sua": {
+  "page_1": {
+   "chars": 0.9108635097493036,
+   "words": 0.7717391304347826,
+   "word_recall": 0.7880434782608695,
+   "changes": {
+    "sửa đúng": 11,
+    "không rõ": 9,
+    "không đổi khi chấm": 5,
+    "bị luật chặn": 3
+   },
+   "seconds": 50.0
+  },
+  "page_2": {
+   "chars": 0.7498358502954694,
+   "words": 0.5141843971631206,
+   "word_recall": 0.5815602836879432,
+   "changes": {
+    "bị luật chặn": 4,
+    "không rõ": 22,
+    "sửa đúng": 11,
+    "không đổi khi chấm": 11,
+    "làm hỏng": 2
+   },
+   "seconds": 56.8
+  },
+  "page_3": {
+   "chars": 0.8021881838074398,
+   "words": 0.5075000000000001,
+   "word_recall": 0.6875,
+   "changes": {
+    "sửa đúng": 32,
+    "không rõ": 15,
+    "làm hỏng": 8,
+    "bị luật chặn": 4,
+    "không đổi khi chấm": 8
+   },
+   "seconds": 107.4
+  },
+  "page_4": {
+   "chars": 0.9295774647887324,
+   "words": 0.8023255813953488,
+   "word_recall": 0.8488372093023255,
+   "changes": {
+    "sửa đúng": 6,
+    "không đổi khi chấm": 1,
+    "không rõ": 1,
+    "bị luật chặn": 2
+   },
+   "seconds": 19.2
+  }
+ },
+ "errors": {}
+}

@@ -1,0 +1,332 @@
+model,method,page,block,step,old,new,ket_qua
+qwen2.5-7b,chon,page_1,0:1,chon,مهينة,معينة,sửa đúng
+qwen2.5-7b,chon,page_1,0:1,chon,جمع الدوائر,جميع الدواء,không rõ
+qwen2.5-7b,chon,page_1,0:1,chon,والتسهية والطلية,والتسعة والعالية,không rõ
+qwen2.5-7b,chon,page_1,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon,page_1,0:1,chon,عط ومحاطة,حمل ومساطة,không rõ
+qwen2.5-7b,chon,page_1,0:1,chon,الحقد جمع,العقد جميع,sửa đúng
+qwen2.5-7b,chon,page_1,0:1,chon,الحقد,الحق,không rõ
+qwen2.5-7b,chon,page_1,0:1,chon,رسها,رسميا,sửa đúng
+qwen2.5-7b,chon,page_1,0:3,chon,لحوم,لعموم,sửa đúng
+qwen2.5-7b,chon,page_1,0:3,chon,عط,علل,không rõ
+qwen2.5-7b,chon,page_1,0:3,chon,وتهويض,وجهض,không rõ
+qwen2.5-7b,chon,page_1,0:3,chon,تد يتحرض,هي متموض,không rõ
+qwen2.5-7b,chon,page_1,0:3,chon,التحاق.,النشاط,không rõ
+qwen2.5-7b,chon,page_1,0:4,chon,ووقحا طيه بحده,وقع عليه بعد,sửa đúng
+qwen2.5-7b,chon,page_2,0:2,chon,وخمسَين,وخمسمئة,không rõ
+qwen2.5-7b,chon,page_2,0:3,chon,الخلق محلاة السَير,الخثلة محكمة الشجر,không rõ
+qwen2.5-7b,chon,page_2,0:4,chon,زبيد,فريد,không rõ
+qwen2.5-7b,chon,page_2,0:4,chon,اسماعاه,حماده,không rõ
+qwen2.5-7b,chon,page_2,0:5,chon,لهذا تفهمه الفرنسيان,لقد اتفق الفريقان,sửa đúng
+qwen2.5-7b,chon,page_2,0:6,chon,لتعين,لتعدي,không rõ
+qwen2.5-7b,chon,page_2,0:6,chon,السَيد هنائي,النزيه السَامي,không rõ
+qwen2.5-7b,chon,page_2,0:6,chon,بمبلغ الرؤل والواقف,للعزين الاول والوانس,sửa đúng
+qwen2.5-7b,chon,page_2,0:7,chon,(القناع),النصارى,sửa đúng
+qwen2.5-7b,chon,page_2,0:8,chon,بتمال,الشمال,sửa đúng
+qwen2.5-7b,chon,page_2,0:8,chon,وباب,ديبا,không rõ
+qwen2.5-7b,chon,page_2,0:8,chon,سعدى,سعد,làm hỏng
+qwen2.5-7b,chon,page_2,0:8,chon,دباسا عمود,دباس عمر,không rõ
+qwen2.5-7b,chon,page_2,0:8,chon,يقين القواكبه.,ريف القواك .,không rõ
+qwen2.5-7b,chon,page_2,0:10,chon,أطلب,طلب,sửa đúng
+qwen2.5-7b,chon,page_2,0:11,chon,المستقر به,المستقلين,không rõ
+qwen2.5-7b,chon,page_2,0:11,chon,ملكه,ملكية,sửa đúng
+qwen2.5-7b,chon,page_2,0:11,chon,العزيز,الفريق,sửa đúng
+qwen2.5-7b,chon,page_2,0:12,chon,زمومه,فرد,không rõ
+qwen2.5-7b,chon,page_2,0:12,chon,العزيزته,الفريقين,sửa đúng
+qwen2.5-7b,chon,page_2,0:12,chon,للزينة الآخرة,للذين الاخر,sửa đúng
+qwen2.5-7b,chon,page_2,0:12,chon,الاتفاقه,الاتفاقية,sửa đúng
+qwen2.5-7b,chon,page_2,0:14,chon,السم الخان عشرين,الثاني عشر من,sửa đúng
+qwen2.5-7b,chon,page_2,0:18,chon,سماىه,سالسا,không rõ
+qwen2.5-7b,chon,page_2,0:21,chon,"""جوهوس""","""محمدي""",không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,المحتبرة,المعتبرة,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,تد,عنا,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,قام,مقام,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,بيح وفراغ,بيع وفراخ,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,قطحة,قلعة,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,خاصنا البالخة,خاصتنا البالغة,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,وحدو دها شملا,وحنون عا شعالا,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,عرو جنويا,عضو جنوبا,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,طريق,طرق,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,طه,ملك,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,رهلة,رحمة,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,الحام,العام,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,الجلاد,الجلاء,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,الآن وخمسائة,الآتي وخمسمائة,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,ونكذا,ونظرا,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,وقد وكلنا وفوضنا,وقلنا وتوضأنا,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,الذكور,المذكور,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,والتقرير تد وفي,والتقدير هنا وهي,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,النصي,النفس,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,تثيلي,تمثيلها,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,تد وامام,عنا أمام,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,للشهر تد,للظهر منا,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,شرعة,شرعية,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,بـ تد,بما,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,المحكين,المحكمين,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,قادما,بها,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,واسترداه,واسترداده,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,القيم,القيام,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,اية جهتكانت,آله جهة كانت,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,الوكالقام ليم,الوكالة لم,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,وتاله دويرة,وكالة دورية,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,ومنحصرة بالميح الحيوف,ومخصوصة بالصحيح العصف,làm hỏng
+qwen2.5-7b,chon,page_3,0:1,chon,يتحلق نيها,يتعلق فيهما,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,الذكور ليم,المذكور ليس,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,لخيرنا حق,لغيرنا حتى,sửa đúng
+qwen2.5-7b,chon,page_3,0:1,chon,مصنف,معنى,không rõ
+qwen2.5-7b,chon,page_3,0:1,chon,الحدل,الجدل,không rõ
+qwen2.5-7b,chon,page_3,0:3,chon,توقيع الوكالة,الله,làm hỏng
+qwen2.5-7b,chon,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+qwen2.5-7b,chon,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+qwen2.5-7b,chon,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+qwen2.5-7b,chon,page_4,0:2,chon,فرار,قرار,sửa đúng
+qwen2.5-7b,chon,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+qwen2.5-7b,sua,page_1,0:1,sua,والرسعية,والرسمية,sửa đúng
+qwen2.5-7b,sua,page_1,0:1,sua,جمع,جميع,sửa đúng
+qwen2.5-7b,sua,page_1,0:1,sua,الاراضي,الأراضي,không đổi khi chấm
+qwen2.5-7b,sua,page_1,0:1,sua,والتسهية,والتسهيل,không rõ
+qwen2.5-7b,sua,page_1,0:1,sua,والطلية,والطلي,không rõ
+qwen2.5-7b,sua,page_1,0:1,sua,الاوراق,الأوراق,không đổi khi chấm
+qwen2.5-7b,sua,page_1,0:1,sua,والمحامات,والمستندات,bị luật chặn
+qwen2.5-7b,sua,page_1,0:1,sua,والصتندات,والصور,bị luật chặn
+qwen2.5-7b,sua,page_1,0:1,sua,الحقد,العقد,sửa đúng
+qwen2.5-7b,sua,page_1,0:1,sua,جمع,جميع,sửa đúng
+qwen2.5-7b,sua,page_1,0:1,sua,الحقد,الحق,không rõ
+qwen2.5-7b,sua,page_1,0:1,sua,رسها,رسميا,bị luật chặn
+qwen2.5-7b,sua,page_1,0:1,sua,اى,أي,bị luật chặn
+qwen2.5-7b,sua,page_1,0:3,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+qwen2.5-7b,sua,page_1,0:3,sua,شاطة,شاطئة,không rõ
+qwen2.5-7b,sua,page_1,0:3,sua,ومسوؤل,ومسؤول,sửa đúng
+qwen2.5-7b,sua,page_1,0:3,sua,محارضات,محاربات,không rõ
+qwen2.5-7b,sua,page_1,0:3,sua,مسوؤليته,مسؤوليته,sửa đúng
+qwen2.5-7b,sua,page_1,0:3,sua,ونففته,ونفثته,không rõ
+qwen2.5-7b,sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+qwen2.5-7b,sua,page_1,0:3,sua,وتهويض,وتهييج,không rõ
+qwen2.5-7b,sua,page_1,0:4,sua,الاعraf,الإعتراف,bị luật chặn
+qwen2.5-7b,sua,page_1,0:4,sua,الحقد,الح,không rõ
+qwen2.5-7b,sua,page_1,0:4,sua,وتلي,---,bị luật chặn
+qwen2.5-7b,sua,page_1,0:5,sua,اول,أول,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:0,sua,بره,براء,bị luật chặn
+qwen2.5-7b,sua,page_2,0:1,sua,"""١""","""٢""",bị luật chặn
+qwen2.5-7b,sua,page_2,0:2,sua,اسرائيلية,إسرائيلية,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:3,sua,السَير,السير,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:4,sua,اسماعاه,اسمياعاه,không rõ
+qwen2.5-7b,sua,page_2,0:5,sua,تفهمه,اتفق,bị luật chặn
+qwen2.5-7b,sua,page_2,0:5,sua,الفرنسيان,الفريقان,bị luật chặn
+qwen2.5-7b,sua,page_2,0:6,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:6,sua,اسرائيلية,إسرائيلية,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:6,sua,الارض,الأرض,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:8,sua,الآرض,الأرض,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:8,sua,وبقي,وبقيت,không rõ
+qwen2.5-7b,sua,page_2,0:8,sua,٢,منها,bị luật chặn
+qwen2.5-7b,sua,page_2,0:8,sua,منقلة,متناقلة,không rõ
+qwen2.5-7b,sua,page_2,0:8,sua,بتمال,الشمال,bị luật chặn
+qwen2.5-7b,sua,page_2,0:8,sua,ملل,ملله,không rõ
+qwen2.5-7b,sua,page_2,0:8,sua,احمد,أحمد,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:9,sua,شرعا,شرعاً,bị luật chặn
+qwen2.5-7b,sua,page_2,0:10,sua,للأرض,الأرض,không rõ
+qwen2.5-7b,sua,page_2,0:10,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:11,sua,الارض,الأرض,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:13,sua,السلاميه,السلامية,không rõ
+qwen2.5-7b,sua,page_2,0:13,sua,اربيه,أربيه,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:13,sua,الى,إلى,không đổi khi chấm
+qwen2.5-7b,sua,page_2,0:18,sua,سماىه,سماها,không rõ
+qwen2.5-7b,sua,page_2,0:21,sua,"""جوهوس""","""جوهدي""",không rõ
+qwen2.5-7b,sua,page_2,0:22,sua,محترمة,محترمته,không rõ
+qwen2.5-7b,sua,page_2,0:24,sua,او,أو,bị luật chặn
+qwen2.5-7b,sua,page_2,0:26,sua,وصفحة,الصفحة,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,لحقد,لعقد,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,المرقين,البائعين,bị luật chặn
+qwen2.5-7b,sua,page_3,0:1,sua,المحتبرة,المعتبرة,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,قطحة,قطعة,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,البالخة,البالغة,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,قطميا,قطمايا,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,التويح,التوحي,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,الرسية,الرسمية,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,والتسهية,والتسهيل,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,وازالق,وازالة,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,نيها,عليها,bị luật chặn
+qwen2.5-7b,sua,page_3,0:1,sua,اليهين,اليها,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+qwen2.5-7b,sua,page_3,0:1,sua,والتنفيدية,والتنفيذية,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,واسترداه,واسترداده,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+qwen2.5-7b,sua,page_3,0:1,sua,الوكالقام,الوكالة,bị luật chặn
+qwen2.5-7b,sua,page_3,0:1,sua,نيها,نينا,không rõ
+qwen2.5-7b,sua,page_3,0:1,sua,تسخيل,تسجيل,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+qwen2.5-7b,sua,page_3,0:1,sua,الهوم,اليوم,sửa đúng
+qwen2.5-7b,sua,page_3,0:5,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_3,0:8,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_3,0:9,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_3,0:10,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,sua,page_4,0:0,sua,الصيد,السيد,sửa đúng
+qwen2.5-7b,sua,page_4,0:0,sua,الديكرر,الدكتور,bị luật chặn
+qwen2.5-7b,sua,page_4,0:2,sua,فرار,قرار,sửa đúng
+qwen2.5-7b,sua,page_4,0:2,sua,باعتهار,باعتبار,sửa đúng
+qwen2.5-7b,sua,page_4,0:2,sua,أمير,امير,không đổi khi chấm
+qwen2.5-7b,sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
+qwen2.5-7b,sua,page_4,0:3,sua,بالجيزة,بالجizaة,bị luật chặn
+qwen2.5-7b,sua,page_4,0:4,sua,طام,عام,sửa đúng
+qwen2.5-7b,sua,page_4,0:4,sua,الوزراة,الوزراء,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,chon,مهينة,معينة,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,chon,جمع الدوائر,جميع الدواء,không rõ
+qwen2.5-7b,chon_sua,page_1,0:1,chon,والتسهية والطلية,والتسعة والعالية,không rõ
+qwen2.5-7b,chon_sua,page_1,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,chon,عط ومحاطة,حمل ومساطة,không rõ
+qwen2.5-7b,chon_sua,page_1,0:1,chon,الحقد جمع,العقد جميع,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,chon,الحقد,الحق,không rõ
+qwen2.5-7b,chon_sua,page_1,0:1,chon,رسها,رسميا,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,sua,والرسعية,والرسمية,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_1,0:1,sua,الدواء,الدوائر,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,sua,الاراضي,الأراضي,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_1,0:1,sua,والتسعة,والتراسع,bị luật chặn
+qwen2.5-7b,chon_sua,page_1,0:1,sua,الاوراق,الأوراق,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_1,0:1,sua,والمحامات,والمحاميات,không rõ
+qwen2.5-7b,chon_sua,page_1,0:1,sua,والصتندات,والمستندات,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:1,sua,اى,أي,bị luật chặn
+qwen2.5-7b,chon_sua,page_1,0:3,chon,لحوم,لعموم,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:3,chon,عط,علل,không rõ
+qwen2.5-7b,chon_sua,page_1,0:3,chon,وتهويض,وجهض,không rõ
+qwen2.5-7b,chon_sua,page_1,0:3,chon,تد يتحرض,هي متموض,không rõ
+qwen2.5-7b,chon_sua,page_1,0:3,chon,التحاق.,النشاط,không rõ
+qwen2.5-7b,chon_sua,page_1,0:3,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:3,sua,فسي,في,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:4,chon,ووقحا طيه بحده,وقع عليه بعد,sửa đúng
+qwen2.5-7b,chon_sua,page_1,0:4,sua,الاعraf,الإعتراف,bị luật chặn
+qwen2.5-7b,chon_sua,page_1,0:5,sua,اول,أول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:0,sua,بره,براء,bị luật chặn
+qwen2.5-7b,chon_sua,page_2,0:1,sua,"""١""","""٢""",bị luật chặn
+qwen2.5-7b,chon_sua,page_2,0:2,chon,وخمسَين,وخمسمئة,không rõ
+qwen2.5-7b,chon_sua,page_2,0:3,chon,الخلق محلاة السَير,الخثلة محكمة الشجر,không rõ
+qwen2.5-7b,chon_sua,page_2,0:4,chon,زبيد,فريد,không rõ
+qwen2.5-7b,chon_sua,page_2,0:4,chon,اسماعاه,حماده,không rõ
+qwen2.5-7b,chon_sua,page_2,0:5,chon,لهذا تفهمه الفرنسيان,لقد اتفق الفريقان,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:6,chon,لتعين,لتعدي,không rõ
+qwen2.5-7b,chon_sua,page_2,0:6,chon,السَيد هنائي,النزيه السَامي,không rõ
+qwen2.5-7b,chon_sua,page_2,0:6,chon,بمبلغ الرؤل والواقف,للعزين الاول والوانس,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:6,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:6,sua,اسرائيلية,إسرائيلية,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:6,sua,الارض,الأرض,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:6,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:7,chon,(القناع),النصارى,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:8,chon,بتمال,الشمال,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:8,chon,وباب,ديبا,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,chon,سعدى,سعد,làm hỏng
+qwen2.5-7b,chon_sua,page_2,0:8,chon,دباسا عمود,دباس عمر,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,chon,يقين القواكبه.,ريف القواك .,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,sua,الآرض,الأرض,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:8,sua,الدلال,دلال,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,sua,وبقي,وبقيت,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,sua,والوانفه,والوانها,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,sua,ملل,مل,không rõ
+qwen2.5-7b,chon_sua,page_2,0:8,sua,احمد,أحمد,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:9,sua,شرعا,شرعاً,bị luật chặn
+qwen2.5-7b,chon_sua,page_2,0:10,chon,أطلب,طلب,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:10,sua,للأرض,الأرض,không rõ
+qwen2.5-7b,chon_sua,page_2,0:10,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:11,chon,المستقر به,المستقلين,không rõ
+qwen2.5-7b,chon_sua,page_2,0:11,chon,ملكه,ملكية,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:11,chon,العزيز,الفريق,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:11,sua,الارض,الأرض,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:12,chon,زمومه,فرد,không rõ
+qwen2.5-7b,chon_sua,page_2,0:12,chon,العزيزته,الفريقين,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:12,chon,للزينة الآخرة,للذين الاخر,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:12,chon,الاتفاقه,الاتفاقية,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:12,sua,غرامه,غرامته,không rõ
+qwen2.5-7b,chon_sua,page_2,0:12,sua,الاخر,الآخر,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:13,sua,السلاميه,السلامية,không rõ
+qwen2.5-7b,chon_sua,page_2,0:13,sua,اربيه,أربيه,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:13,sua,الى,إلى,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_2,0:14,chon,السم الخان عشرين,الثاني عشر من,sửa đúng
+qwen2.5-7b,chon_sua,page_2,0:14,sua,عدول,عدل,làm hỏng
+qwen2.5-7b,chon_sua,page_2,0:18,chon,سماىه,سالسا,không rõ
+qwen2.5-7b,chon_sua,page_2,0:21,chon,"""جوهوس""","""محمدي""",không rõ
+qwen2.5-7b,chon_sua,page_2,0:22,sua,محترمة,محترمته,không rõ
+qwen2.5-7b,chon_sua,page_2,0:24,sua,او,أو,bị luật chặn
+qwen2.5-7b,chon_sua,page_2,0:26,sua,وصفحة,الصفحة,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,المحتبرة,المعتبرة,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,تد,عنا,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,قام,مقام,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,بيح وفراغ,بيع وفراخ,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,قطحة,قلعة,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,خاصنا البالخة,خاصتنا البالغة,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,وحدو دها شملا,وحنون عا شعالا,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,عرو جنويا,عضو جنوبا,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,طريق,طرق,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,طه,ملك,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,رهلة,رحمة,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الحام,العام,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الجلاد,الجلاء,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الآن وخمسائة,الآتي وخمسمائة,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,ونكذا,ونظرا,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,وقد وكلنا وفوضنا,وقلنا وتوضأنا,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الذكور,المذكور,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,والتقرير تد وفي,والتقدير هنا وهي,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,النصي,النفس,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,تثيلي,تمثيلها,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,تد وامام,عنا أمام,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,للشهر تد,للظهر منا,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,شرعة,شرعية,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,جمع,جميع,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,بـ تد,بما,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,المحكين,المحكمين,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,قادما,بها,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,واسترداه,واسترداده,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,القيم,القيام,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,اية جهتكانت,آله جهة كانت,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الوكالقام ليم,الوكالة لم,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,وتاله دويرة,وكالة دورية,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,ومنحصرة بالميح الحيوف,ومخصوصة بالصحيح العصف,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,يتحلق نيها,يتعلق فيهما,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الذكور ليم,المذكور ليس,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,لخيرنا حق,لغيرنا حتى,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,chon,مصنف,معنى,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,chon,الحدل,الجدل,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,لحقد,لعقد,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,المرقين,البائعين,bị luật chặn
+qwen2.5-7b,chon_sua,page_3,0:1,sua,الارض,الأرض,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:1,sua,قطميا,قطمايا,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,الرسية,الرسمية,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,والتسهية,والتسهيل,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,وازالق,وازالة,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,نيها,عليها,bị luật chặn
+qwen2.5-7b,chon_sua,page_3,0:1,sua,اليهين,اليها,không rõ
+qwen2.5-7b,chon_sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:1,sua,الاجراثية,التنفيذية,bị luật chặn
+qwen2.5-7b,chon_sua,page_3,0:1,sua,والتنفيدية,والتنفيذية,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,باي,بأي,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:1,sua,آله,أي,bị luật chặn
+qwen2.5-7b,chon_sua,page_3,0:1,sua,يبق,يبقى,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,وكيلا,وكيل,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,تسخيل,تسجيل,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:1,sua,الهوم,اليوم,sửa đúng
+qwen2.5-7b,chon_sua,page_3,0:3,chon,توقيع الوكالة,الله,làm hỏng
+qwen2.5-7b,chon_sua,page_3,0:5,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:8,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:9,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_3,0:10,sua,الاول,الأول,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:0,sua,والاعلام,والإعلام,không đổi khi chấm
+qwen2.5-7b,chon_sua,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+qwen2.5-7b,chon_sua,page_4,0:2,chon,فرار,قرار,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:2,sua,باعتهار,باعتبار,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:3,sua,بالجيزة,بالجizaة,bị luật chặn
+qwen2.5-7b,chon_sua,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+qwen2.5-7b,chon_sua,page_4,0:4,sua,طام,السر,bị luật chặn

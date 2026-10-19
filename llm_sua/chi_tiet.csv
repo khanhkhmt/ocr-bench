@@ -595,3 +595,570 @@ qwen3-8b,chon_sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
 qwen3-8b,chon_sua,page_4,0:3,chon,بالتنبهه,بالتتمييه,không rõ
 qwen3-8b,chon_sua,page_4,0:3,chon,النشأة بالجيزة,النسير بالجريدة,sửa đúng
 qwen3-8b,chon_sua,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+allam-7b,chon,page_1,0:1,chon,مهينة,معينة,sửa đúng
+allam-7b,chon,page_1,0:1,chon,والتسهية والطلية,والتسعة والعالية,không rõ
+allam-7b,chon,page_1,0:1,chon,والتوقيع,وبالتوقيع,sửa đúng
+allam-7b,chon,page_1,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon,page_1,0:1,chon,عط ومحاطة,حمل ومساطة,không rõ
+allam-7b,chon,page_1,0:1,chon,الحقد جمع,العقد جميع,sửa đúng
+allam-7b,chon,page_1,0:1,chon,الحقد,الحق,không rõ
+allam-7b,chon,page_1,0:1,chon,رسها,رسميا,sửa đúng
+allam-7b,chon,page_1,0:3,chon,لحوم,لعموم,sửa đúng
+allam-7b,chon,page_1,0:3,chon,عط,علل,không rõ
+allam-7b,chon,page_1,0:3,chon,وتهويض,وجهض,không rõ
+allam-7b,chon,page_1,0:3,chon,التحاق.,النشاط,không rõ
+allam-7b,chon,page_1,0:4,chon,الحقد وتلي على,الحق وطي طى,làm hỏng
+allam-7b,chon,page_1,0:4,chon,ووقحا طيه بحده,وقع عليه بعد,sửa đúng
+allam-7b,chon,page_2,0:2,chon,وخمسَين,وخمسمئة,không rõ
+allam-7b,chon,page_2,0:3,chon,الخلق محلاة السَير,الخثلة محكمة الشجر,không rõ
+allam-7b,chon,page_2,0:4,chon,زبيد,فريد,không rõ
+allam-7b,chon,page_2,0:4,chon,اسماعاه,حماده,không rõ
+allam-7b,chon,page_2,0:5,chon,لهذا تفهمه الفرنسيان,لقد اتفق الفريقان,sửa đúng
+allam-7b,chon,page_2,0:6,chon,وخمسَين,وخمسَة,không rõ
+allam-7b,chon,page_2,0:7,chon,(القناع),النصارى,sửa đúng
+allam-7b,chon,page_2,0:8,chon,العزيز,الغريب,không rõ
+allam-7b,chon,page_2,0:8,chon,بتمال,الشمال,sửa đúng
+allam-7b,chon,page_2,0:8,chon,وباب,ديبا,không rõ
+allam-7b,chon,page_2,0:8,chon,سعدى,سعد,làm hỏng
+allam-7b,chon,page_2,0:8,chon,دباسا عمود,دباس عمر,không rõ
+allam-7b,chon,page_2,0:8,chon,يقين القواكبه.,ريف القواك .,không rõ
+allam-7b,chon,page_2,0:10,chon,أطلب,طلب,sửa đúng
+allam-7b,chon,page_2,0:11,chon,المستقر به,المستقلين,không rõ
+allam-7b,chon,page_2,0:11,chon,ملكه,ملكية,sửa đúng
+allam-7b,chon,page_2,0:11,chon,العزيز,الفريق,sửa đúng
+allam-7b,chon,page_2,0:11,chon,النزية الأول,حكم النزهة الاولى,làm hỏng
+allam-7b,chon,page_2,0:12,chon,زمومه,فرد,không rõ
+allam-7b,chon,page_2,0:12,chon,العزيزته,الفريقين,sửa đúng
+allam-7b,chon,page_2,0:12,chon,للزينة الآخرة,للذين الاخر,sửa đúng
+allam-7b,chon,page_2,0:12,chon,الاتفاقه,الاتفاقية,sửa đúng
+allam-7b,chon,page_2,0:14,chon,السم الخان عشرين,الثاني عشر من,sửa đúng
+allam-7b,chon,page_2,0:15,chon,ومحادث,ومجاور,không rõ
+allam-7b,chon,page_2,0:18,chon,سماىه,سالسا,không rõ
+allam-7b,chon,page_2,0:21,chon,"""جوهوس""","""محمدي""",không rõ
+allam-7b,chon,page_3,0:1,chon,المحتبرة,المعتبرة,sửa đúng
+allam-7b,chon,page_3,0:1,chon,تد,عنا,sửa đúng
+allam-7b,chon,page_3,0:1,chon,قام,مقام,sửa đúng
+allam-7b,chon,page_3,0:1,chon,خاصنا البالخة,خاصتنا البالغة,sửa đúng
+allam-7b,chon,page_3,0:1,chon,وتبع بلده,موقع بمربد,sửa đúng
+allam-7b,chon,page_3,0:1,chon,عرو جنويا,عضو جنوبا,sửa đúng
+allam-7b,chon,page_3,0:1,chon,رهلة,رحمة,làm hỏng
+allam-7b,chon,page_3,0:1,chon,الحام,العام,sửa đúng
+allam-7b,chon,page_3,0:1,chon,الجلاد,الجلاء,làm hỏng
+allam-7b,chon,page_3,0:1,chon,الآن وخمسائة,الآتي وخمسمائة,sửa đúng
+allam-7b,chon,page_3,0:1,chon,اسراتيلية وصلنا بكامله,إسرائيلية توصلنا بكافه,làm hỏng
+allam-7b,chon,page_3,0:1,chon,ونكذا,ونظرا,không rõ
+allam-7b,chon,page_3,0:1,chon,الذكور,المذكور,sửa đúng
+allam-7b,chon,page_3,0:1,chon,النصي,النفس,không rõ
+allam-7b,chon,page_3,0:1,chon,تثيلي,تمثيلها,không rõ
+allam-7b,chon,page_3,0:1,chon,تد وامام,عنا أمام,sửa đúng
+allam-7b,chon,page_3,0:1,chon,الرسية والمختصة بـ,الرسمية والمتخصصة بعـ,sửa đúng
+allam-7b,chon,page_3,0:1,chon,للشهر تد,للظهر منا,không rõ
+allam-7b,chon,page_3,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon,page_3,0:1,chon,شرعة,شرعية,sửa đúng
+allam-7b,chon,page_3,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon,page_3,0:1,chon,بـ تد,بما,sửa đúng
+allam-7b,chon,page_3,0:1,chon,المحكين,المحكمين,sửa đúng
+allam-7b,chon,page_3,0:1,chon,قادما,بها,không rõ
+allam-7b,chon,page_3,0:1,chon,والاجراثي وتكها,والاجرائي وفهمهما,sửa đúng
+allam-7b,chon,page_3,0:1,chon,واسترداه,واسترداده,sửa đúng
+allam-7b,chon,page_3,0:1,chon,القيم,القيام,sửa đúng
+allam-7b,chon,page_3,0:1,chon,الوكالقام ليم,الوكالة لم,sửa đúng
+allam-7b,chon,page_3,0:1,chon,وتاله دويرة,وكالة دورية,sửa đúng
+allam-7b,chon,page_3,0:1,chon,ومنحصرة بالميح الحيوف,ومخصوصة بالصحيح العصف,làm hỏng
+allam-7b,chon,page_3,0:1,chon,يتحلق نيها,يتعلق فيهما,sửa đúng
+allam-7b,chon,page_3,0:1,chon,الذكور ليم,المذكور ليس,sửa đúng
+allam-7b,chon,page_3,0:1,chon,مصنف,معنى,không rõ
+allam-7b,chon,page_3,0:1,chon,بحث,يعين,không rõ
+allam-7b,chon,page_3,0:1,chon,الحدل,الجدل,không rõ
+allam-7b,chon,page_3,0:3,chon,توقيع الوكالة,الله,làm hỏng
+allam-7b,chon,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+allam-7b,chon,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+allam-7b,chon,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+allam-7b,chon,page_4,0:2,chon,فرار,قرار,sửa đúng
+allam-7b,chon,page_4,0:2,chon,متحف أمير الشعاء,متظاهر الشعواء,làm hỏng
+allam-7b,chon,page_4,0:2,chon,شقى بمسحافظة الجيزة,شوقي بمحافظة الجبهزة,sửa đúng
+allam-7b,chon,page_4,0:3,chon,النشأة بالجيزة,النسير بالجريدة,sửa đúng
+allam-7b,chon,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+allam-7b,sua,page_1,0:1,sua,يقضى,يقضي,không đổi khi chấm
+allam-7b,sua,page_1,0:1,sua,والرسعية,والرسمية,sửa đúng
+allam-7b,sua,page_1,0:1,sua,واثق,وفقاً,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,اجراءات,لإجراءات,làm hỏng
+allam-7b,sua,page_1,0:1,sua,مهينة,معينة,sửa đúng
+allam-7b,sua,page_1,0:1,sua,فان,فإن,không đổi khi chấm
+allam-7b,sua,page_1,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_1,0:1,sua,الاراضي,الأراضي,không đổi khi chấm
+allam-7b,sua,page_1,0:1,sua,والتسهية,والتسوية,sửa đúng
+allam-7b,sua,page_1,0:1,sua,والطلية,والعامة,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_1,0:1,sua,الاوراق,الأوراق,không đổi khi chấm
+allam-7b,sua,page_1,0:1,sua,والمحامات,والمحاضر,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,والصتندات,والمستندات,sửa đúng
+allam-7b,sua,page_1,0:1,sua,وبالقيم,والقيام,không rõ
+allam-7b,sua,page_1,0:1,sua,الحقد,العقد,sửa đúng
+allam-7b,sua,page_1,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_1,0:1,sua,الحقد,العقد,sửa đúng
+allam-7b,sua,page_1,0:1,sua,تنفيذا,تنفيذاً,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,كاملا,كاملاً,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,الConcept,المذكور,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,رسها,رسمياً,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,وقانونيا,وقانونياً,bị luật chặn
+allam-7b,sua,page_1,0:1,sua,اى,أي,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,الاول,الأول,không đổi khi chấm
+allam-7b,sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+allam-7b,sua,page_1,0:3,sua,حجاء,تجاه,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,فسي,في,sửa đúng
+allam-7b,sua,page_1,0:3,sua,الحقد,العقد,sửa đúng
+allam-7b,sua,page_1,0:3,sua,مسوؤلية,من,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,كالة,مسؤولية,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,شاطة,شاملة،,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,ومسوؤل,ومسؤول,sửa đúng
+allam-7b,sua,page_1,0:3,sua,وطزم,تضامني,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,للخير,للغير,sửa đúng
+allam-7b,sua,page_1,0:3,sua,مسوؤليته,مسؤوليته,sửa đúng
+allam-7b,sua,page_1,0:3,sua,ونففته,وملكه,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,الشخصية,الشخصي,làm hỏng
+allam-7b,sua,page_1,0:3,sua,وانه,أنه,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+allam-7b,sua,page_1,0:3,sua,عط,عطل,bị luật chặn
+allam-7b,sua,page_1,0:3,sua,التحاق.,التعاقد.,không rõ
+allam-7b,sua,page_1,0:4,sua,الاعraf,الاعتراف,bị luật chặn
+allam-7b,sua,page_1,0:4,sua,الحقد,العقد,sửa đúng
+allam-7b,sua,page_1,0:4,sua,ووقحا,ووقع,không rõ
+allam-7b,sua,page_1,0:4,sua,طيه,عليه,bị luật chặn
+allam-7b,sua,page_1,0:4,sua,بحده,بعد,bị luật chặn
+allam-7b,sua,page_1,0:4,sua,ان,أن,bị luật chặn
+allam-7b,sua,page_1,0:4,sua,مضونه,مضمونه,sửa đúng
+allam-7b,sua,page_1,0:4,sua,ومحتهاته,ومحتوياته,sửa đúng
+allam-7b,sua,page_1,0:5,sua,اول,أول,không đổi khi chấm
+allam-7b,sua,page_1,0:7,sua,ترامب,ترام,không rõ
+allam-7b,sua,page_2,0:0,sua,بره,بُرْهَة,bị luật chặn
+allam-7b,sua,page_2,0:0,sua,إسراء,إِسْرَاء,bị luật chặn
+allam-7b,sua,page_2,0:3,sua,اول:,أول:,không đổi khi chấm
+allam-7b,sua,page_2,0:3,sua,محلاة,محكمة,không rõ
+allam-7b,sua,page_2,0:3,sua,السَير,السير,không đổi khi chấm
+allam-7b,sua,page_2,0:4,sua,اسماعاه,إسماعيل,bị luật chặn
+allam-7b,sua,page_2,0:4,sua,بشي,بشيء,không rõ
+allam-7b,sua,page_2,0:5,sua,لهذا,لقد,bị luật chặn
+allam-7b,sua,page_2,0:5,sua,تفهمه,اتفق,bị luật chặn
+allam-7b,sua,page_2,0:5,sua,الفرنسيان,الفريقان,bị luật chặn
+allam-7b,sua,page_2,0:7,sua,بلد,بَلَد,bị luật chặn
+allam-7b,sua,page_2,0:7,sua,الحصن,الحِصْن,bị luật chặn
+allam-7b,sua,page_2,0:8,sua,بتمال,الشمال,bị luật chặn
+allam-7b,sua,page_2,0:8,sua,احمد,أحمد,không đổi khi chấm
+allam-7b,sua,page_2,0:9,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,sua,page_2,0:9,sua,للارض,للأرض,không đổi khi chấm
+allam-7b,sua,page_2,0:10,sua,أطلب,طلب,sửa đúng
+allam-7b,sua,page_2,0:10,sua,النزيه,النزيل,không rõ
+allam-7b,sua,page_2,0:10,sua,الاول,الأول,không đổi khi chấm
+allam-7b,sua,page_2,0:12,sua,زمومه,فرد,bị luật chặn
+allam-7b,sua,page_2,0:12,sua,العزيزته,الفريقين,bị luật chặn
+allam-7b,sua,page_2,0:12,sua,غرامه,غرامة,sửa đúng
+allam-7b,sua,page_2,0:12,sua,للزينة,للفريق,bị luật chặn
+allam-7b,sua,page_2,0:12,sua,الآخرة,الآخر,sửa đúng
+allam-7b,sua,page_2,0:12,sua,الاتفاقه,الاتفاقية,sửa đúng
+allam-7b,sua,page_2,0:13,sua,السلاميه,السلامية,không rõ
+allam-7b,sua,page_2,0:13,sua,الى,إلى,không đổi khi chấm
+allam-7b,sua,page_2,0:14,sua,السم,الثاني,bị luật chặn
+allam-7b,sua,page_2,0:14,sua,الخان,عشر,bị luật chặn
+allam-7b,sua,page_2,0:14,sua,عشرين,من,bị luật chặn
+allam-7b,sua,page_2,0:14,sua,٩٧٢,١٩٧٢,bị luật chặn
+allam-7b,sua,page_2,0:15,sua,ومحادث,ومحاضر,không rõ
+allam-7b,sua,page_2,0:18,sua,سماىه,سِمَاء,bị luật chặn
+allam-7b,sua,page_2,0:21,sua,"""جوهوس""","""محمود""",bị luật chặn
+allam-7b,sua,page_2,0:24,sua,او,أو,bị luật chặn
+allam-7b,sua,page_2,0:26,sua,اشير,أشير,không đổi khi chấm
+allam-7b,sua,page_2,0:26,sua,الى,إلى,không đổi khi chấm
+allam-7b,sua,page_2,0:26,sua,وصفحة,الوثيقة,bị luật chặn
+allam-7b,sua,page_2,0:26,sua,فصححها,وصححها,không rõ
+allam-7b,sua,page_2,0:26,sua,سَيدي,سيدي,không đổi khi chấm
+allam-7b,sua,page_2,0:26,sua,ادام,أدام,không đổi khi chấm
+allam-7b,sua,page_2,0:26,sua,الازم,اللازم,không rõ
+allam-7b,sua,page_3,0:1,sua,وتنفيذا,وتنفيذاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,لحقد,لعقد,sửa đúng
+allam-7b,sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,المرخ,المفروغ,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,في,من,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,فاننا,فإننا,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,المرقين,الموقعين,sửa đúng
+allam-7b,sua,page_3,0:1,sua,ادناه,أدناه,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,صحفوظ,محفوظ,sửa đúng
+allam-7b,sua,page_3,0:1,sua,المحتبرة,المعتبرة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وقانونا,وقانوناً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,تد,قد,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,بيح,بيع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,قطحة,قطعة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الارض,الأرض,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,خاصنا,خاصتنا,không rõ
+allam-7b,sua,page_3,0:1,sua,البالخة,البالغة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,اراضي,أراضي,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,بلده,بلد,sửa đúng
+allam-7b,sua,page_3,0:1,sua,عرو,عروب,không rõ
+allam-7b,sua,page_3,0:1,sua,جنويا,جنوبا,sửa đúng
+allam-7b,sua,page_3,0:1,sua,شرقا,شرقاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,عرو,عروب,không rõ
+allam-7b,sua,page_3,0:1,sua,احمد,أحمد,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,ابو,أبو,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,وفريا,وفرياً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,عرو,عروب,không rõ
+allam-7b,sua,page_3,0:1,sua,ومحمد,محمد,không rõ
+allam-7b,sua,page_3,0:1,sua,ابو,أبو,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,الحام,العام,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الآن,آلاف,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وخمسائة,وخمسمائة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,اسراتيلية,إسرائيلية,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,ونكذا,ونظرا,không rõ
+allam-7b,sua,page_3,0:1,sua,واذنا,وأذنا,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,اوراق,أوراق,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,ومحاملات,ومعاملات,sửa đúng
+allam-7b,sua,page_3,0:1,sua,تثيلي,تمثيلها,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,تد,عنا,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وامام,أمام,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وايا,وأية,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الامر,الأمر,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,امام,أمام,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,شرعة,شرعية,sửa đúng
+allam-7b,sua,page_3,0:1,sua,صلحا,صلحاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,بيداية,بداية,không rõ
+allam-7b,sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+allam-7b,sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+allam-7b,sua,page_3,0:1,sua,وتهييزا,وتعيينا,không rõ
+allam-7b,sua,page_3,0:1,sua,وعدل,وعدلا,làm hỏng
+allam-7b,sua,page_3,0:1,sua,وايا,وأي,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,انواع,أنواع,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,والافراز,والإفراز,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,وازالق,وإزالة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,والشفحة,والشفعة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,والاولية,والأولى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,والمهاية,والعملية,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وايا,وأي,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,والعدافحة,والدفاع,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,والافراز,والعرافة,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,نيها,فيها,sửa đúng
+allam-7b,sua,page_3,0:1,sua,تعليف,تأليف,không rõ
+allam-7b,sua,page_3,0:1,sua,اليهين,اليمين,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وفي,وهي,làm hỏng
+allam-7b,sua,page_3,0:1,sua,التحكم,التحكيم,sửa đúng
+allam-7b,sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,المحكين,المحكمين,sửa đúng
+allam-7b,sua,page_3,0:1,sua,تنفيذا,تنفيذ,không rõ
+allam-7b,sua,page_3,0:1,sua,اي,أي,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,الاجراء,الإجراء,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,اية,أية,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,قادما,بذلك,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,المحاملات,المعاملات,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الاجراثية,الأخرى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,والتنفيدية,والتنفيذية,sửa đúng
+allam-7b,sua,page_3,0:1,sua,والاجراثي,والإجرائي,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وتكها,وفهما,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,تثبيتها,تثبيتهما,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الحيس,الحبس,sửa đúng
+allam-7b,sua,page_3,0:1,sua,واسترداه,واسترداده,sửa đúng
+allam-7b,sua,page_3,0:1,sua,القيم,القيام,sửa đúng
+allam-7b,sua,page_3,0:1,sua,باي,بأي,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,فاننا,فإننا,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,تد,قد,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وقانونا,وقانوناً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الوكالقام,الوكالة,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,ليم,لم,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وتاله,وكالة,sửa đúng
+allam-7b,sua,page_3,0:1,sua,دويرة,دورية,sửa đúng
+allam-7b,sua,page_3,0:1,sua,ومنحصرة,ومحصورة,làm hỏng
+allam-7b,sua,page_3,0:1,sua,بالميح,بالصحيح,không rõ
+allam-7b,sua,page_3,0:1,sua,الحيوف,العصف,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,يتحلق,يتعلق,sửa đúng
+allam-7b,sua,page_3,0:1,sua,نيها,فيهما,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الخيز,النمير,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,ليم,ليس,sửa đúng
+allam-7b,sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,لخيرنا,لغيرنا,sửa đúng
+allam-7b,sua,page_3,0:1,sua,حق,حتى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,يبق,يبقى,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وكيلا,وتحيلا,làm hỏng
+allam-7b,sua,page_3,0:1,sua,اتي,إلى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,ان,أن,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,مصنف,معنى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,تنفيذا,تنفيذاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,كاملا,كاملاً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,واتي,وإلى,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,ان,أن,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,تسخيل,تسجيل,sửa đúng
+allam-7b,sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,رسميا,رسمياً,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,وتانونيا,وقانونيا,sửa đúng
+allam-7b,sua,page_3,0:1,sua,وان,وإن,không đổi khi chấm
+allam-7b,sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,sua,page_3,0:1,sua,الخيز,الغير,sửa đúng
+allam-7b,sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,بحث,بعض,bị luật chặn
+allam-7b,sua,page_3,0:1,sua,الحدل,الجدل,không rõ
+allam-7b,sua,page_3,0:9,sua,الاول,الأول,không đổi khi chấm
+allam-7b,sua,page_4,0:0,sua,الصيد,السيد,sửa đúng
+allam-7b,sua,page_4,0:0,sua,الديكرر,الدكتور,bị luật chặn
+allam-7b,sua,page_4,0:0,sua,الوزراة,الوزراء,sửa đúng
+allam-7b,sua,page_4,0:0,sua,والاعلام,والإعلام,không đổi khi chấm
+allam-7b,sua,page_4,0:2,sua,فرار,قرار,sửa đúng
+allam-7b,sua,page_4,0:2,sua,باعتهار,باعتبار,sửa đúng
+allam-7b,sua,page_4,0:2,sua,اقامة,إقامة,không đổi khi chấm
+allam-7b,sua,page_4,0:2,sua,الشعاء,الشعراء,sửa đúng
+allam-7b,sua,page_4,0:2,sua,شقى,شوقي,bị luật chặn
+allam-7b,sua,page_4,0:2,sua,شقى,شوقي,bị luật chặn
+allam-7b,sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
+allam-7b,sua,page_4,0:3,sua,بالتنبهه,بالتنبه,không rõ
+allam-7b,sua,page_4,0:4,sua,طام,ظام,không rõ
+allam-7b,sua,page_4,0:4,sua,الوزراة,الوزراء,sửa đúng
+allam-7b,sua,page_4,0:6,sua,يسرى,يسري,không đổi khi chấm
+allam-7b,chon_sua,page_1,0:1,chon,مهينة,معينة,sửa đúng
+allam-7b,chon_sua,page_1,0:1,chon,والتسهية والطلية,والتسعة والعالية,không rõ
+allam-7b,chon_sua,page_1,0:1,chon,والتوقيع,وبالتوقيع,sửa đúng
+allam-7b,chon_sua,page_1,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon_sua,page_1,0:1,chon,عط ومحاطة,حمل ومساطة,không rõ
+allam-7b,chon_sua,page_1,0:1,chon,الحقد جمع,العقد جميع,sửa đúng
+allam-7b,chon_sua,page_1,0:1,chon,الحقد,الحق,không rõ
+allam-7b,chon_sua,page_1,0:1,chon,رسها,رسميا,sửa đúng
+allam-7b,chon_sua,page_1,0:3,chon,لحوم,لعموم,sửa đúng
+allam-7b,chon_sua,page_1,0:3,chon,عط,علل,không rõ
+allam-7b,chon_sua,page_1,0:3,chon,وتهويض,وجهض,không rõ
+allam-7b,chon_sua,page_1,0:3,chon,التحاق.,النشاط,không rõ
+allam-7b,chon_sua,page_1,0:3,sua,فسي,في,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,الحقد,العقد,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,مسوؤلية,مسؤولية,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,كالة,كاملة,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,للخير,للغير,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,مسوؤليته,مسؤوليته,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,ونففته,وملكه,bị luật chặn
+allam-7b,chon_sua,page_1,0:3,sua,الشخصية,الشخصي,làm hỏng
+allam-7b,chon_sua,page_1,0:3,sua,وانه,أنه,bị luật chặn
+allam-7b,chon_sua,page_1,0:3,sua,مسوؤل,مسؤول,sửa đúng
+allam-7b,chon_sua,page_1,0:3,sua,النشاط,النشاط.,bị luật chặn
+allam-7b,chon_sua,page_1,0:4,chon,الحقد وتلي على,الحق وطي طى,làm hỏng
+allam-7b,chon_sua,page_1,0:4,chon,ووقحا طيه بحده,وقع عليه بعد,sửa đúng
+allam-7b,chon_sua,page_1,0:4,sua,الاعraf,الاعتراف,bị luật chặn
+allam-7b,chon_sua,page_1,0:4,sua,ان,أن,bị luật chặn
+allam-7b,chon_sua,page_1,0:4,sua,مضونه,مضمونه,sửa đúng
+allam-7b,chon_sua,page_1,0:4,sua,ومحتهاته,ومحتواه,không rõ
+allam-7b,chon_sua,page_1,0:5,sua,اول,أول,không đổi khi chấm
+allam-7b,chon_sua,page_1,0:7,sua,ترامب,ترام,không rõ
+allam-7b,chon_sua,page_2,0:0,sua,بره,بُرْهَة,bị luật chặn
+allam-7b,chon_sua,page_2,0:0,sua,إسراء,إِسْرَاء,bị luật chặn
+allam-7b,chon_sua,page_2,0:2,chon,وخمسَين,وخمسمئة,không rõ
+allam-7b,chon_sua,page_2,0:3,chon,الخلق محلاة السَير,الخثلة محكمة الشجر,không rõ
+allam-7b,chon_sua,page_2,0:3,sua,اول:,أول:,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:4,chon,زبيد,فريد,không rõ
+allam-7b,chon_sua,page_2,0:4,chon,اسماعاه,حماده,không rõ
+allam-7b,chon_sua,page_2,0:4,sua,حماده,حمادة,sửa đúng
+allam-7b,chon_sua,page_2,0:4,sua,بخل,بيع,bị luật chặn
+allam-7b,chon_sua,page_2,0:4,sua,بشي,بشيء,không rõ
+allam-7b,chon_sua,page_2,0:5,chon,لهذا تفهمه الفرنسيان,لقد اتفق الفريقان,sửa đúng
+allam-7b,chon_sua,page_2,0:6,chon,وخمسَين,وخمسَة,không rõ
+allam-7b,chon_sua,page_2,0:7,chon,(القناع),النصارى,sửa đúng
+allam-7b,chon_sua,page_2,0:8,chon,العزيز,الغريب,không rõ
+allam-7b,chon_sua,page_2,0:8,chon,بتمال,الشمال,sửa đúng
+allam-7b,chon_sua,page_2,0:8,chon,وباب,ديبا,không rõ
+allam-7b,chon_sua,page_2,0:8,chon,سعدى,سعد,làm hỏng
+allam-7b,chon_sua,page_2,0:8,chon,دباسا عمود,دباس عمر,không rõ
+allam-7b,chon_sua,page_2,0:8,chon,يقين القواكبه.,ريف القواك .,không rõ
+allam-7b,chon_sua,page_2,0:8,sua,ملل,ملك,sửa đúng
+allam-7b,chon_sua,page_2,0:8,sua,احمد,أحمد,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:9,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,chon_sua,page_2,0:9,sua,للارض,للأرض,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:10,chon,أطلب,طلب,sửa đúng
+allam-7b,chon_sua,page_2,0:10,sua,الاول,الأول,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:11,chon,المستقر به,المستقلين,không rõ
+allam-7b,chon_sua,page_2,0:11,chon,ملكه,ملكية,sửa đúng
+allam-7b,chon_sua,page_2,0:11,chon,العزيز,الفريق,sửa đúng
+allam-7b,chon_sua,page_2,0:11,chon,النزية الأول,حكم النزهة الاولى,làm hỏng
+allam-7b,chon_sua,page_2,0:11,sua,الارض,الأرض,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:11,sua,(الثاني),الثاني,bị luật chặn
+allam-7b,chon_sua,page_2,0:11,sua,الاولى,الأولى,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:12,chon,زمومه,فرد,không rõ
+allam-7b,chon_sua,page_2,0:12,chon,العزيزته,الفريقين,sửa đúng
+allam-7b,chon_sua,page_2,0:12,chon,للزينة الآخرة,للذين الاخر,sửa đúng
+allam-7b,chon_sua,page_2,0:12,chon,الاتفاقه,الاتفاقية,sửa đúng
+allam-7b,chon_sua,page_2,0:12,sua,غرامه,غرامة,sửa đúng
+allam-7b,chon_sua,page_2,0:12,sua,الاخر,الآخر,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:13,sua,السلاميه,السلامية,không rõ
+allam-7b,chon_sua,page_2,0:13,sua,الى,إلى,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:14,chon,السم الخان عشرين,الثاني عشر من,sửa đúng
+allam-7b,chon_sua,page_2,0:14,sua,٩٧٢,١٩٧٢,bị luật chặn
+allam-7b,chon_sua,page_2,0:15,chon,ومحادث,ومجاور,không rõ
+allam-7b,chon_sua,page_2,0:15,sua,مشاهد,مُشَاهِد,bị luật chặn
+allam-7b,chon_sua,page_2,0:15,sua,ومجاور,وَمُجَاوِر,bị luật chặn
+allam-7b,chon_sua,page_2,0:18,chon,سماىه,سالسا,không rõ
+allam-7b,chon_sua,page_2,0:18,sua,سالسا,سُلْطَان,bị luật chặn
+allam-7b,chon_sua,page_2,0:21,chon,"""جوهوس""","""محمدي""",không rõ
+allam-7b,chon_sua,page_2,0:21,sua,"""محمدي""","""محمود""",sửa đúng
+allam-7b,chon_sua,page_2,0:24,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_2,0:26,sua,اشير,أشير,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:26,sua,الى,إلى,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:26,sua,وصفحة,الوثيقة,bị luật chặn
+allam-7b,chon_sua,page_2,0:26,sua,فصححها,وصححها,không rõ
+allam-7b,chon_sua,page_2,0:26,sua,سَيدي,سيدي,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:26,sua,ادام,أدام,không đổi khi chấm
+allam-7b,chon_sua,page_2,0:26,sua,الازم,اللازم,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,المحتبرة,المعتبرة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,تد,عنا,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,قام,مقام,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,خاصنا البالخة,خاصتنا البالغة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,وتبع بلده,موقع بمربد,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,عرو جنويا,عضو جنوبا,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,رهلة,رحمة,làm hỏng
+allam-7b,chon_sua,page_3,0:1,chon,الحام,العام,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,الجلاد,الجلاء,làm hỏng
+allam-7b,chon_sua,page_3,0:1,chon,الآن وخمسائة,الآتي وخمسمائة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,اسراتيلية وصلنا بكامله,إسرائيلية توصلنا بكافه,làm hỏng
+allam-7b,chon_sua,page_3,0:1,chon,ونكذا,ونظرا,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,النصي,النفس,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,تثيلي,تمثيلها,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,تد وامام,عنا أمام,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,الرسية والمختصة بـ,الرسمية والمتخصصة بعـ,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,للشهر تد,للظهر منا,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,شرعة,شرعية,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,جمع,جميع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,بـ تد,بما,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,المحكين,المحكمين,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,قادما,بها,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,والاجراثي وتكها,والاجرائي وفهمهما,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,واسترداه,واسترداده,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,القيم,القيام,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,الوكالقام ليم,الوكالة لم,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,وتاله دويرة,وكالة دورية,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,ومنحصرة بالميح الحيوف,ومخصوصة بالصحيح العصف,làm hỏng
+allam-7b,chon_sua,page_3,0:1,chon,يتحلق نيها,يتعلق فيهما,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,الذكور ليم,المذكور ليس,sửa đúng
+allam-7b,chon_sua,page_3,0:1,chon,مصنف,معنى,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,بحث,يعين,không rõ
+allam-7b,chon_sua,page_3,0:1,chon,الحدل,الجدل,không rõ
+allam-7b,chon_sua,page_3,0:1,sua,وتنفيذا,وتنفيذاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,لحقد,لعقد,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,المرخ,المفروغ,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,في,من,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,١٩٧٢/٧/١٢,1972/7/12,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,فاننا,فإننا,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,المرقين,الموقعين,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,ادناه,أدناه,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,صحفوظ,محفوظ,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,وقانونا,وقانوناً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,تد,قد,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,واقمنا,وأقمنا,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,بيح,بيع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,قطحة,قطعة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,الارض,الأرض,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,اراضي,أراضي,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,جنوبا,جنوباً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,ابو,أبو,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,الآتي,آلاف,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,بكافه,بكاملها,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,ونظرا,ونظراً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,واذنا,وأذنا,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,بالاقرار,بالإقرار,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,والتقرير,والتقدير,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,تد,هنا,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,وفي,وهي,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,التويح,التعريف,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,منى,هي,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,على,طى,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,نية,لمة,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,اوراق,أوراق,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,ومحاملات,ومعاملات,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,ومستندات,وستدات,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,ووثائق,ووظائف,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,الاراضي,الأراضي,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,والتسهية,والصحة,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,والمالية,والعلاقة,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,والبلدية,البلدية,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,وايا,وأية,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,للظهر,للظهور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,اذا,إذا,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,الامر,الأمر,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,امام,أمام,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,صلحا,صلحاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,بيداية,بداية,không rõ
+allam-7b,chon_sua,page_3,0:1,sua,واستثنائا,واستثناء,không rõ
+allam-7b,chon_sua,page_3,0:1,sua,واستثنائا,واستئنافا,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,انواع,أنواع,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,والافراز,والإفراز,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,وازالق,وإزالة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,والشفحة,والشفعة,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,والاولية,والأولى,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,والمهاية,والعملية,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,وايا,وآية,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,تنظيم,تصميم,không rõ
+allam-7b,chon_sua,page_3,0:1,sua,وحضورها,وحصرها,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,والحجز,والعجز,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,نيها,عنها,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,تنفيذا,تنفيذ,không rõ
+allam-7b,chon_sua,page_3,0:1,sua,اي,أي,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,لدي,لدى,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,الاجراء,الإجراء,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,اية,أية,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,جمع,جميع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,المحاملات,المعاملات,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,الاجراثية,الأخرى,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,والتنفيدية,والتنفيذية,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,والاجرائي,والإجرائي,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,الحيس,الحبس,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,باي,بأي,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,فاننا,فإننا,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,تد,قد,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,شرعا,شرعاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,وقانونا,وقانوناً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,لخيرنا,لغيرنا,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,يبق,يبقى,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,وكيلا,وتحيلا,làm hỏng
+allam-7b,chon_sua,page_3,0:1,sua,اتي,إلى,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,ان,أن,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,تنفيذا,تنفيذاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,كاملا,كاملاً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,واتي,وإلى,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,ان,أن,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,تسخيل,تسجيل,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,البيح,البيع,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,رسميا,رسمياً,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,وتانونيا,وقانونيا,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,وان,وإن,không đổi khi chấm
+allam-7b,chon_sua,page_3,0:1,sua,الذكور,المذكور,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,الخيز,الغير,sửa đúng
+allam-7b,chon_sua,page_3,0:1,sua,او,أو,bị luật chặn
+allam-7b,chon_sua,page_3,0:1,sua,الجدل,العدل,sửa đúng
+allam-7b,chon_sua,page_3,0:3,chon,توقيع الوكالة,الله,làm hỏng
+allam-7b,chon_sua,page_3,0:9,sua,الاول,الأول,không đổi khi chấm
+allam-7b,chon_sua,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+allam-7b,chon_sua,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+allam-7b,chon_sua,page_4,0:0,sua,والاعلام,والإعلام,không đổi khi chấm
+allam-7b,chon_sua,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+allam-7b,chon_sua,page_4,0:1,sua,وسعد.,وسد.,không rõ
+allam-7b,chon_sua,page_4,0:2,chon,فرار,قرار,sửa đúng
+allam-7b,chon_sua,page_4,0:2,chon,متحف أمير الشعاء,متظاهر الشعواء,làm hỏng
+allam-7b,chon_sua,page_4,0:2,chon,شقى بمسحافظة الجيزة,شوقي بمحافظة الجبهزة,sửa đúng
+allam-7b,chon_sua,page_4,0:2,sua,باعتهار,باعتبار,sửa đúng
+allam-7b,chon_sua,page_4,0:2,sua,اقامة,إقامة,không đổi khi chấm
+allam-7b,chon_sua,page_4,0:3,chon,النشأة بالجيزة,النسير بالجريدة,sửa đúng
+allam-7b,chon_sua,page_4,0:3,sua,بالتنبهه,بالتنبه,không rõ
+allam-7b,chon_sua,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+allam-7b,chon_sua,page_4,0:4,sua,طام,ظام,không rõ
+allam-7b,chon_sua,page_4,0:6,sua,يسرى,يسري,không đổi khi chấm

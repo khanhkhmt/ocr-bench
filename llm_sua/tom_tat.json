@@ -339,5 +339,156 @@
    "seconds": 25.0
   }
  },
+ "allam-7b|chon": {
+  "page_1": {
+   "chars": 0.903435468895079,
+   "words": 0.7391304347826086,
+   "word_recall": 0.7554347826086957,
+   "changes": {
+    "sửa đúng": 7,
+    "không rõ": 6,
+    "làm hỏng": 1
+   },
+   "seconds": 5.0
+  },
+  "page_2": {
+   "chars": 0.7485226526592252,
+   "words": 0.5070921985815603,
+   "word_recall": 0.574468085106383,
+   "changes": {
+    "không rõ": 14,
+    "sửa đúng": 10,
+    "làm hỏng": 2
+   },
+   "seconds": 7.2
+  },
+  "page_3": {
+   "chars": 0.8043763676148796,
+   "words": 0.5,
+   "word_recall": 0.68,
+   "changes": {
+    "sửa đúng": 23,
+    "làm hỏng": 5,
+    "không rõ": 8
+   },
+   "seconds": 11.9
+  },
+  "page_4": {
+   "chars": 0.9195171026156942,
+   "words": 0.7790697674418605,
+   "word_recall": 0.8255813953488372,
+   "changes": {
+    "sửa đúng": 6,
+    "không rõ": 1,
+    "làm hỏng": 1
+   },
+   "seconds": 2.0
+  }
+ },
+ "allam-7b|sua": {
+  "page_1": {
+   "chars": 0.924791086350975,
+   "words": 0.7934782608695652,
+   "word_recall": 0.8097826086956522,
+   "changes": {
+    "không đổi khi chấm": 6,
+    "sửa đúng": 19,
+    "bị luật chặn": 21,
+    "làm hỏng": 2,
+    "không rõ": 4
+   },
+   "seconds": 16.6
+  },
+  "page_2": {
+   "chars": 0.7255416940249508,
+   "words": 0.4787234042553191,
+   "word_recall": 0.549645390070922,
+   "changes": {
+    "bị luật chặn": 21,
+    "không đổi khi chấm": 10,
+    "không rõ": 7,
+    "sửa đúng": 4
+   },
+   "seconds": 31.7
+  },
+  "page_3": {
+   "chars": 0.8087527352297593,
+   "words": 0.5525,
+   "word_recall": 0.745,
+   "changes": {
+    "bị luật chặn": 45,
+    "sửa đúng": 49,
+    "không đổi khi chấm": 20,
+    "không rõ": 14,
+    "làm hỏng": 4
+   },
+   "seconds": 43.4
+  },
+  "page_4": {
+   "chars": 0.9235412474849094,
+   "words": 0.7906976744186046,
+   "word_recall": 0.8372093023255814,
+   "changes": {
+    "sửa đúng": 7,
+    "bị luật chặn": 3,
+    "không đổi khi chấm": 3,
+    "không rõ": 2
+   },
+   "seconds": 11.1
+  }
+ },
+ "allam-7b|chon_sua": {
+  "page_1": {
+   "chars": 0.9136490250696379,
+   "words": 0.7771739130434783,
+   "word_recall": 0.7934782608695652,
+   "changes": {
+    "sửa đúng": 15,
+    "không rõ": 8,
+    "bị luật chặn": 5,
+    "làm hỏng": 2,
+    "không đổi khi chấm": 1
+   },
+   "seconds": 18.0
+  },
+  "page_2": {
+   "chars": 0.7511490479317138,
+   "words": 0.5177304964539007,
+   "word_recall": 0.5815602836879432,
+   "changes": {
+    "bị luật chặn": 11,
+    "không rõ": 18,
+    "không đổi khi chấm": 12,
+    "sửa đúng": 14,
+    "làm hỏng": 2
+   },
+   "seconds": 38.7
+  },
+  "page_3": {
+   "chars": 0.8135667396061269,
+   "words": 0.55,
+   "word_recall": 0.735,
+   "changes": {
+    "sửa đúng": 51,
+    "làm hỏng": 12,
+    "không rõ": 12,
+    "bị luật chặn": 41,
+    "không đổi khi chấm": 23
+   },
+   "seconds": 54.3
+  },
+  "page_4": {
+   "chars": 0.9195171026156942,
+   "words": 0.7906976744186046,
+   "word_recall": 0.8372093023255814,
+   "changes": {
+    "sửa đúng": 7,
+    "không đổi khi chấm": 3,
+    "không rõ": 4,
+    "làm hỏng": 1
+   },
+   "seconds": 13.3
+  }
+ },
  "errors": {}
 }

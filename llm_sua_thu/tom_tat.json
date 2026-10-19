@@ -1,0 +1,61 @@
+{
+ "—|khong": {
+  "page_4": {
+   "chars": 0.9094567404426559,
+   "words": 0.7093023255813953,
+   "word_recall": 0.7558139534883721,
+   "changes": {}
+  }
+ },
+ "—|tran_chon": {
+  "page_4": {
+   "chars": 0.9275653923541247,
+   "words": 0.7906976744186046,
+   "word_recall": 0.8372093023255814,
+   "changes": {}
+  }
+ },
+ "nho|chon": {
+  "page_4": {
+   "chars": 0.9154929577464789,
+   "words": 0.7558139534883721,
+   "word_recall": 0.8023255813953488,
+   "changes": {
+    "sửa đúng": 4,
+    "không rõ": 1,
+    "làm hỏng": 1
+   },
+   "seconds": 1.9
+  }
+ },
+ "nho|sua": {
+  "page_4": {
+   "chars": 0.9074446680080483,
+   "words": 0.7093023255813953,
+   "word_recall": 0.7558139534883721,
+   "changes": {
+    "làm hỏng": 3,
+    "không đổi khi chấm": 1,
+    "sửa đúng": 3,
+    "bị luật chặn": 7
+   },
+   "seconds": 10.6
+  }
+ },
+ "nho|chon_sua": {
+  "page_4": {
+   "chars": 0.9114688128772636,
+   "words": 0.7441860465116279,
+   "word_recall": 0.7906976744186046,
+   "changes": {
+    "sửa đúng": 6,
+    "không đổi khi chấm": 3,
+    "không rõ": 1,
+    "làm hỏng": 4,
+    "bị luật chặn": 7
+   },
+   "seconds": 12.2
+  }
+ },
+ "errors": {}
+}

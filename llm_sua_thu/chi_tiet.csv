@@ -1,0 +1,42 @@
+model,method,page,block,step,old,new,ket_qua
+nho,chon,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+nho,chon,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+nho,chon,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+nho,chon,page_4,0:2,chon,فرار,قرار,sửa đúng
+nho,chon,page_4,0:2,chon,متحف أمير الشعاء,متظاهر الشعواء,làm hỏng
+nho,chon,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+nho,sua,page_4,0:2,sua,أتشرف,أشرف,làm hỏng
+nho,sua,page_4,0:2,sua,بأن,أن,làm hỏng
+nho,sua,page_4,0:2,sua,الى,إلى,không đổi khi chấm
+nho,sua,page_4,0:2,sua,فرار,قرار,sửa đúng
+nho,sua,page_4,0:2,sua,شقى,شرقي,bị luật chặn
+nho,sua,page_4,0:2,sua,شقى,شوقي,bị luật chặn
+nho,sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
+nho,sua,page_4,0:2,sua,الجيزة,الجبهزة,làm hỏng
+nho,sua,page_4,0:3,sua,رجاء,وجاه,bị luật chặn
+nho,sua,page_4,0:3,sua,بالتنبهه,بالتمني,bị luật chặn
+nho,sua,page_4,0:3,sua,النشأة,النسيان,bị luật chặn
+nho,sua,page_4,0:4,sua,طام,طالب,bị luật chặn
+nho,sua,page_4,0:4,sua,الوزراة,الوزراء,sửa đúng
+nho,sua,page_4,0:7,sua,١٩٧٢,١٩٥٨,bị luật chặn
+nho,chon_sua,page_4,0:0,chon,الصيد الديكرر,السيد الدكتور,sửa đúng
+nho,chon_sua,page_4,0:0,chon,الوزراة,الوزراء,sửa đúng
+nho,chon_sua,page_4,0:0,sua,والاعلام,والإعلام,không đổi khi chấm
+nho,chon_sua,page_4,0:1,chon,طلبة بعد .,طيبة وسعد.,không rõ
+nho,chon_sua,page_4,0:2,chon,فرار,قرار,sửa đúng
+nho,chon_sua,page_4,0:2,chon,متحف أمير الشعاء,متظاهر الشعواء,làm hỏng
+nho,chon_sua,page_4,0:2,sua,أتشرف,أشرف,làm hỏng
+nho,chon_sua,page_4,0:2,sua,بأن,أن,làm hỏng
+nho,chon_sua,page_4,0:2,sua,الى,إلى,không đổi khi chấm
+nho,chon_sua,page_4,0:2,sua,١٩٧٢,١٩٦٢,bị luật chặn
+nho,chon_sua,page_4,0:2,sua,باعتهار,باعتبار,sửa đúng
+nho,chon_sua,page_4,0:2,sua,اقامة,إقامة,không đổi khi chấm
+nho,chon_sua,page_4,0:2,sua,شقى,شرقي,bị luật chặn
+nho,chon_sua,page_4,0:2,sua,شقى,شوقي,bị luật chặn
+nho,chon_sua,page_4,0:2,sua,بمسحافظة,بمحافظة,sửa đúng
+nho,chon_sua,page_4,0:2,sua,الجيزة,الجبهزة,làm hỏng
+nho,chon_sua,page_4,0:3,sua,رجاء,وجاه,bị luật chặn
+nho,chon_sua,page_4,0:3,sua,بالتنبهه,بالتمني,bị luật chặn
+nho,chon_sua,page_4,0:3,sua,النشأة,النسيان,bị luật chặn
+nho,chon_sua,page_4,0:4,chon,الوزراة,الوزراء,sửa đúng
+nho,chon_sua,page_4,0:7,sua,١٩٧٢,١٩٥٨,bị luật chặn

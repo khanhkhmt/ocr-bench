@@ -1,6 +1,6 @@
 # LLM sửa lỗi OCR — 4 trang mẫu
 
-Cập nhật 2026-10-19 09:19 UTC. Điểm = % ký tự đúng / % từ đúng (mã chấm của arabic-doc-ocr `scripts/evaluate.py`, văn bản chính). Nhãn chỉ dùng để chấm, không đưa vào LLM.
+Cập nhật 2026-10-19 09:32 UTC. Điểm = % ký tự đúng / % từ đúng (mã chấm của arabic-doc-ocr `scripts/evaluate.py`, văn bản chính). Nhãn chỉ dùng để chấm, không đưa vào LLM.
 
 Loại trang: page_1 = đánh máy, page_2 = viết tay, page_3 = đánh máy, page_4 = đánh máy
 
@@ -17,6 +17,9 @@ Loại trang: page_1 = đánh máy, page_2 = viết tay, page_3 = đánh máy, p
 | allam-7b | chon | 90.3 / 73.9 (+0.1 / +3.8) | 74.9 / 50.7 (+2.6 / +4.3) | 80.4 / 50.0 (+1.4 / +6.0) | 92.0 / 77.9 (+1.0 / +7.0) | 46 | 9 | 29 | 0 | 26 |
 | allam-7b | sua | 92.5 / 79.3 (+2.2 / +9.2) | 72.6 / 47.9 (+0.3 / +1.4) | 80.9 / 55.2 (+1.9 / +11.3) | 92.4 / 79.1 (+1.4 / +8.1) | 79 | 6 | 27 | 90 | 103 |
 | allam-7b | chon_sua | 91.4 / 77.7 (+1.1 / +7.6) | 75.1 / 51.8 (+2.9 / +5.3) | 81.4 / 55.0 (+2.4 / +11.0) | 92.0 / 79.1 (+1.0 / +8.1) | 87 | 17 | 42 | 57 | 124 |
+| qwen3.5-9b | chon | 90.3 / 73.4 (+0.0 / +3.3) | 75.0 / 51.4 (+2.8 / +5.0) | 80.1 / 48.8 (+1.1 / +4.8) | 93.0 / 79.1 (+2.0 / +8.1) | 44 | 9 | 31 | 0 | 135 |
+| qwen3.5-9b | sua | 92.0 / 77.7 (+1.8 / +7.6) | 72.2 / 46.8 (-0.1 / +0.4) | 81.0 / 55.5 (+2.0 / +11.5) | 93.0 / 79.1 (+2.0 / +8.1) | 72 | 3 | 29 | 50 | 211 |
+| qwen3.5-9b | chon_sua | 91.4 / 78.3 (+1.1 / +8.2) | 75.2 / 51.8 (+3.0 / +5.3) | 81.2 / 55.5 (+2.2 / +11.5) | 94.0 / 83.7 (+3.0 / +12.8) | 89 | 12 | 56 | 37 | 289 |
 
 `khong` = chưa sửa · `tran_chon` = mức tối đa của cách `chon` (dùng nhãn, không phải cách sửa).
 
@@ -35,5 +38,8 @@ Loại trang: page_1 = đánh máy, page_2 = viết tay, page_3 = đánh máy, p
 | allam-7b | chon | ĐẠT (từ +5.6 · ký tự tệ nhất +0.1 · sửa đúng 36 / làm hỏng 7) | ĐẠT (từ +4.3 · ký tự tệ nhất +2.6 · sửa đúng 10 / làm hỏng 2) |
 | allam-7b | sua | ĐẠT (từ +9.5 · ký tự tệ nhất +1.4 · sửa đúng 75 / làm hỏng 6) | không đạt (từ +1.4 · ký tự tệ nhất +0.3 · sửa đúng 4 / làm hỏng 0) |
 | allam-7b | chon_sua | ĐẠT (từ +8.9 · ký tự tệ nhất +1.0 · sửa đúng 73 / làm hỏng 15) | ĐẠT (từ +5.3 · ký tự tệ nhất +2.9 · sửa đúng 14 / làm hỏng 2) |
+| qwen3.5-9b | chon | ĐẠT (từ +5.4 · ký tự tệ nhất +0.0 · sửa đúng 33 / làm hỏng 8) | ĐẠT (từ +5.0 · ký tự tệ nhất +2.8 · sửa đúng 11 / làm hỏng 1) |
+| qwen3.5-9b | sua | ĐẠT (từ +9.1 · ký tự tệ nhất +1.8 · sửa đúng 70 / làm hỏng 2) | không đạt (từ +0.4 · ký tự tệ nhất -0.1 · sửa đúng 2 / làm hỏng 1) |
+| qwen3.5-9b | chon_sua | ĐẠT (từ +10.8 · ký tự tệ nhất +1.1 · sửa đúng 77 / làm hỏng 10) | ĐẠT (từ +5.3 · ký tự tệ nhất +3.0 · sửa đúng 12 / làm hỏng 2) |
 
 Chi tiết từng từ bị đổi: `chi_tiet.csv`.

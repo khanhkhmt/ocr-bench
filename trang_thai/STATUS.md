@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-19 08:17 UTC
+# Trạng thái server — 2026-10-19 08:27 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `e6a5044ee560` · up 4 hours, 27 minutes
+- máy: `e6a5044ee560` · up 4 hours, 37 minutes
 - ngrok (SSH): tcp://0.tcp.ngrok.io:28751
 - code: `72dcb7b hop_thu: RAM trong STATUS; prompt LLM: báo trạng thái mỗi 10 phút, server sập → làm lại từ BƯỚC 0` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  549M   19G   3% /kaggle/working
@@ -28,7 +28,7 @@ hop_thu: 1 windows (created Mon Oct 19 04:01:52 2026)
 | adoc | XONG | 1 | 0 | 2026-10-19 04:02 UTC | `✔ XONG TẤT CẢ — bước tiếp theo: bash scripts/push_results.sh` |
 | cai_llm | CHỜ LỆNH | 1 | 0 | 2026-10-19 05:35 UTC | `✘ LỖI: kiểm tra venv lỗi` |
 
-## cai_llm.log (sửa 162 phút trước)
+## cai_llm.log (sửa 172 phút trước)
 ```
 == torch hệ thống 2.10.0 → transformers 5.15.1
    ghim: torch==2.10.0+cu128 torchvision==0.25.0+cu128 torchaudio==2.10.0+cu128 triton==3.6.0 
@@ -40,7 +40,7 @@ AssertionError
 ✘ LỖI: kiểm tra venv lỗi
 ```
 
-## adoc_run_all.log (sửa 164 phút trước)
+## adoc_run_all.log (sửa 174 phút trước)
 ```
 | page_3 | printed | 213 s | 34 | 234 s |
 | page_4 | printed | 114 s | 19 | 59 s |

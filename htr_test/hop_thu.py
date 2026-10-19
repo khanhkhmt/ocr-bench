@@ -153,6 +153,7 @@ def status(prompt_seen: str, note: str) -> str:
          f"- ngrok (SSH): {', '.join(ngrok_urls()) or '(không thấy)'}",
          f"- code: `{sh(f'git -C {CODE} log --oneline -1')}` (nhánh `{sh(f'git -C {CODE} branch --show-current')}`)",
          f"- ổ {WORK}: {sh(f'df -h {WORK} | tail -1')}",
+         f"- RAM: {sh('free -g | grep Mem:')} (cột: tổng / đã dùng / trống / … / còn dùng được, GB)",
          f"- prompt đã nhận gần nhất: `{prompt_seen or '(chưa có)'}`", "",
          "## GPU", "```", sh("nvidia-smi --query-gpu=name,memory.used,memory.total,utilization.gpu --format=csv,noheader"),
          sh("nvidia-smi --query-compute-apps=pid,used_memory,process_name --format=csv,noheader") or "(không có tiến trình)",

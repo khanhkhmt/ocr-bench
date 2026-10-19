@@ -4,6 +4,9 @@ Bạn là agent chạy trên server Kaggle (2× T4). Làm ĐÚNG từng bước 
 Bạn KHÔNG thiết kế thí nghiệm, KHÔNG sửa code, KHÔNG đổi tham số: mọi thứ đã viết sẵn trong script.
 Việc của bạn: chạy lệnh, chờ, kiểm tra đúng điều kiện ghi ở mỗi bước, báo cáo.
 
+Server sập / khởi động lại giữa chừng → làm lại TỪ BƯỚC 0. Mọi bước chạy lại đều an toàn: code tự lấy lại, run_all.sh
+đo lại từ đầu, llm_sua tự lấy phần đã xong từ GitHub và đi tiếp.
+
 ## LUẬT CỨNG (vi phạm = dừng ngay)
 
 1. Token (`GITHUB_TOKEN`, `HF_TOKEN`) CHỈ nằm trong biến môi trường. CẤM in ra (`echo $GITHUB_TOKEN`, `env`,
@@ -54,7 +57,7 @@ tmux start-server
 tmux set-environment -g GITHUB_TOKEN "$GITHUB_TOKEN"
 [ -n "${HF_TOKEN:-}" ] && tmux set-environment -g HF_TOKEN "$HF_TOKEN"
 tmux has-session -t hop_thu 2>/dev/null || tmux new -d -s hop_thu \
-  "cd /kaggle/working/ocr-bench && python3 -m htr_test.hop_thu chay --phut 20 --kiem-lenh 5 2>&1 | tee -a /kaggle/working/hop_thu.log"
+  "cd /kaggle/working/ocr-bench && python3 -m htr_test.hop_thu chay --phut 10 --kiem-lenh 5 2>&1 | tee -a /kaggle/working/hop_thu.log"
 sleep 60; tail -n 5 /kaggle/working/hop_thu.log
 ```
 

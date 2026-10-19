@@ -35,10 +35,13 @@ echo "   ghim: $(tr '\n' ' ' < "$VENV/torch_pin.txt")"
 "$VENV/bin/python" -m pip install -q -c "$VENV/torch_pin.txt" "transformers==$TF" "accelerate>=1.0" \
   "huggingface_hub" "rapidfuzz>=3" "pyyaml" "sentencepiece" "protobuf" || fail "pip install lỗi"
 "$VENV/bin/python" - <<'EOF' || fail "kiểm tra venv lỗi"
+import os, sys
 import torch, transformers, accelerate, rapidfuzz, yaml
-assert "/site-packages" in torch.__file__
+# torch phải là bản của HỆ THỐNG (site-packages hoặc dist-packages ngoài venv), không phải bản lạc vào venv
+assert not os.path.realpath(torch.__file__).startswith(os.path.realpath(sys.prefix) + os.sep), \
+    f"torch nằm TRONG venv ({torch.__file__}) — không phải torch hệ thống"
 n = torch.cuda.device_count()
-print(f"   torch {torch.__version__} ({torch.__file__.split('/site-packages')[0]}) · transformers {transformers.__version__}"
+print(f"   torch {torch.__version__} ({os.path.dirname(os.path.dirname(torch.__file__))}) · transformers {transformers.__version__}"
       f" · accelerate {accelerate.__version__} · GPU {n}: " +
       ", ".join(torch.cuda.get_device_name(i) for i in range(n)))
 from htr_test.sync import Sync  # noqa: F401  (đẩy kết quả lên GitHub cần import được)

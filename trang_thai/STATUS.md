@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-20 09:57 UTC
+# Trạng thái server — 2026-10-20 10:07 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `5649dab657e1` · up 7 hours, 43 minutes
+- máy: `5649dab657e1` · up 7 hours, 53 minutes
 - ngrok (SSH): tcp://2.tcp.ngrok.io:19216
 - code: `028c4ee dot1: Đợt 1 thử không cần huấn luyện — bộ test A (chọn) / B (xác nhận), trộn ft3+ft4, độ mạnh ft3, bầu chọn, Bước 0 trên 66 trang Muharaf (dòng chuẩn vs Kraken), dots đọc từng khối; luật chọn / luật đạt viết sẵn; chay_dot1.sh + PROMPT_DOT1.md` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  3.4G   17G  18% /kaggle/working
@@ -11,8 +11,8 @@
 
 ## GPU
 ```
-Tesla T4, 9093 MiB, 15360 MiB, 30 %
-Tesla T4, 8351 MiB, 15360 MiB, 28 %
+Tesla T4, 9093 MiB, 15360 MiB, 29 %
+Tesla T4, 8351 MiB, 15360 MiB, 32 %
 100096, 8640 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
 100100, 450 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
 100100, 8348 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
@@ -30,21 +30,21 @@ init: 1 windows (created Tue Oct 20 02:40:12 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | cai_adoc | XONG | 1 | 0 | 2026-10-20 02:41 UTC | `Done. Web:  bash run_web.sh        CLI:  /kaggle/working/arabic-doc-ocr/.venv/bin/python -m arabic_doc_ocr page <file> --type printed` |
-| dot1 | đang chạy | 1 | 0 | 2026-10-20 02:47 UTC | `[b1] [09:55:06]    ✔ tự kiểm: ft3 / gốc đọc giống hệt sản phẩm; tron34 bật đủ 2 adapter với hệ số ½` |
+| dot1 | đang chạy | 1 | 0 | 2026-10-20 02:47 UTC | `[b1] [10:06:01]    omar_B · ft3 · phần 7: 50 dòng, 3.23 s/dòng · còn ~255 phần · RAM trống 25.1 GB` |
 
-## dot1.log (sửa 3 phút trước)
+## dot1.log (sửa 2 phút trước)
 ```
-[b1] 
-[b1] 
-[b0] [09:54:26]    nạp xong: 412 lớp LoRA × 3 adapter trên cuda:0
-[b0] The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-[b1] [09:54:27]    nạp xong: 412 lớp LoRA × 3 adapter trên cuda:1
-[b1] The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
-[b0] [09:55:04]    ✔ tự kiểm: ft3 / gốc đọc giống hệt sản phẩm; tron34 bật đủ 2 adapter với hệ số ½
-[b1] [09:55:06]    ✔ tự kiểm: ft3 / gốc đọc giống hệt sản phẩm; tron34 bật đủ 2 adapter với hệ số ½
+[b1] [09:57:48]    omar_B · ft3 · phần 0: 50 dòng, 3.25 s/dòng · còn ~261 phần · RAM trống 25.2 GB
+[b1] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 7d0b5d1) — dot1 doc B: omar_B ft3 phần 0
+[b0] [10:00:40]    omar_B · ft3 · phần 2: 50 dòng, 3.52 s/dòng · còn ~260 phần · RAM trống 25.2 GB
+[b1] [10:00:43]    omar_B · ft3 · phần 3: 50 dòng, 3.43 s/dòng · còn ~259 phần · RAM trống 25.1 GB
+[b0] [10:03:18]    omar_B · ft3 · phần 4: 50 dòng, 3.13 s/dòng · còn ~258 phần · RAM trống 25.2 GB
+[b1] [10:03:18]    omar_B · ft3 · phần 5: 50 dòng, 3.09 s/dòng · còn ~257 phần · RAM trống 25.2 GB
+[b0] [10:05:56]    omar_B · ft3 · phần 6: 50 dòng, 3.16 s/dòng · còn ~255 phần · RAM trống 25.2 GB
+[b1] [10:06:01]    omar_B · ft3 · phần 7: 50 dòng, 3.23 s/dòng · còn ~255 phần · RAM trống 25.1 GB
 ```
 
-## cai_adoc.log (sửa 433 phút trước)
+## cai_adoc.log (sửa 443 phút trước)
 ```
   Kraken: /root/.cache/arabic_doc_ocr/kraken_venv/bin/kraken · segmentation model: /root/.cache/arabic_doc_ocr/muharaf_seg_best.mlmodel
   RAM 31.3 GiB (free 28.2)

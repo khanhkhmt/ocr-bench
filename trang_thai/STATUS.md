@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-20 06:37 UTC
+# Trạng thái server — 2026-10-20 06:47 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `5649dab657e1` · up 4 hours, 23 minutes
+- máy: `5649dab657e1` · up 4 hours, 33 minutes
 - ngrok (SSH): tcp://2.tcp.ngrok.io:19216
 - code: `028c4ee dot1: Đợt 1 thử không cần huấn luyện — bộ test A (chọn) / B (xác nhận), trộn ft3+ft4, độ mạnh ft3, bầu chọn, Bước 0 trên 66 trang Muharaf (dòng chuẩn vs Kraken), dots đọc từng khối; luật chọn / luật đạt viết sẵn; chay_dot1.sh + PROMPT_DOT1.md` (nhánh `thu-2-model-htr`)
 - ổ /kaggle/working: /dev/loop2       20G  3.4G   17G  17% /kaggle/working
@@ -11,8 +11,8 @@
 
 ## GPU
 ```
-Tesla T4, 9093 MiB, 15360 MiB, 33 %
-Tesla T4, 8351 MiB, 15360 MiB, 26 %
+Tesla T4, 9093 MiB, 15360 MiB, 35 %
+Tesla T4, 8351 MiB, 15360 MiB, 30 %
 9277, 450 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
 14233, 8640 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
 9277, 8348 MiB, /kaggle/working/arabic-doc-ocr/.venv/bin/python
@@ -30,21 +30,21 @@ init: 1 windows (created Tue Oct 20 02:40:12 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | cai_adoc | XONG | 1 | 0 | 2026-10-20 02:41 UTC | `Done. Web:  bash run_web.sh        CLI:  /kaggle/working/arabic-doc-ocr/.venv/bin/python -m arabic_doc_ocr page <file> --type printed` |
-| dot1 | đang chạy | 1 | 0 | 2026-10-20 02:47 UTC | `[g0] [06:36:52]    omar_A · ft3_s075 · phần 2: 50 dòng, 3.30 s/dòng · còn ~166 phần · RAM trống 25.1 GB` |
+| dot1 | đang chạy | 1 | 0 | 2026-10-20 02:47 UTC | `[g1] [06:45:39]    omar_A · ft3_s075 · phần 9: 50 dòng, 3.18 s/dòng · còn ~159 phần · RAM trống 25.1 GB` |
 
-## dot1.log (sửa 0 phút trước)
+## dot1.log (sửa 1 phút trước)
 ```
-[g0] [06:28:05]    giulai_A · tron34 · phần 6: 50 dòng, 3.36 s/dòng · còn ~172 phần · RAM trống 25.1 GB
-[g0] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 6f6df75) — dot1 doc A: giulai_A tron34 phần 6
-[g1] [06:28:33]    giulai_A · tron34 · phần 7: 50 dòng, 3.62 s/dòng · còn ~171 phần · RAM trống 25.1 GB
-[g0] [06:31:12]    giulai_A · tron34 · phần 8: 50 dòng, 3.71 s/dòng · còn ~170 phần · RAM trống 25.1 GB
-[g1] [06:31:32]    giulai_A · tron34 · phần 9: 50 dòng, 3.57 s/dòng · còn ~169 phần · RAM trống 25.1 GB
-[g0] [06:34:06]    omar_A · ft3_s075 · phần 0: 50 dòng, 3.46 s/dòng · còn ~168 phần · RAM trống 25.1 GB
-[g1] [06:34:22]    omar_A · ft3_s075 · phần 1: 50 dòng, 3.40 s/dòng · còn ~167 phần · RAM trống 25.1 GB
-[g0] [06:36:52]    omar_A · ft3_s075 · phần 2: 50 dòng, 3.30 s/dòng · còn ~166 phần · RAM trống 25.1 GB
+[g1] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit ffd6f1d) — dot1 doc A: omar_A ft3_s075 phần 3
+[g0] [06:39:35]    omar_A · ft3_s075 · phần 4: 50 dòng, 3.26 s/dòng · còn ~164 phần · RAM trống 25.1 GB
+[g0] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit b7dba5e) — dot1 doc A: omar_A ft3_s075 phần 4
+[g1] [06:40:09]    omar_A · ft3_s075 · phần 5: 50 dòng, 3.52 s/dòng · còn ~163 phần · RAM trống 25.1 GB
+[g0] [06:42:34]    omar_A · ft3_s075 · phần 6: 50 dòng, 3.53 s/dòng · còn ~162 phần · RAM trống 25.1 GB
+[g1] [06:43:00]    omar_A · ft3_s075 · phần 7: 50 dòng, 3.40 s/dòng · còn ~161 phần · RAM trống 25.1 GB
+[g0] [06:45:15]    omar_A · ft3_s075 · phần 8: 50 dòng, 3.23 s/dòng · còn ~160 phần · RAM trống 25.1 GB
+[g1] [06:45:39]    omar_A · ft3_s075 · phần 9: 50 dòng, 3.18 s/dòng · còn ~159 phần · RAM trống 25.1 GB
 ```
 
-## cai_adoc.log (sửa 232 phút trước)
+## cai_adoc.log (sửa 242 phút trước)
 ```
   Kraken: /root/.cache/arabic_doc_ocr/kraken_venv/bin/kraken · segmentation model: /root/.cache/arabic_doc_ocr/muharaf_seg_best.mlmodel
   RAM 31.3 GiB (free 28.2)

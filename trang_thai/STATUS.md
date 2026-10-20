@@ -1,12 +1,12 @@
-# Trạng thái server — 2026-10-19 09:38 UTC
+# Trạng thái server — 2026-10-20 02:41 UTC
 
-**Còn sống** · llm XONG
+**Còn sống** · định kỳ
 
-- máy: `e6a5044ee560` · up 5 hours, 48 minutes
-- ngrok (SSH): tcp://0.tcp.ngrok.io:28751
-- code: `ce65530 cai_llm.sh: kiểm tra torch hệ thống theo vị trí ngoài venv (Kaggle để torch ở dist-packages, không phải site-packages)` (nhánh `thu-2-model-htr`)
-- ổ /kaggle/working: /dev/loop2       20G  592M   19G   3% /kaggle/working
-- RAM: Mem:              31           0           7           0          23          29 (cột: tổng / đã dùng / trống / … / còn dùng được, GB)
+- máy: `5649dab657e1` · up 27 minutes
+- ngrok (SSH): tcp://2.tcp.ngrok.io:19216
+- code: `028c4ee dot1: Đợt 1 thử không cần huấn luyện — bộ test A (chọn) / B (xác nhận), trộn ft3+ft4, độ mạnh ft3, bầu chọn, Bước 0 trên 66 trang Muharaf (dòng chuẩn vs Kraken), dots đọc từng khối; luật chọn / luật đạt viết sẵn; chay_dot1.sh + PROMPT_DOT1.md` (nhánh `thu-2-model-htr`)
+- ổ /kaggle/working: /dev/loop2       20G   49M   20G   1% /kaggle/working
+- RAM: Mem:              31           1          21           0           8          29 (cột: tổng / đã dùng / trống / … / còn dùng được, GB)
 - prompt đã nhận gần nhất: `(chưa có)`
 
 ## GPU
@@ -18,63 +18,7 @@ Tesla T4, 0 MiB, 15360 MiB, 0 %
 
 ## Phiên tmux
 ```
-hop_thu: 1 windows (created Mon Oct 19 04:01:52 2026)
-```
-
-## Việc (giám sát)
-
-| việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
-|---|---|---:|---:|---|---|
-| adoc | XONG | 1 | 0 | 2026-10-19 04:02 UTC | `✔ XONG TẤT CẢ — bước tiếp theo: bash scripts/push_results.sh` |
-| cai_llm | XONG | 2 | 0 | 2026-10-19 08:46 UTC | `✔ VENV LLM SẴN SÀNG: /kaggle/working/venvs/llm (transformers 5.15.1)` |
-| llm_thu | XONG | 1 | 0 | 2026-10-19 08:48 UTC | `✔ XONG TẤT CẢ (1/1 model chạy được; lỗi: không)` |
-| llm | XONG | 1 | 0 | 2026-10-19 08:51 UTC | `✔ XONG TẤT CẢ (4/5 model chạy được; lỗi: ['gemma4-12b'])` |
-
-## llm_sua.log (sửa 4 phút trước)
-```
-[09:32:07]    qwen3.5-9b · chon_sua · page_3: 86 từ đổi (10 bị luật chặn), 117 s
-[09:32:38]    qwen3.5-9b · chon_sua · page_4: 16 từ đổi (3 bị luật chặn), 31 s
-✔ GITHUB: đã đẩy lên nhánh results-htr/llm_sua (commit dbd6dc0) — llm_sua: xong qwen3.5-9b
-[09:32:40] == gemma4-12b (google/gemma-4-12B-it): tải + nạp …
-[09:32:40]    ổ trống 993 GiB
-[09:34:11] ⚠ gemma4-12b KHÔNG CHẠY ĐƯỢC — OSError: [Errno 30] Read-only file system: '/tmp/llm_sua_cache/models--google--gemma-4-12B-it/blobs/5a84cb313260ac447237b890387116dfa8682e49a6b44bc585ae8353abbff18d.9f709b67.incomplete'
-✔ GITHUB: đã đẩy lên nhánh results-htr/llm_sua (commit 832998e) — llm_sua: xong gemma4-12b
-✔ XONG TẤT CẢ (4/5 model chạy được; lỗi: ['gemma4-12b'])
-```
-
-## llm_thu.log (sửa 49 phút trước)
-```
-[08:48:51] == nho (Qwen/Qwen2.5-0.5B-Instruct): tải + nạp …
-[08:48:51]    ổ trống 1054 GiB
-[08:49:09]    nạp xong (17 s, float16, revision 7ae557604a)
-[08:49:10]    nho · chon · page_4: 6 từ đổi (0 bị luật chặn), 2 s
-[08:49:21]    nho · sua · page_4: 7 từ đổi (7 bị luật chặn), 11 s
-[08:49:33]    nho · chon_sua · page_4: 14 từ đổi (7 bị luật chặn), 12 s
-✔ GITHUB: đã đẩy lên nhánh results-htr/llm_sua_thu (commit 7e04fab) — llm_sua: xong nho
-✔ XONG TẤT CẢ (1/1 model chạy được; lỗi: không)
-```
-
-## cai_llm.log (sửa 52 phút trước)
-```
-Traceback (most recent call last):
-  File "<stdin>", line 2, in <module>
-AssertionError
-✘ LỖI: kiểm tra venv lỗi
-== torch hệ thống 2.10.0 → transformers 5.15.1
-   ghim: torch==2.10.0+cu128 torchvision==0.25.0+cu128 torchaudio==2.10.0+cu128 triton==3.6.0 
-   torch 2.10.0+cu128 (/usr/local/lib/python3.12/dist-packages) · transformers 5.15.1 · accelerate 1.12.0 · GPU 2: Tesla T4, Tesla T4
-✔ VENV LLM SẴN SÀNG: /kaggle/working/venvs/llm (transformers 5.15.1)
-```
-
-## adoc_run_all.log (sửa 245 phút trước)
-```
-| page_3 | printed | 213 s | 34 | 234 s |
-| page_4 | printed | 114 s | 19 | 59 s |
-## Disk
-| item | size |
-|---|---:|
-| model dots-studio/dots.mocr | 5.7 GB |
-| model Misraj/Baseer__Nakba | 7.0 GB |
-✔ XONG TẤT CẢ — bước tiếp theo: bash scripts/push_results.sh
+hop_thu: 1 windows (created Tue Oct 20 02:41:19 2026)
+init: 1 windows (created Tue Oct 20 02:40:12 2026)
 ```
 

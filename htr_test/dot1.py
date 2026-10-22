@@ -77,6 +77,9 @@ PRINTED = ("page_1", "page_3", "page_4")  # loại trang như docs/RESULTS.md c�
 KHOI_F = (1.5, 2.0, 3.0)  # #5: phóng khối so với trang đã chuẩn bị (sản phẩm đọc cả trang ở ~×1,5)
 KHOI_MAX_PX = 4_500_000  # trang 2400 px (~4,1 MP) vừa T4; 3200 px (~7 MP) hết VRAM → giới hạn mỗi khối
 MUHARAF_ZIP = "https://zenodo.org/api/records/11492215/files/public_data_files.zip/content"
+# #12: nới khung dòng Kraken theo chiều dọc thêm N % độ dày dòng (nửa trên, nửa dưới). Bước 0 thấy dòng Kraken chỉ cao
+# ~76% dòng chuẩn (trung vị) → nét trên / dưới và dấu chấm bị tô mất. 0 = cắt y như sản phẩm, đọc lại làm mốc cùng lần chạy.
+NO_MUC = (0, 15, 30, 50)
 
 LUAT = {
     "chon": "Ứng viên = cách có điểm ký tự TRUNG BÌNH 3 bộ A cao nhất (mọi cấu hình + mọi kiểu bầu, trừ ft3 và mức trần), "
@@ -93,6 +96,10 @@ LUAT = {
                "nhất (hơn ≥ 0,2) → học QUÁ / quên kiến thức gốc → Đợt 2 trộn checkpoint, giữ một phần gốc; còn lại → "
                "không rõ (nhật ký train: CER kiểm tra vẫn giảm ở bước 2000 → nghiêng về train lâu hơn).",
     "bau": "Bầu chọn tốt nhất hơn ft3 ≥ 1,0 điểm (bộ A) → Đợt 2 train vài bản ft5 khác nhau để bầu; ít hơn → một bản.",
+    "no": "#12 ĐẠT nếu mức nới tốt nhất (theo % ký tự cả trang, 66 trang Muharaf, đọc bằng ft3) hơn mức 0 % (đọc lại cùng "
+          "lần chạy) ≥ +1,0 điểm VÀ túi từ không kém VÀ trang 2 (viết tay của khách, chữ chính) không kém quá 1,0 điểm → "
+          "đưa mức đó vào sản phẩm (crop_poly, chờ anh duyệt) và dùng khi cắt dòng Kraken cho #10. Chọn 1 trong 3 mức trên "
+          "chính 66 trang → mức hơn hơi lạc quan; model tách dòng Muharaf có thể đã thấy các trang này.",
 }
 
 
@@ -385,11 +392,63 @@ def _dong_muharaf(js: dict) -> tuple[list[dict], list[list]]:
     return giu, bo
 
 
-def cmd_mtrang(a) -> int:
+def _anh_mtrang(raw: Path, p: str):
+    """Ảnh một trang Muharaf test đúng như Bước 0 dùng: xoay / co theo page_dict, dòng bị loại tô màu giấy, prepare() như
+    sản phẩm; kèm dòng chuẩn (đa giác theo ảnh đó). → (ảnh, dòng chuẩn, cách khớp toạ độ), hoặc None nếu thiếu file /
+    trang không có dòng Ả Rập có nhãn."""
     from PIL import Image, ImageDraw, ImageOps
 
-    from arabic_doc_ocr.lines import kraken_page
     from arabic_doc_ocr.pipeline import prepare
+
+    js_f = raw / f"{p}.json"
+    imf = next(iter(raw.glob(f"{p}.img.*")), None)
+    if not js_f.exists() or imf is None:
+        return None
+    js = json.loads(js_f.read_text(encoding="utf-8"))
+    giu, bo = _dong_muharaf(js)
+    if not giu:
+        log(f"   ⚠ {p}: không có dòng Ả Rập có nhãn → bỏ")
+        return None
+    img = Image.open(imf)
+    pdct = js.get("page_dict") or {}
+    wj, hj = int(float(pdct.get("imageWidth") or 0)), int(float(pdct.get("imageHeight") or 0))
+    cach = "goc"
+    if wj and hj and img.size != (wj, hj):
+        t = ImageOps.exif_transpose(img)
+        if t.size == (wj, hj):
+            img, cach = t, "exif"
+        else:
+            sx, sy = img.width / wj, img.height / hj
+            for g in giu:
+                g["poly"] = [(x * sx, y * sy) for x, y in g["poly"]]
+            bo = [[(x * sx, y * sy) for x, y in q] for q in bo]
+            cach = f"co_{sx:.3f}x{sy:.3f}"
+    img = img.convert("RGB")
+    w0 = img.width
+    # dòng bị loại (chữ Latin, mã lưu trữ, gạch bỏ…) → tô màu giấy; dòng giữ lại dán lại nguyên vẹn
+    if bo:
+        import numpy as np
+
+        bg = tuple(int(v) for v in np.median(np.asarray(img).reshape(-1, 3), axis=0))
+        to = img.copy()
+        dr = ImageDraw.Draw(to)
+        for q in bo:
+            dr.polygon(q, fill=bg)
+        m = Image.new("L", img.size, 0)
+        dm = ImageDraw.Draw(m)
+        for g in giu:
+            dm.polygon(g["poly"], fill=255)
+        img = Image.composite(img, to, m)
+    img = prepare(img)  # như sản phẩm (chỉ phóng ảnh nhỏ < 1000 px) → khung chuẩn phóng theo
+    if img.width != w0:
+        s = img.width / w0
+        for g in giu:
+            g["poly"] = [(x * s, y * s) for x, y in g["poly"]]
+    return img, giu, cach
+
+
+def cmd_mtrang(a) -> int:
+    from arabic_doc_ocr.lines import kraken_page
 
     out, data = Path(a.out), Path(a.data)
     raw, cd = data / "mtrang_raw", data / "crops" / "mtrang"
@@ -418,50 +477,10 @@ def cmd_mtrang(a) -> int:
     kr = {r["id"]: r for r in doc_jsonl(kr_f)}
     trang_rows, vang_rows, kr_rows = [], [], []
     for i, p in enumerate(pids):
-        js_f = raw / f"{p}.json"
-        imf = next(iter(raw.glob(f"{p}.img.*")), None)
-        if not js_f.exists() or imf is None:
+        dung = _anh_mtrang(raw, p)
+        if dung is None:
             continue
-        js = json.loads(js_f.read_text(encoding="utf-8"))
-        giu, bo = _dong_muharaf(js)
-        if not giu:
-            log(f"   ⚠ {p}: không có dòng Ả Rập có nhãn → bỏ")
-            continue
-        img = Image.open(imf)
-        pdct = js.get("page_dict") or {}
-        wj, hj = int(float(pdct.get("imageWidth") or 0)), int(float(pdct.get("imageHeight") or 0))
-        cach = "goc"
-        if wj and hj and img.size != (wj, hj):
-            t = ImageOps.exif_transpose(img)
-            if t.size == (wj, hj):
-                img, cach = t, "exif"
-            else:
-                sx, sy = img.width / wj, img.height / hj
-                for g in giu:
-                    g["poly"] = [(x * sx, y * sy) for x, y in g["poly"]]
-                bo = [[(x * sx, y * sy) for x, y in q] for q in bo]
-                cach = f"co_{sx:.3f}x{sy:.3f}"
-        img = img.convert("RGB")
-        w0 = img.width
-        # dòng bị loại (chữ Latin, mã lưu trữ, gạch bỏ…) → tô màu giấy; dòng giữ lại dán lại nguyên vẹn
-        if bo:
-            import numpy as np
-
-            bg = tuple(int(v) for v in np.median(np.asarray(img).reshape(-1, 3), axis=0))
-            to = img.copy()
-            dr = ImageDraw.Draw(to)
-            for q in bo:
-                dr.polygon(q, fill=bg)
-            m = Image.new("L", img.size, 0)
-            dm = ImageDraw.Draw(m)
-            for g in giu:
-                dm.polygon(g["poly"], fill=255)
-            img = Image.composite(img, to, m)
-        img = prepare(img)  # như sản phẩm (chỉ phóng ảnh nhỏ < 1000 px) → khung chuẩn phóng theo
-        if img.width != w0:
-            s = img.width / w0
-            for g in giu:
-                g["poly"] = [(x * s, y * s) for x, y in g["poly"]]
+        img, giu, cach = dung
         nhan = "\n".join(g["nhan"] for g in giu)
         for n, g in enumerate(giu):
             lid = f"{p}:V{n:03d}"
@@ -504,6 +523,112 @@ def cmd_mtrang(a) -> int:
                                              "kraken_loi": len(trang_rows) - ok}])
     log(f"✔ XONG mtrang: {len(trang_rows)} trang · {len(vang_rows)} dòng chuẩn · {len(kr_rows)} dòng Kraken "
         f"(Kraken lỗi {len(trang_rows) - ok} trang)")
+    return 0
+
+
+# === 3b. #12: nới khung dòng Kraken ===================================================================================
+
+def cat_no(img, rec: dict, muc: int):
+    """Ảnh dòng cắt như sản phẩm (crop_poly), nhưng khung NỚI theo chiều dọc thêm `muc` % độ dày dòng (nửa trên, nửa
+    dưới). Mặt nạ = đa giác vẽ chồng ở mọi độ dời dọc trong [−d, d] → giãn đúng theo chiều dọc, giữ dáng dòng cong /
+    nghiêng. Độ dày dòng = diện tích đa giác / bề ngang. muc = 0 → đúng crop_poly của sản phẩm."""
+    if not muc:
+        return _cat_dong(img, rec)
+    import numpy as np
+    from PIL import Image, ImageDraw
+
+    W, H = img.size
+    x0, y0, x1, y1 = rec["box"]
+    poly = rec.get("poly") or []
+    if len(poly) >= 3:
+        xs = [q[0] for q in poly]
+        dt = abs(sum(poly[k][0] * poly[k - 1][1] - poly[k - 1][0] * poly[k][1] for k in range(len(poly)))) / 2
+        day = dt / max(1.0, max(xs) - min(xs))
+    else:
+        day = y1 - y0
+    d = int(round(muc / 100 * day / 2))
+    pad = 4  # như crop_poly
+    cx0, cy0, cx1, cy1 = max(0, x0 - pad), max(0, y0 - d - pad), min(W, x1 + pad), min(H, y1 + d + pad)
+    crop = img.convert("RGB").crop((cx0, cy0, cx1, cy1))
+    if len(poly) < 3:
+        return crop
+    mask = Image.new("L", crop.size, 0)
+    dr = ImageDraw.Draw(mask)
+    for dy in range(-d, d + 1):
+        dr.polygon([(x - cx0, y - cy0 + dy) for x, y in poly], fill=255)
+    bg = int(np.percentile(np.asarray(crop.convert("L")), 90))  # màu giấy, như crop_poly
+    return Image.composite(crop, Image.new("RGB", crop.size, (bg, bg, bg)), mask)
+
+
+def _giong_anh(a, f: Path) -> bool:
+    import numpy as np
+    from PIL import Image
+
+    return np.array_equal(np.asarray(a.convert("RGB")), np.asarray(Image.open(f).convert("RGB")))
+
+
+def cmd_mtrang_no(a) -> int:
+    """#12: cắt lại dòng Kraken (khung đã lưu, KHÔNG chạy lại Kraken) của 66 trang Muharaf và 4 trang mẫu ở mọi mức
+    NO_MUC → bộ mtrang_knoNN / trang4_noNN, CÙNG id với mtrang_kraken / trang4 (chấm bằng cùng hàm). Ảnh dòng trước,
+    file bộ sau."""
+    from arabic_doc_ocr.pipeline import load_pages, prepare
+
+    out, data = Path(a.out), Path(a.data)
+    if not bo_file(out, "mtrang_xong").exists():
+        sys.exit("✘ LỖI: chưa dựng xong 66 trang Muharaf (bo__mtrang_xong.jsonl) — chạy mtrang trước")
+    raw, cd = data / "mtrang_raw", data / "crops" / "mtrang_no"
+    cd.mkdir(parents=True, exist_ok=True)
+
+    def ten_anh(r, m):
+        return str(cd / f"{r['id'].replace(':', '_')}_n{m:02d}.png")
+
+    kr = doc_bo(out, "mtrang_kraken")
+    theo = collections.defaultdict(list)
+    for r in kr:
+        theo[r["nhom"]].append(r)
+    rows = {m: [] for m in NO_MUC}
+    for i, p in enumerate(sorted(theo)):
+        dung = _anh_mtrang(raw, p)
+        if dung is None:
+            sys.exit(f"✘ LỖI: không dựng lại được ảnh trang {p} ({raw}/{p}.*) — chạy mtrang trước")
+        img = dung[0]
+        # ảnh trang dựng lại phải Y HỆT ảnh mà mtrang vừa cắt dòng Kraken (so dòng đầu của trang)
+        r0 = theo[p][0]
+        if not Path(r0["anh"]).exists():
+            sys.exit(f"✘ LỖI: thiếu ảnh dòng Kraken {r0['anh']} — chạy mtrang trước")
+        if not _giong_anh(cat_no(img, r0, 0), Path(r0["anh"])):
+            sys.exit(f"✘ LỖI: trang {p}: cắt lại mức 0 % KHÁC ảnh dòng Kraken của mtrang — không so được")
+        for r in theo[p]:
+            for m in NO_MUC:
+                rec = dict(r, anh=ten_anh(r, m), no=m)
+                if not Path(rec["anh"]).exists():
+                    cat_no(img, r, m).save(rec["anh"])
+                rows[m].append(rec)
+        if (i + 1) % 10 == 0:
+            log(f"   #12: {i + 1}/{len(theo)} trang Muharaf")
+
+    rows4 = doc_bo(out, "trang4")
+    if not rows4:
+        sys.exit("✘ LỖI: chưa có bo__trang4.jsonl — chạy bon_trang trước")
+    imgs = {name: prepare(load_pages(pth)[0]) for name, pth, _ in _trang_mau()}
+    r4, da_kiem = {m: [] for m in NO_MUC}, set()
+    for r in rows4:
+        if r["nhom"] not in da_kiem:
+            if not Path(r["anh"]).exists():
+                sys.exit(f"✘ LỖI: thiếu ảnh dòng {r['anh']} — chạy bon_trang trước")
+            if not _giong_anh(cat_no(imgs[r["nhom"]], r, 0), Path(r["anh"])):
+                sys.exit(f"✘ LỖI: {r['nhom']}: cắt lại mức 0 % KHÁC ảnh dòng của bon_trang — không so được")
+            da_kiem.add(r["nhom"])
+        for m in NO_MUC:
+            rec = dict(r, anh=ten_anh(r, m), no=m)
+            if not Path(rec["anh"]).exists():
+                cat_no(imgs[r["nhom"]], r, m).save(rec["anh"])
+            r4[m].append(rec)
+    for m in NO_MUC:
+        ghi_jsonl(bo_file(out, f"mtrang_kno{m:02d}"), rows[m])
+        ghi_jsonl(bo_file(out, f"trang4_no{m:02d}"), r4[m])
+    log(f"✔ XONG mtrang_no: {len(theo)} trang Muharaf × {len(kr)} dòng Kraken + 4 trang mẫu × {len(rows4)} dòng, "
+        f"mức nới {', '.join(f'{m} %' for m in NO_MUC)} (mức 0 % khớp ảnh cũ từng pixel)")
     return 0
 
 
@@ -590,8 +715,12 @@ def _viec(out: Path, phan: str) -> list[tuple[str, str, int, list[dict]]]:
             sys.exit("✘ LỖI: chưa dựng xong 66 trang Muharaf (bo__mtrang_xong.jsonl)")
         for c in uv[0]["can_doc_B"]:
             cap += [(f"{b}_B", c) for b in BO_DONG] + [("mtrang_kraken", c)]
+    elif phan == "N":  # #12: dòng Kraken nới khung, đọc bằng ft3
+        cap = [(b, "ft3") for m in NO_MUC for b in (f"mtrang_kno{m:02d}", f"trang4_no{m:02d}") if co(b)]
+        if len(cap) != 2 * len(NO_MUC):
+            sys.exit("✘ LỖI: chưa cắt đủ dòng nới khung (bo__mtrang_knoNN / bo__trang4_noNN) — chạy mtrang_no trước")
     else:
-        sys.exit(f"✘ LỖI: phần {phan} lạ (A hoặc B)")
+        sys.exit(f"✘ LỖI: phần {phan} lạ (A, B hoặc N)")
     viec, co_anh = [], {}
     for b, c in cap:
         rows = doc_bo(out, b)
@@ -1108,6 +1237,51 @@ def cmd_bao_cao(a) -> int:
                                 if dat5 else "KHÔNG ĐẠT → #11 (dòng máy chữ tự sinh) ưu tiên trong Đợt 2."))
                 J["khoi"]["ket_luan"] = {"tot_nhat": tot5, "dat": dat5}
 
+    # --- #12: nới khung dòng Kraken (66 trang Muharaf + trang 2 viết tay của khách), đọc bằng ft3
+    no = {}
+    for m in NO_MUC:
+        rk_m = doc_bo(out, f"mtrang_kno{m:02d}")
+        d = doc_ca(out, f"mtrang_kno{m:02d}", "ft3", rk_m) if rk_m and mt else None
+        r4m = doc_bo(out, f"trang4_no{m:02d}")
+        d4 = doc_ca(out, f"trang4_no{m:02d}", "ft3", r4m) if r4m and "page_2" in bo4 else None
+        if d is None or d4 is None:
+            continue
+        no[m] = {"mtrang": tong(diem_mtrang(rk_m, d)),
+                 "page_2": diem_trang(ev, nhan4["page_2"][0]["text"],
+                                      _ghep_trang(bo4["page_2"], [r for r in r4m if r["nhom"] == "page_2"], d4,
+                                                  "handwritten"))}
+        if m == 0:
+            cu = doc_ket_qua(out, "mtrang_kraken", "ft3")
+            no[0]["giong_cu"] = 100 * sum(cu.get(k) == v for k, v in d.items()) / max(1, len(d))
+    if len(no) == len(NO_MUC):
+        g0 = no[0]
+        L += ["## 5b. Nới khung dòng Kraken (#12) — đọc bằng ft3, cùng dòng Kraken, chỉ đổi khung cắt", "",
+              "| nới thêm (% độ dày dòng) | 66 trang Muharaf: % ký tự | túi từ | hơn 0 % | trang 2 (viết tay): % ký tự "
+              "/ % từ | hơn 0 % |", "|---|---:|---:|---:|---:|---:|"]
+        for m in NO_MUC:
+            v = no[m]
+            L.append(f"| {m} % | {v['mtrang']['ky_tu']:.1f} | {v['mtrang']['tui_tu']:.1f} | "
+                     f"{_d(v['mtrang']['ky_tu'] - g0['mtrang']['ky_tu'], 2) if m else '—'} | "
+                     f"{v['page_2']['ky_tu']:.1f} / {v['page_2']['tu']:.1f} | "
+                     f"{_d(v['page_2']['ky_tu'] - g0['page_2']['ky_tu'], 2) if m else '—'} |")
+        b0 = J.get("buoc0") or {}
+        L += ["", f"Mốc: mức 0 % đọc lại trong lần chạy này giống bản đọc Bước 0 ở {g0['giong_cu']:.1f} % số dòng "
+              f"(Bước 0: Kraken {_f((b0.get('kraken') or {}).get('ky_tu'))}, dòng chuẩn "
+              f"{_f((b0.get('vang') or {}).get('ky_tu'))})."]
+        tot = max((m for m in NO_MUC if m), key=lambda m: no[m]["mtrang"]["ky_tu"])
+        hon_k = no[tot]["mtrang"]["ky_tu"] - g0["mtrang"]["ky_tu"]
+        hon_t = no[tot]["mtrang"]["tui_tu"] - g0["mtrang"]["tui_tu"]
+        hon_p2 = no[tot]["page_2"]["ky_tu"] - g0["page_2"]["ky_tu"]
+        dat12 = hon_k >= 1.0 and hon_t >= 0 and hon_p2 >= -1.0
+        L += ["", f"**Kết luận theo luật:** tốt nhất nới {tot} %: {_d(hon_k, 2)} điểm ký tự, túi từ {_d(hon_t, 2)}, "
+              f"trang 2 {_d(hon_p2, 2)} → **{'ĐẠT' if dat12 else 'KHÔNG ĐẠT'}**. {LUAT['no']}", ""]
+        goi_y.append(f"**Nới khung dòng (#12):** nới {tot} % → {_d(hon_k, 2)} điểm trên 66 trang, trang 2 {_d(hon_p2, 2)} → "
+                     + (f"ĐẠT → đưa nới {tot} % vào sản phẩm (chờ anh duyệt) và cắt dòng Kraken cho #10 bằng mức này."
+                        if dat12 else "KHÔNG ĐẠT → giữ khung cũ; #10 cắt dòng như sản phẩm."))
+        J["no"] = {"diem": no, "tot_nhat": tot, "hon": hon_k, "hon_tui_tu": hon_t, "hon_page_2": hon_p2, "dat": dat12}
+    elif any(bo_file(out, f"mtrang_kno{m:02d}").exists() for m in NO_MUC):
+        L += ["## 5b. Nới khung dòng Kraken (#12)", "", "(chưa đọc xong)", ""]
+
     # --- kết luận ứng viên (cần B + trang)
     if u and tb is not None and lo is not None:
         dk = [("TB 3 bộ B ≥ +0,3", tb >= 0.3), ("khoảng tin cậy 95% > 0", lo > 0),
@@ -1183,6 +1357,20 @@ def cmd_tu_kiem(a) -> int:
                    "line_3": {"coord": [0, 20, 10, 20, 10, 25, 0, 25], "text": "اول", "language": "Arabic", "index": 0}}}
     g, b = _dong_muharaf(js)
     kt("Muharaf: giữ dòng Ả Rập theo thứ tự đọc, loại dòng Latin", [x["nhan"] for x in g] == ["اول", "سطر"] and len(b) == 1)
+    import numpy as np
+    from PIL import Image, ImageDraw
+
+    from arabic_doc_ocr.lines import crop_poly
+
+    im = Image.new("RGB", (60, 40), (250, 250, 250))
+    ImageDraw.Draw(im).line([(0, 13), (59, 13)], fill=(0, 0, 0))  # nét mực ở y=13, ngay trên dòng (y 15–25)
+    rec = {"box": [10, 15, 50, 25], "poly": [[10, 15], [50, 15], [50, 25], [10, 25]]}
+    c0, c60 = cat_no(im, rec, 0), cat_no(im, rec, 60)  # độ dày 10 → nới 60 % = 3 px mỗi phía
+    kt("nới khung 0 % = crop_poly của sản phẩm (từng pixel)", np.array_equal(
+        np.asarray(c0), np.asarray(crop_poly(im, {"box": (10, 15, 50, 25), "poly": [(10, 15), (50, 15), (50, 25), (10, 25)]}))))
+    kt("nới khung 0 %: nét mực ngoài đa giác bị tô màu giấy", int(np.asarray(c0.convert("L"))[13 - 11, 20]) > 200)
+    kt("nới khung 60 %: ảnh cao thêm 2×3 px, nét mực ngay trên dòng được giữ",
+       c60.size == (c0.size[0], c0.size[1] + 6) and int(np.asarray(c60.convert("L"))[13 - 8, 20]) < 50)
     print("✔ TỰ KIỂM ĐẠT" if ok else "✘ LỖI: TỰ KIỂM KHÔNG ĐẠT", flush=True)
     return 0 if ok else 1
 
@@ -1190,20 +1378,21 @@ def cmd_tu_kiem(a) -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="lenh", required=True)
-    for ten in ("khoi_phuc", "bo", "bon_trang", "mtrang", "doc", "chon", "bao_cao", "tu_kiem"):
+    for ten in ("khoi_phuc", "bo", "bon_trang", "mtrang", "mtrang_no", "doc", "chon", "bao_cao", "tu_kiem"):
         p = sub.add_parser(ten)
         p.add_argument("--out", default="/kaggle/working/dot1")
         p.add_argument("--data", default="/kaggle/working/dot1_data")
         if ten == "bon_trang":
             p.add_argument("--dots-device", default="cuda:0")
         if ten == "doc":
-            p.add_argument("--phan", required=True, choices=["A", "B"])
+            p.add_argument("--phan", required=True, choices=["A", "B", "N"])
             p.add_argument("--gpu", type=int, default=0)
         if ten in ("doc", "bao_cao"):
             p.add_argument("--push", action="store_true")
     a = ap.parse_args()
     Path(a.out).mkdir(parents=True, exist_ok=True)
-    return {"khoi_phuc": cmd_khoi_phuc, "bo": cmd_bo, "bon_trang": cmd_bon_trang, "mtrang": cmd_mtrang, "doc": cmd_doc, "chon": cmd_chon,
+    return {"khoi_phuc": cmd_khoi_phuc, "bo": cmd_bo, "bon_trang": cmd_bon_trang, "mtrang": cmd_mtrang,
+            "mtrang_no": cmd_mtrang_no, "doc": cmd_doc, "chon": cmd_chon,
             "bao_cao": cmd_bao_cao, "tu_kiem": cmd_tu_kiem}[a.lenh](a)
 
 

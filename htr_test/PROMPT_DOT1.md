@@ -5,8 +5,9 @@ Bạn KHÔNG thiết kế thí nghiệm, KHÔNG sửa code, KHÔNG đổi tham s
 viết sẵn trong `htr_test/dot1.py` và `htr_test/chay_dot1.sh`. Việc của bạn: chạy lệnh, chờ, kiểm tra đúng điều kiện ghi
 ở mỗi bước, báo cáo.
 
-Server sập / khởi động lại giữa chừng → làm lại TỪ BƯỚC 0. Mọi bước chạy lại đều an toàn: `chay_dot1.sh` tự lấy lại
-phần đã đẩy lên GitHub (nhánh `results-htr/dot1`) và đi tiếp từ chỗ dở.
+Server sập / khởi động lại / phiên Kaggle hết giờ giữa chừng → làm lại TỪ BƯỚC 0 (kể cả server mới tinh). Mọi bước
+chạy lại đều an toàn: `chay_dot1.sh` tự lấy lại phần đã đẩy lên GitHub (nhánh `results-htr/dot1`) và đi tiếp từ chỗ dở;
+phần đã xong KHÔNG đọc lại. (Lần chạy trước đã xong bộ A, Bước 0, 4 trang, #5; lần này còn #12 và bộ B.)
 
 ## LUẬT CỨNG (vi phạm = dừng ngay)
 
@@ -89,7 +90,7 @@ tail -n 4 /kaggle/working/cai_adoc.log; tmux has-session -t cai_adoc 2>/dev/null
 - `cai_adoc ĐÃ THOÁT` mà không có `Done. Web:` → MẪU B, DỪNG.
 - Cảnh báo pip kiểu "dependency resolver … google-adk" là BÌNH THƯỜNG.
 
-## BƯỚC 3 — chạy Đợt 1, ~6–10 giờ (2 GPU)
+## BƯỚC 3 — chạy Đợt 1 (chạy tiếp: ~1 giờ dựng lại + ~2,5 giờ #12 + ~5 giờ bộ B, 2 GPU)
 
 ```bash
 python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔ XONG ĐỢT 1" -- bash htr_test/chay_dot1.sh
@@ -97,8 +98,11 @@ python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔
 
 Script tự làm theo thứ tự (bạn KHÔNG làm tay bước nào):
 1. kiểm tra môi trường + tự kiểm (`✔ TỰ KIỂM ĐẠT`), 2. lấy lại phần đã xong từ GitHub, 3. tải dữ liệu dòng (~20–40 phút),
-4. song song: dots đọc 4 trang mẫu (GPU 0) · tải 66 trang Muharaf + Kraken tách dòng (CPU) · đọc bộ A (GPU 1),
-5. vét bộ A, 6. chọn ứng viên, 7. đọc bộ B, 8. báo cáo.
+4. song song: dots đọc 4 trang mẫu (GPU 0) · tải 66 trang Muharaf + Kraken tách dòng (CPU) · đọc bộ A (GPU 1)
+   (chạy tiếp: phần đã xong chỉ cắt lại ảnh dòng, vài phút),
+5. vét bộ A, 6. chọn ứng viên, 7. #12: cắt lại dòng Kraken với khung nới (CPU, vài phút),
+8. #12: đọc dòng nới khung (2 GPU, ~2,5 giờ) + đẩy báo cáo tạm lên GitHub (in `✔ #12 XONG`),
+9. đọc bộ B, 10. báo cáo.
 
 Kiểm tra mỗi 10 phút:
 ```bash
@@ -108,6 +112,9 @@ nvidia-smi --query-gpu=index,memory.used,memory.total,utilization.gpu --format=c
 ```
 
 - Có `✔ XONG ĐỢT 1` → sang BƯỚC 4.
+- Lần ĐẦU thấy `✔ #12 XONG` (chưa có `✔ XONG ĐỢT 1`) → chạy
+  `sed -n '/^## 5b/,/^## 6\|^## 7/p' /kaggle/working/dot1/tom_tat.md`, gửi MẪU E, rồi CHỜ TIẾP (việc vẫn chạy, không làm
+  gì thêm). Chỉ gửi MẪU E một lần.
 - Có `✘ LỖI ở bước` → MẪU B (log = `/kaggle/working/dot1.log`). Trong 30 dòng cuối đã có sẵn đoạn log của tiến
   trình bị lỗi (script tự in). DỪNG.
 - `dot1 ĐÃ THOÁT` mà không có hai dòng trên → chờ thêm 10 phút, vì hộp thư tự chạy lại khi lỗi mạng (tối đa 2 lần),
@@ -151,6 +158,12 @@ Tôi chưa sửa gì, chưa chạy lại gì.
 BƯỚC <số> chạy đã <số> giờ, chưa xong; tôi vẫn đang chờ. <"RAM thấp" nếu có>
 Dòng log mới nhất (nguyên văn):
 <dán output lệnh kiểm tra của bước đó>
+```
+
+**MẪU E — #12 xong (Đợt 1 vẫn đang chạy bộ B)**
+```
+#12 XONG (nới khung dòng Kraken); bộ B đang chạy, tôi vẫn chờ. Kết quả #12 (nguyên văn):
+<dán output lệnh sed ở BƯỚC 3>
 ```
 
 **MẪU D — xong**

@@ -4,6 +4,8 @@
 #
 #   python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔ XONG ĐỢT 1" -- bash htr_test/chay_dot1.sh
 #
+# Thứ tự: môi trường → khôi phục → dữ liệu → bộ A + 4 trang + 66 trang Muharaf → chọn → #12 nới khung dòng Kraken
+# (báo cáo tạm lên GitHub) → bộ B → báo cáo.
 # Cần: arabic-doc-ocr đã cài (bash install.sh → .venv), GITHUB_TOKEN, HF_TOKEN (bộ Omar là bộ gated).
 # Dòng cuối: "✔ XONG ĐỢT 1 …" hoặc "✘ LỖI ở bước N: …". Log riêng từng tiến trình: /kaggle/working/dot1_logs/.
 set -uo pipefail
@@ -80,6 +82,24 @@ cho "$P0" "vét A (GPU 0)" "$LOGD/docA2_g0.log"
 
 step "chọn ứng viên theo luật (bộ A)"
 "${D1[@]}" chon --out "$OUT" || fail "chọn ứng viên lỗi"
+
+step "#12: cắt lại dòng Kraken với khung nới 0/15/30/50 % (66 trang Muharaf + 4 trang mẫu, CPU)"
+"${D1[@]}" mtrang_no --out "$OUT" --data "$DATA" > "$LOGD/mtrang_no.log" 2>&1 \
+  || { tail -n 30 "$LOGD/mtrang_no.log"; fail "cắt dòng nới khung lỗi"; }
+tail -n 1 "$LOGD/mtrang_no.log"
+
+step "#12: đọc dòng nới khung bằng ft3 (2 GPU) + báo cáo tạm lên GitHub"
+rm -rf "$OUT/.nhan_viec"
+nen n0 "$LOGD/docN_g0.log" "${D1[@]}" doc --phan N --gpu 0 --out "$OUT" --push; P0=$!
+P1=""
+if [ "$N_GPU" -ge 2 ]; then nen n1 "$LOGD/docN_g1.log" "${D1[@]}" doc --phan N --gpu 1 --out "$OUT" --push; P1=$!; fi
+cho "$P0" "đọc #12 (GPU 0)" "$LOGD/docN_g0.log"
+[ -n "$P1" ] && cho "$P1" "đọc #12 (GPU 1)" "$LOGD/docN_g1.log"
+"${D1[@]}" bao_cao --out "$OUT" --push > "$LOGD/bao_cao_tam.log" 2>&1 \
+  || { tail -n 30 "$LOGD/bao_cao_tam.log"; fail "báo cáo tạm lỗi"; }
+mkdir -p "$BAO_CAO" && cp "$OUT/tom_tat.md" "$BAO_CAO/dot1.md"
+grep "Nới khung dòng (#12)" "$OUT/tom_tat.md" | tail -n 1
+echo "✔ #12 XONG — báo cáo tạm đã đẩy lên GitHub (results-htr/dot1/tom_tat.md)"
 
 step "xác nhận trên bộ B + 66 trang Muharaf"
 rm -rf "$OUT/.nhan_viec"

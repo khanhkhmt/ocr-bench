@@ -1,0 +1,87 @@
+{
+ "nguon": "khanhkhmt/arabic-doc-ocr main@03e1e8e",
+ "adoc": "/root/ocr-bench/adoc",
+ "khop": true,
+ "rows": [
+  {
+   "page": "page_1",
+   "type": "printed",
+   "now": {
+    "main": 90.25,
+    "dots": 90.25,
+    "ft3": 78.83,
+    "ft4": 75.95
+   },
+   "moc": {
+    "main": 90.25,
+    "dots": 90.25,
+    "ft3": 78.83,
+    "ft4": 75.95
+   },
+   "ok": true,
+   "blocks_same": 11,
+   "blocks": 11,
+   "seconds": 341.2
+  },
+  {
+   "page": "page_2",
+   "type": "handwritten",
+   "now": {
+    "main": 72.23,
+    "dots": 47.93,
+    "ft3": 72.23,
+    "ft4": 73.08
+   },
+   "moc": {
+    "main": 72.23,
+    "dots": 47.93,
+    "ft3": 72.23,
+    "ft4": 73.08
+   },
+   "ok": true,
+   "blocks_same": 27,
+   "blocks": 27,
+   "seconds": 417.3
+  },
+  {
+   "page": "page_3",
+   "type": "printed",
+   "now": {
+    "main": 78.99,
+    "dots": 78.99,
+    "ft3": 79.74,
+    "ft4": 80.26
+   },
+   "moc": {
+    "main": 78.99,
+    "dots": 78.99,
+    "ft3": 79.74,
+    "ft4": 80.26
+   },
+   "ok": true,
+   "blocks_same": 27,
+   "blocks": 27,
+   "seconds": 569.3
+  },
+  {
+   "page": "page_4",
+   "type": "printed",
+   "now": {
+    "main": 90.95,
+    "dots": 90.95,
+    "ft3": 79.88,
+    "ft4": 83.7
+   },
+   "moc": {
+    "main": 90.95,
+    "dots": 90.95,
+    "ft3": 79.88,
+    "ft4": 83.7
+   },
+   "ok": true,
+   "blocks_same": 10,
+   "blocks": 10,
+   "seconds": 282.3
+  }
+ ]
+}

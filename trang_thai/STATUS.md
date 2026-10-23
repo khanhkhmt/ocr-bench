@@ -1,8 +1,8 @@
-# Trạng thái server — 2026-10-23 05:47 UTC
+# Trạng thái server — 2026-10-23 05:57 UTC
 
 **Còn sống** · định kỳ
 
-- máy: `82d3fda35fd3` · up 3 hours, 43 minutes
+- máy: `82d3fda35fd3` · up 3 hours, 53 minutes
 - ngrok (SSH): tcp://4.tcp.ngrok.io:10288
 - code: `dc0462a adoc/: bản chép riêng pipeline arabic-doc-ocr main@03e1e8e — thí nghiệm ocr-bench không cần repo demo nữa` (nhánh `main`)
 - ổ /kaggle/working: /dev/loop2       20G  4.8G   15G  25% /kaggle/working
@@ -11,11 +11,11 @@
 
 ## GPU
 ```
-Tesla T4, 10181 MiB, 15360 MiB, 35 %
-Tesla T4, 9491 MiB, 15360 MiB, 100 %
+Tesla T4, 10181 MiB, 15360 MiB, 31 %
+Tesla T4, 9493 MiB, 15360 MiB, 81 %
 30480, 434 MiB, /kaggle/working/venvs/adoc/bin/python
 30478, 9744 MiB, /kaggle/working/venvs/adoc/bin/python
-30480, 9488 MiB, /kaggle/working/venvs/adoc/bin/python
+30480, 9490 MiB, /kaggle/working/venvs/adoc/bin/python
 ```
 
 ## Phiên tmux
@@ -29,21 +29,21 @@ hop_thu: 1 windows (created Fri Oct 23 03:47:10 2026)
 | việc | trạng thái | lần chạy | tự chạy lại | bắt đầu | dòng log mới nhất |
 |---|---|---:|---:|---|---|
 | cai_adoc | XONG | 1 | 0 | 2026-10-23 02:43 UTC | `Done. adoc — kiểm bản chép: /kaggle/working/venvs/adoc/bin/python -m adoc kiem --out /kaggle/working/kiem_adoc` |
-| dot1 | đang chạy | 2 | 0 | 2026-10-23 03:47 UTC | `[n0] [05:46:46]    mtrang_kno30 · ft3 · phần 15: 50 dòng, 2.45 s/dòng · còn ~47 phần · RAM trống 25.1 GB` |
+| dot1 | đang chạy | 2 | 0 | 2026-10-23 03:47 UTC | `[n0] [05:56:56]    mtrang_kno30 · ft3 · phần 21: 50 dòng, 2.68 s/dòng · còn ~41 phần · RAM trống 25.2 GB` |
 
 ## dot1.log (sửa 1 phút trước)
 ```
-[n1] [05:40:19]    mtrang_kno30 · ft3 · phần 10: 50 dòng, 2.56 s/dòng · còn ~52 phần · RAM trống 25.1 GB
-[n0] [05:41:53]    mtrang_kno30 · ft3 · phần 11: 50 dòng, 4.06 s/dòng · còn ~51 phần · RAM trống 25.1 GB
-[n0] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 5a448ab) — dot1 doc N: mtrang_kno30 ft3 phần 11
-[n1] [05:43:45]    mtrang_kno30 · ft3 · phần 12: 50 dòng, 4.10 s/dòng · còn ~50 phần · RAM trống 25.0 GB
-[n1] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 75dae2d) — dot1 doc N: mtrang_kno30 ft3 phần 12
-[n0] [05:44:42]    mtrang_kno30 · ft3 · phần 13: 50 dòng, 3.32 s/dòng · còn ~49 phần · RAM trống 25.1 GB
-[n1] [05:46:28]    mtrang_kno30 · ft3 · phần 14: 50 dòng, 3.19 s/dòng · còn ~48 phần · RAM trống 25.1 GB
-[n0] [05:46:46]    mtrang_kno30 · ft3 · phần 15: 50 dòng, 2.45 s/dòng · còn ~47 phần · RAM trống 25.1 GB
+[n0] [05:48:30]    mtrang_kno30 · ft3 · phần 17: 50 dòng, 2.08 s/dòng · còn ~45 phần · RAM trống 25.1 GB
+[n0] [05:50:24]    mtrang_kno30 · ft3 · phần 18: 50 dòng, 2.27 s/dòng · còn ~44 phần · RAM trống 25.1 GB
+[n1] [05:50:30]    mtrang_kno30 · ft3 · phần 16: 50 dòng, 4.83 s/dòng · còn ~46 phần · RAM trống 25.1 GB
+[n0] [05:54:40]    mtrang_kno30 · ft3 · phần 19: 50 dòng, 5.08 s/dòng · còn ~43 phần · RAM trống 25.1 GB
+[n0] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 5257ee5) — dot1 doc N: mtrang_kno30 ft3 phần 19
+[n1] [05:56:21]    mtrang_kno30 · ft3 · phần 20: 50 dòng, 7.01 s/dòng · còn ~42 phần · RAM trống 25.1 GB
+[n1] ✔ GITHUB: đã đẩy lên nhánh results-htr/dot1 (commit 76709e6) — dot1 doc N: mtrang_kno30 ft3 phần 20
+[n0] [05:56:56]    mtrang_kno30 · ft3 · phần 21: 50 dòng, 2.68 s/dòng · còn ~41 phần · RAM trống 25.2 GB
 ```
 
-## cai_adoc.log (sửa 180 phút trước)
+## cai_adoc.log (sửa 190 phút trước)
 ```
   Kraken: /root/.cache/ocr_bench_adoc/kraken_venv/bin/kraken · model tách dòng: /root/.cache/ocr_bench_adoc/muharaf_seg_best.mlmodel
   RAM 31.3 GiB (còn 27.6)

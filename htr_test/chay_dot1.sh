@@ -4,14 +4,15 @@
 #
 #   python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔ XONG ĐỢT 1" -- bash htr_test/chay_dot1.sh
 #
-# Thứ tự: môi trường → khôi phục → dữ liệu → bộ A + 4 trang + 66 trang Muharaf → chọn → #12 nới khung dòng Kraken
+# Thứ tự: môi trường → kiểm bản chép adoc (4 trang mẫu = mốc) → khôi phục → dữ liệu → bộ A + 4 trang + 66 trang Muharaf → chọn → #12 nới khung dòng Kraken
 # (báo cáo tạm lên GitHub) → bộ B → báo cáo.
-# Cần: arabic-doc-ocr đã cài (bash install.sh → .venv), GITHUB_TOKEN, HF_TOKEN (bộ Omar là bộ gated).
+# Cần: bash htr_test/cai_adoc.sh (venv /kaggle/working/venvs/adoc; pipeline = adoc/, bản chép riêng — KHÔNG cần repo
+# arabic-doc-ocr), GITHUB_TOKEN, HF_TOKEN (bộ Omar là bộ gated).
 # Dòng cuối: "✔ XONG ĐỢT 1 …" hoặc "✘ LỖI ở bước N: …". Log riêng từng tiến trình: /kaggle/working/dot1_logs/.
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
-export ADOC="${ADOC:-/kaggle/working/arabic-doc-ocr}"
-PY="$ADOC/.venv/bin/python"
+PY="${OCRB_ADOC_VENV:-/kaggle/working/venvs/adoc}/bin/python"
+KIEM="${KIEM:-/kaggle/working/kiem_adoc}"
 OUT="${OUT:-/kaggle/working/dot1}"
 DATA="${DATA:-/kaggle/working/dot1_data}"
 LOGD="${LOGD:-/kaggle/working/dot1_logs}"
@@ -29,18 +30,31 @@ nen() { local tag=$1 log=$2; shift 2; ( "$@" 2>&1 | tee -a "$log" | sed -u "s/^/
 cho() { local pid=$1 ten=$2 log=$3; wait "$pid" || { echo "--- 30 dòng cuối $log:"; tail -n 30 "$log"; fail "$ten lỗi (log $log)"; }; }
 
 step "kiểm tra môi trường"
-[ -x "$PY" ] || fail "chưa cài arabic-doc-ocr: không có $PY (bash $ADOC/install.sh)"
+[ -x "$PY" ] || fail "chưa cài môi trường: không có $PY (bash htr_test/cai_adoc.sh)"
 N_GPU=$(nvidia-smi -L 2>/dev/null | wc -l)
 [ "$N_GPU" -ge 1 ] || fail "không thấy GPU"
 echo "GPU: $N_GPU · ổ trống /kaggle/working: $(df -BG --output=avail /kaggle/working | tail -1 | tr -dc 0-9) GB"
 [ -n "${GITHUB_TOKEN:-}" ] || fail "thiếu GITHUB_TOKEN"
 [ -n "${HF_TOKEN:-}" ] || fail "thiếu HF_TOKEN (bộ Omar Al-Saleh là bộ gated)"
 [ "$(df -BG --output=avail /kaggle/working | tail -1 | tr -dc 0-9)" -ge 6 ] || fail "ổ /kaggle/working còn < 6 GB"
-"$PY" -c "import arabic_doc_ocr, peft, rapidfuzz, numpy, pyarrow; from htr_test.sync import Sync" \
-  || fail "venv arabic-doc-ocr thiếu gói (import lỗi ở trên)"
-"$PY" -m arabic_doc_ocr check > "$LOGD/check.txt" 2>&1; tail -n 4 "$LOGD/check.txt"
-grep -qx "OK" "$LOGD/check.txt" || fail "arabic_doc_ocr check không in OK (xem $LOGD/check.txt)"
+"$PY" -c "import adoc, peft, rapidfuzz, numpy, pyarrow; from htr_test.sync import Sync; \
+import os; assert os.path.realpath(adoc.__file__).startswith(os.path.realpath('$ROOT') + os.sep), adoc.__file__" \
+  || fail "venv adoc thiếu gói, hoặc adoc không phải bản trong $ROOT (lỗi ở trên)"
+"$PY" -m adoc check > "$LOGD/check.txt" 2>&1; tail -n 4 "$LOGD/check.txt"
+grep -qx "OK" "$LOGD/check.txt" || fail "adoc check không in OK (xem $LOGD/check.txt)"
 "${D1[@]}" tu_kiem --out "$OUT" || fail "tự kiểm hàm bầu chọn / chấm điểm không đạt"
+
+step "kiểm bản chép adoc: đọc lại 4 trang mẫu, 16 số phải bằng mốc 2026-10-19 (2 GPU ~25 phút; một lần mỗi máy)"
+if [ -f "$LOGD/kiem_adoc.ok" ]; then echo "đã khớp trên máy này ($(cat "$LOGD/kiem_adoc.ok")) → bỏ qua"
+else
+  if [ "$N_GPU" -ge 2 ]; then KD=(--dots-device cuda:0 --htr-device cuda:1); else KD=(--dots-device cuda:0 --htr-device cuda:0); fi
+  "$PY" -m adoc kiem --out "$KIEM" "${KD[@]}" > "$LOGD/kiem_adoc.log" 2>&1
+  RC=$?
+  grep -E "^[✔✘] " "$LOGD/kiem_adoc.log"
+  cp "$KIEM/kiem.md" "$OUT/kiem_adoc.md" 2>/dev/null; cp "$KIEM/kiem.json" "$OUT/kiem_adoc.json" 2>/dev/null
+  [ $RC -eq 0 ] || { tail -n 30 "$LOGD/kiem_adoc.log"; fail "bản chép adoc KHÔNG khớp mốc (log $LOGD/kiem_adoc.log) — không chạy thí nghiệm trên pipeline lệch"; }
+  date -u +%Y-%m-%dT%H:%MZ > "$LOGD/kiem_adoc.ok"
+fi
 
 step "lấy lại phần đã xong từ GitHub (results-htr/dot1)"
 "${D1[@]}" khoi_phuc --out "$OUT" || fail "khôi phục lỗi"

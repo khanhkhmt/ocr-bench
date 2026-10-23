@@ -1,11 +1,12 @@
-"""Thử LLM sửa lỗi OCR trên 4 trang mẫu của arabic-doc-ocr (chữ đánh máy + chữ viết tay).
+"""Thử LLM sửa lỗi OCR trên 4 trang mẫu (chữ đánh máy + chữ viết tay).
 
     /kaggle/working/venvs/llm/bin/python -m htr_test.llm_sua \
-        --ocr /kaggle/working/arabic-doc-ocr/results/two_gpus --adoc /kaggle/working/arabic-doc-ocr \
-        --out /kaggle/working/llm_sua --push
+        --ocr /kaggle/working/kiem_adoc --out /kaggle/working/llm_sua --push
 
-ĐẦU VÀO: JSON kết quả của arabic-doc-ocr (`page_N*.json`, mỗi khối có văn bản chính, bản dots, ft3/ft4 từng dòng).
-NHÃN (`examples/page_N/label.json`) CHỈ được đọc ở bước chấm, SAU khi sửa xong. Hàm sửa chỉ nhận chữ OCR, không bao
+ĐẦU VÀO: JSON kết quả OCR (`page_N*.json`, mỗi khối có văn bản chính, bản dots, ft3/ft4 từng dòng) — do
+`python -m adoc kiem --out /kaggle/working/kiem_adoc` ghi (cùng dạng arabic-doc-ocr; adoc/mau_ket_qua = bản đo 2026-10-19).
+Mã chấm + nhãn: bản chép adoc/ của ocr-bench (adoc/evaluate.py, adoc/trang_mau), không cần repo arabic-doc-ocr.
+NHÃN (`adoc/trang_mau/page_N/label.json`) CHỈ được đọc ở bước chấm, SAU khi sửa xong. Hàm sửa chỉ nhận chữ OCR, không bao
 giờ thấy nhãn (`_sua_trang` không nhận đối số nhãn; nhãn nạp trong `_cham`).
 
 Cách sửa — CỐ ĐỊNH TRƯỚC, không chỉnh theo kết quả 4 trang:
@@ -86,12 +87,12 @@ def log(msg: str) -> None:
 # --- đọc kết quả OCR + mã chấm của arabic-doc-ocr ---------------------------------------------------------------------
 
 def _load_adoc(adoc: Path):
-    """→ (evaluate module, compare_words key). Dùng ĐÚNG mã chấm của arabic-doc-ocr (scripts/evaluate.py)."""
-    spec = importlib.util.spec_from_file_location("adoc_evaluate", adoc / "scripts" / "evaluate.py")
+    """→ (evaluate module, compare_words key). Mã chấm của adoc/ (= scripts/evaluate.py của arabic-doc-ocr)."""
+    spec = importlib.util.spec_from_file_location("adoc_evaluate", adoc / "evaluate.py")
     ev = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ev)
-    sys.path.insert(0, str(adoc))
-    from arabic_doc_ocr.text import _key  # noqa: PLC0415  (cách so từ của bước tô vàng)
+    sys.path.insert(0, str(adoc.parent))
+    from adoc.text import _key  # noqa: PLC0415  (cách so từ của bước tô vàng)
     return ev, _key
 
 
@@ -385,8 +386,9 @@ def _classify(change: dict, ref_words: Counter, ev) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--ocr", required=True, help="thư mục JSON kết quả arabic-doc-ocr (vd. results/two_gpus)")
-    ap.add_argument("--adoc", required=True, help="thư mục repo arabic-doc-ocr (lấy scripts/evaluate.py + examples/)")
+    ap.add_argument("--ocr", required=True, help="thư mục JSON kết quả OCR (vd. /kaggle/working/kiem_adoc)")
+    ap.add_argument("--adoc", default=str(Path(__file__).resolve().parents[1] / "adoc"),
+                    help="thư mục adoc/ của ocr-bench (evaluate.py + trang_mau/)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--models", default="all", help="all hoặc tên ngắn cách nhau dấu phẩy: "
                     + ",".join(n for n, _ in MODELS))
@@ -404,7 +406,7 @@ def main() -> int:
         raise SystemExit("✘ LỖI: không chạy trên real_docs (dữ liệu khách)")
     out.mkdir(parents=True, exist_ok=True)
     ev, key = _load_adoc(adoc)
-    pages = _pages(Path(a.ocr), adoc / "examples", [p for p in a.pages.split(",") if p] or None)
+    pages = _pages(Path(a.ocr), adoc / "trang_mau", [p for p in a.pages.split(",") if p] or None)
     models = list(MODELS) + ([tuple(a.extra_model.split("=", 1))] if a.extra_model else [])
     if a.models != "all":
         want = a.models.split(",")
@@ -483,7 +485,7 @@ def main() -> int:
 
 
 def _report(out: Path, ocr: dict, units: dict, models, methods, errors: dict, adoc: Path, ev, key) -> None:
-    labels = {p: json.loads((adoc / "examples" / p / "label.json").read_text(encoding="utf-8")) for p in ocr}
+    labels = {p: json.loads((adoc / "trang_mau" / p / "label.json").read_text(encoding="utf-8")) for p in ocr}
     refw = {p: Counter(ev.clean(labels[p]["text"]).split()) for p in ocr}
     kind = {p: ("viết tay" if ocr[p]["pages"][0].get("info", {}).get("page_type") == "handwritten" else "đánh máy")
             for p in ocr}

@@ -16,7 +16,8 @@ Thử nghiệm (cùng một nền Baseer-Nakba + 3 adapter ft3 / ft4 / ft1 của
   #5 dots đọc lại TỪNG khối chữ đánh máy, phóng ×1,5 / ×2 / ×3 (trang 1, 3, 4)
 Luật chọn / luật đạt viết SẴN trong file này (LUAT) — báo cáo tự áp, không chỉnh tay sau khi thấy số.
 
-Lệnh con (python = venv của arabic-doc-ocr, ADOC=<thư mục arabic-doc-ocr>):
+Lệnh con (python = /kaggle/working/venvs/adoc, cài bằng bash htr_test/cai_adoc.sh; pipeline = adoc/ — bản chép riêng
+của ocr-bench, xem adoc/NGUON.md — không cần repo arabic-doc-ocr):
   bo          tạo các bộ dòng A/B từ dữ liệu đã tải (htr_train.du_lieu)
   bon_trang   dots: bố cục 4 trang (như sản phẩm) + #5 đọc lại từng khối  [GPU]
   mtrang      tải 66 trang Muharaf test (chỉ phần cần, đọc theo khoảng byte) + cắt dòng chuẩn + Kraken  [CPU]
@@ -34,7 +35,6 @@ import collections
 import contextlib
 import csv
 import difflib
-import importlib.util
 import io
 import json
 import math
@@ -48,7 +48,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-ADOC = Path(os.environ.get("ADOC", "/kaggle/working/arabic-doc-ocr")).resolve()
+TRANG_MAU = ROOT / "adoc" / "trang_mau"  # 4 trang mẫu + nhãn (chép từ examples/ của arabic-doc-ocr)
 
 from ocrbench.metrics import edit_stats  # noqa: E402
 from ocrbench.normalize import NormConfig, normalize  # noqa: E402
@@ -140,12 +140,10 @@ def doc_bo(out: Path, ten: str) -> list[dict]:
 
 
 def adoc_eval():
-    """scripts/evaluate.py của arabic-doc-ocr (chấm cả trang đúng như docs/RESULTS.md) — nạp theo đường dẫn để không
-    đụng gói `evaluate` của Hugging Face có sẵn trên Kaggle."""
-    spec = importlib.util.spec_from_file_location("adoc_evaluate", ADOC / "scripts" / "evaluate.py")
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m
+    """adoc/evaluate.py (= scripts/evaluate.py của arabic-doc-ocr, chấm cả trang đúng như docs/RESULTS.md)."""
+    from adoc import evaluate
+
+    return evaluate
 
 
 def _norm(s: str) -> str:
@@ -203,17 +201,17 @@ def cmd_khoi_phuc(a) -> int:
 
 def _trang_mau() -> list[tuple[str, Path, dict]]:
     out = []
-    for d in sorted((ADOC / "examples").glob("page_*")):
+    for d in sorted(TRANG_MAU.glob("page_*")):
         img = next((p for p in d.iterdir() if p.suffix.lower() in (".jpg", ".jpeg", ".png")), None)
         if img and (d / "label.json").exists():
             out.append((d.name, img, json.loads((d / "label.json").read_text(encoding="utf-8"))))
     if len(out) != 4:
-        sys.exit(f"✘ LỖI: cần 4 trang mẫu trong {ADOC}/examples, thấy {len(out)}")
+        sys.exit(f"✘ LỖI: cần 4 trang mẫu trong {TRANG_MAU}, thấy {len(out)}")
     return out
 
 
 def _cat_dong(img, rec: dict):
-    from arabic_doc_ocr.lines import crop_poly
+    from adoc.lines import crop_poly
 
     box = tuple(rec["box"])
     if rec.get("poly"):
@@ -222,7 +220,7 @@ def _cat_dong(img, rec: dict):
 
 
 def cmd_bon_trang(a) -> int:
-    from arabic_doc_ocr.pipeline import Pipeline, free_gpu, load_pages, prepare
+    from adoc.pipeline import Pipeline, free_gpu, load_pages, prepare
 
     out, data = Path(a.out), Path(a.data)
     crops = data / "crops" / "trang4"
@@ -261,9 +259,9 @@ def cmd_bon_trang(a) -> int:
     log(f"✔ 4 trang: {len(rows)} dòng → {bo_f.name}")
 
     # --- #5: dots đọc lại từng khối chữ (trang đánh máy) ---
-    from arabic_doc_ocr import config as AC
-    from arabic_doc_ocr.dots_model import _dots_utils
-    from arabic_doc_ocr.text import fix_arabic
+    from adoc import config as AC
+    from adoc.dots_model import _dots_utils
+    from adoc.text import fix_arabic
 
     kf = out / "khoi_dots.jsonl"
     xong = {(r["page"], r["khoi"], r["f"]) for r in doc_jsonl(kf)}
@@ -398,7 +396,7 @@ def _anh_mtrang(raw: Path, p: str):
     trang không có dòng Ả Rập có nhãn."""
     from PIL import Image, ImageDraw, ImageOps
 
-    from arabic_doc_ocr.pipeline import prepare
+    from adoc.pipeline import prepare
 
     js_f = raw / f"{p}.json"
     imf = next(iter(raw.glob(f"{p}.img.*")), None)
@@ -448,7 +446,7 @@ def _anh_mtrang(raw: Path, p: str):
 
 
 def cmd_mtrang(a) -> int:
-    from arabic_doc_ocr.lines import kraken_page
+    from adoc.lines import kraken_page
 
     out, data = Path(a.out), Path(a.data)
     raw, cd = data / "mtrang_raw", data / "crops" / "mtrang"
@@ -571,7 +569,7 @@ def cmd_mtrang_no(a) -> int:
     """#12: cắt lại dòng Kraken (khung đã lưu, KHÔNG chạy lại Kraken) của 66 trang Muharaf và 4 trang mẫu ở mọi mức
     NO_MUC → bộ mtrang_knoNN / trang4_noNN, CÙNG id với mtrang_kraken / trang4 (chấm bằng cùng hàm). Ảnh dòng trước,
     file bộ sau."""
-    from arabic_doc_ocr.pipeline import load_pages, prepare
+    from adoc.pipeline import load_pages, prepare
 
     out, data = Path(a.out), Path(a.data)
     if not bo_file(out, "mtrang_xong").exists():
@@ -640,7 +638,7 @@ class DocDong:
     def __init__(self, device: str):
         from peft.tuners.lora import LoraLayer
 
-        from arabic_doc_ocr.htr_model import HTRReader
+        from adoc.htr_model import HTRReader
 
         self.r = HTRReader(device, adapters=ADAPTERS).load()
         self.layers = [m for m in self.r.model.modules() if isinstance(m, LoraLayer)]
@@ -663,9 +661,9 @@ class DocDong:
         self.ten, self.tat = ten, not w
 
     def doc(self, ims) -> list[str]:
-        from arabic_doc_ocr import config as AC
-        from arabic_doc_ocr.htr_model import _EOS, _PAD, PROMPT, TEMPLATE
-        from arabic_doc_ocr.text import clean_repeated_substrings, fix_arabic
+        from adoc import config as AC
+        from adoc.htr_model import _EOS, _PAD, PROMPT, TEMPLATE
+        from adoc.text import clean_repeated_substrings, fix_arabic
 
         torch, model, proc = self.r.torch, self.r.model, self.r.processor
         prompt, out = TEMPLATE.format(p=PROMPT), []
@@ -800,7 +798,7 @@ def cmd_doc(a) -> int:
 # === 5. bầu chọn ======================================================================================================
 
 def _key(w: str) -> str:
-    from arabic_doc_ocr.text import _key as k
+    from adoc.text import _key as k
 
     return k(w)
 
@@ -932,7 +930,7 @@ def _ghep_trang(bo_cuc: dict, rows: list[dict], doan: dict[str, str], loai: str,
                 chi_dong: bool = False) -> str:
     """Chữ chính của một trang, theo đúng luật của sản phẩm (Pipeline.assemble). khoi_moi: {khối: chữ} thay chữ dots
     (#5). chi_dong: mọi khối lấy chữ đọc dòng (để so các cấu hình đọc dòng trên cả trang đánh máy)."""
-    from arabic_doc_ocr import config as AC
+    from adoc import config as AC
 
     theo_khoi = collections.defaultdict(list)
     for r in sorted(rows, key=lambda r: r["thu_tu"]):
@@ -961,7 +959,7 @@ def _bo_md(s: str) -> str:
 
 
 def diem_trang(ev, ref: str, hyp: str) -> dict:
-    """Chấm cả trang bằng scripts/evaluate.py của arabic-doc-ocr (như docs/RESULTS.md); ce / cr = số lỗi / số ký tự
+    """Chấm cả trang bằng adoc/evaluate.py (chép từ arabic-doc-ocr) (như docs/RESULTS.md); ce / cr = số lỗi / số ký tự
     nhãn sau chuẩn hoá (để cộng dồn nhiều trang)."""
     from rapidfuzz.distance import Levenshtein
 
@@ -1298,7 +1296,7 @@ def cmd_bao_cao(a) -> int:
 
     L += ["## 7. Gợi ý cho Đợt 2 (tự rút theo luật)", ""] + [f"- {x}" for x in goi_y] + [""]
     L += ["## Lưu ý", "",
-          "- Số đọc dòng ở đây dùng đúng code đọc của arabic-doc-ocr (có sửa mã chữ Ba Tư → Ả Rập), nên có thể lệch "
+          "- Số đọc dòng ở đây dùng đúng code đọc của adoc/ (bản chép arabic-doc-ocr) (có sửa mã chữ Ba Tư → Ả Rập), nên có thể lệch "
           "nhẹ so với bảng cũ của eval_lines.",
           "- Chữ đánh máy chỉ có 3 trang → kết quả #5 là tín hiệu, chưa phải bằng chứng.",
           "- Mọi luật: `LUAT` trong htr_test/dot1.py.", ""]
@@ -1342,7 +1340,7 @@ def cmd_tu_kiem(a) -> int:
     kt("bootstrap: hơn đều 2 điểm → khoảng quanh +2", abs(lo - 2) < 1e-6 and abs(hi - 2) < 1e-6)
     ev = adoc_eval()
     d = diem_trang(ev, "قال الرجل\nسلام", "قال الرجل\nسلام")
-    kt("chấm trang (evaluate.py của arabic-doc-ocr): đúng hết = 100", abs(d["ky_tu"] - 100) < 1e-9)
+    kt("chấm trang (adoc/evaluate.py): đúng hết = 100", abs(d["ky_tu"] - 100) < 1e-9)
     bc = {"blocks": [{"category": "Text", "text": "dots 1"}, {"category": "Picture"},
                      {"category": "Text", "text": "", "hebrew": False}, {"category": "Text", "text": "שלום", "hebrew": True}]}
     rr = [{"id": "a", "khoi": 0, "thu_tu": 0}, {"id": "b", "khoi": 2, "thu_tu": 1}]
@@ -1360,7 +1358,7 @@ def cmd_tu_kiem(a) -> int:
     import numpy as np
     from PIL import Image, ImageDraw
 
-    from arabic_doc_ocr.lines import crop_poly
+    from adoc.lines import crop_poly
 
     im = Image.new("RGB", (60, 40), (250, 250, 250))
     ImageDraw.Draw(im).line([(0, 13), (59, 13)], fill=(0, 0, 0))  # nét mực ở y=13, ngay trên dòng (y 15–25)

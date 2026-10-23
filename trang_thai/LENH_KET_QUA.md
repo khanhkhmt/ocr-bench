@@ -1,4 +1,4 @@
-# Kết quả lệnh 20261014-073148 — 2026-10-14 07:33 UTC
+# Kết quả lệnh 20261014-073148 — 2026-10-23 03:47 UTC
 
-- ✔ keo_code → f13093d thu_dots: nạp dots lần lượt trên từng GPU (hai luồng cùng snapshot_download → tqdm AttributeError '_lock', GPU thứ hai không nạp được)
-- ✔ chay_lai td (lần chạy 2)
+- ✔ keo_code → dc0462a adoc/: bản chép riêng pipeline arabic-doc-ocr main@03e1e8e — thí nghiệm ocr-bench không cần repo demo nữa
+- ✘ chay_lai td: không có việc 'td' (có: cai_adoc, dot1)

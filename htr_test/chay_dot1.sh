@@ -5,7 +5,7 @@
 #   python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔ XONG ĐỢT 1" -- bash htr_test/chay_dot1.sh
 #
 # Thứ tự: môi trường → kiểm bản chép adoc (4 trang mẫu = mốc) → khôi phục → dữ liệu → bộ A + 4 trang + 66 trang Muharaf → chọn → #12 nới khung dòng Kraken
-# (báo cáo tạm lên GitHub) → bộ B → báo cáo.
+# (báo cáo tạm lên GitHub) → bộ B → đo adoc nới dòng 50 % trên 4 trang mẫu (#12 đã đưa vào adoc) → báo cáo.
 # Cần: bash htr_test/cai_adoc.sh (venv /kaggle/working/venvs/adoc; pipeline = adoc/, bản chép riêng — KHÔNG cần repo
 # arabic-doc-ocr), GITHUB_TOKEN, HF_TOKEN (bộ Omar là bộ gated).
 # Dòng cuối: "✔ XONG ĐỢT 1 …" hoặc "✘ LỖI ở bước N: …". Log riêng từng tiến trình: /kaggle/working/dot1_logs/.
@@ -13,6 +13,7 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
 PY="${OCRB_ADOC_VENV:-/kaggle/working/venvs/adoc}/bin/python"
 KIEM="${KIEM:-/kaggle/working/kiem_adoc}"
+DO50="${DO50:-/kaggle/working/do_noi50}"
 OUT="${OUT:-/kaggle/working/dot1}"
 DATA="${DATA:-/kaggle/working/dot1_data}"
 LOGD="${LOGD:-/kaggle/working/dot1_logs}"
@@ -44,10 +45,11 @@ import os; assert os.path.realpath(adoc.__file__).startswith(os.path.realpath('$
 grep -qx "OK" "$LOGD/check.txt" || fail "adoc check không in OK (xem $LOGD/check.txt)"
 "${D1[@]}" tu_kiem --out "$OUT" || fail "tự kiểm hàm bầu chọn / chấm điểm không đạt"
 
-step "kiểm bản chép adoc: đọc lại 4 trang mẫu, 16 số phải bằng mốc 2026-10-19 (2 GPU ~25 phút; một lần mỗi máy)"
+if [ "$N_GPU" -ge 2 ]; then KD=(--dots-device cuda:0 --htr-device cuda:1); else KD=(--dots-device cuda:0 --htr-device cuda:0); fi
+
+step "kiểm bản chép adoc (nới dòng 0 %): đọc lại 4 trang mẫu, 16 số phải bằng mốc 2026-10-19 (2 GPU ~25 phút; một lần mỗi máy)"
 if [ -f "$LOGD/kiem_adoc.ok" ]; then echo "đã khớp trên máy này ($(cat "$LOGD/kiem_adoc.ok")) → bỏ qua"
 else
-  if [ "$N_GPU" -ge 2 ]; then KD=(--dots-device cuda:0 --htr-device cuda:1); else KD=(--dots-device cuda:0 --htr-device cuda:0); fi
   "$PY" -m adoc kiem --out "$KIEM" "${KD[@]}" > "$LOGD/kiem_adoc.log" 2>&1
   RC=$?
   grep -E "^[✔✘] " "$LOGD/kiem_adoc.log"
@@ -125,6 +127,15 @@ cho "$P0" "đọc B (GPU 0)" "$LOGD/docB_g0.log"
 rm -rf "$OUT/.nhan_viec"
 "${D1[@]}" doc --phan B --gpu 0 --out "$OUT" --push > "$LOGD/docB2.log" 2>&1 \
   || { tail -n 30 "$LOGD/docB2.log"; fail "vét B lỗi"; }
+
+step "đo adoc với nới dòng 50 % (mặc định mới, #12 ĐẠT): 4 trang mẫu qua cả pipeline (2 GPU ~25 phút)"
+if [ -f "$OUT/do_noi50.md" ]; then echo "đã đo trên máy này → bỏ qua"
+else
+  "$PY" -m adoc kiem --noi 50 --out "$DO50" "${KD[@]}" > "$LOGD/do_noi50.log" 2>&1 \
+    || { tail -n 30 "$LOGD/do_noi50.log"; fail "đo nới 50 % lỗi (log $LOGD/do_noi50.log)"; }
+  cp "$DO50/kiem.md" "$OUT/do_noi50.md" && cp "$DO50/kiem.json" "$OUT/do_noi50.json" || fail "thiếu $DO50/kiem.md"
+fi
+grep -E "^\| \*\*TB" "$OUT/do_noi50.md"
 
 step "báo cáo"
 "${D1[@]}" bao_cao --out "$OUT" --push > "$LOGD/bao_cao.log" 2>&1 \

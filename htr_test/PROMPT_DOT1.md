@@ -7,7 +7,8 @@ viết sẵn trong `htr_test/dot1.py` và `htr_test/chay_dot1.sh`. Việc của 
 
 Server sập / khởi động lại / phiên Kaggle hết giờ giữa chừng → làm lại TỪ BƯỚC 0 (kể cả server mới tinh). Mọi bước
 chạy lại đều an toàn: `chay_dot1.sh` tự lấy lại phần đã đẩy lên GitHub (nhánh `results-htr/dot1`) và đi tiếp từ chỗ dở;
-phần đã xong KHÔNG đọc lại. (Lần chạy trước đã xong bộ A, Bước 0, 4 trang, #5; lần này còn #12 và bộ B.)
+phần đã xong KHÔNG đọc lại. (Các lần trước đã xong bộ A, Bước 0, 4 trang, #5, #12 và khoảng nửa bộ B; lần này còn
+nốt bộ B + đo pipeline adoc với nới dòng 50 % trên 4 trang mẫu.)
 
 ## LUẬT CỨNG (vi phạm = dừng ngay)
 
@@ -90,7 +91,7 @@ tail -n 4 /kaggle/working/cai_adoc.log; tmux has-session -t cai_adoc 2>/dev/null
 - `cai_adoc ĐÃ THOÁT` mà không có `Done. adoc` → MẪU B, DỪNG.
 - Cảnh báo pip kiểu "dependency resolver … google-adk" là BÌNH THƯỜNG.
 
-## BƯỚC 3 — chạy Đợt 1 (chạy tiếp: ~25 phút kiểm bản chép + ~1 giờ dựng lại + ~2,5 giờ #12 + ~5 giờ bộ B, 2 GPU)
+## BƯỚC 3 — chạy Đợt 1 (chạy tiếp: ~25 phút kiểm bản chép + ~1 giờ dựng lại + ~2,5 giờ nốt bộ B + ~25 phút đo nới 50 %, 2 GPU)
 
 ```bash
 python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔ XONG ĐỢT 1" -- bash htr_test/chay_dot1.sh
@@ -98,13 +99,14 @@ python3 -m htr_test.hop_thu viec dot1 --log /kaggle/working/dot1.log --xong "✔
 
 Script tự làm theo thứ tự (bạn KHÔNG làm tay bước nào):
 1. kiểm tra môi trường + tự kiểm (`✔ TỰ KIỂM ĐẠT`),
-2. kiểm bản chép adoc: đọc lại 4 trang mẫu, 16 số phải bằng mốc (`✔ ADOC KHỚP MỐC`; 2 GPU ~25 phút),
+2. kiểm bản chép adoc (nới dòng 0 %): đọc lại 4 trang mẫu, 16 số phải bằng mốc (`✔ ADOC KHỚP MỐC`; 2 GPU ~25 phút),
 3. lấy lại phần đã xong từ GitHub, 4. tải dữ liệu dòng (~20–40 phút),
 5. song song: dots đọc 4 trang mẫu (GPU 0) · tải 66 trang Muharaf + Kraken tách dòng (CPU) · đọc bộ A (GPU 1)
    (chạy tiếp: phần đã xong chỉ cắt lại ảnh dòng, vài phút),
 6. vét bộ A, 7. chọn ứng viên, 8. #12: cắt lại dòng Kraken với khung nới (CPU, vài phút),
 9. #12: đọc dòng nới khung (2 GPU, ~2,5 giờ) + đẩy báo cáo tạm lên GitHub (in `✔ #12 XONG`),
-10. đọc bộ B, 11. báo cáo.
+10. đọc bộ B, 11. đo adoc với nới dòng 50 % trên 4 trang mẫu (2 GPU ~25 phút, in `✔ ĐO NỚI 50 % XONG`; các dòng
+    `· page_N` là BÌNH THƯỜNG — số khác mốc là đúng ý, không phải lỗi), 12. báo cáo.
 
 Kiểm tra mỗi 10 phút:
 ```bash
@@ -114,7 +116,7 @@ nvidia-smi --query-gpu=index,memory.used,memory.total,utilization.gpu --format=c
 ```
 
 - Có `✔ XONG ĐỢT 1` → sang BƯỚC 4.
-- Lần ĐẦU thấy `✔ #12 XONG` (chưa có `✔ XONG ĐỢT 1`) → chạy
+- Lần ĐẦU thấy `✔ #12 XONG` (chưa có `✔ XONG ĐỢT 1`; chạy tiếp thì dòng này hiện lại sau vài phút vì #12 đã đọc xong) → chạy
   `sed -n '/^## 5b/,/^## 6\|^## 7/p' /kaggle/working/dot1/tom_tat.md`, gửi MẪU E, rồi CHỜ TIẾP (việc vẫn chạy, không làm
   gì thêm). Chỉ gửi MẪU E một lần.
 - Có `✘ LỖI ở bước` → MẪU B (log = `/kaggle/working/dot1.log`). Trong 30 dòng cuối đã có sẵn đoạn log của tiến

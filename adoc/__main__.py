@@ -4,6 +4,7 @@ bash htr_test/cai_adoc.sh):
     $PY -m adoc check                  # GPU, thư viện, Kraken, cache model → dòng cuối OK / NOT READY
     $PY -m adoc download               # tải model (~15 GB) + model tách dòng Muharaf
     $PY -m adoc kiem --out <thư mục>   # đọc lại 4 trang mẫu, so 16 số với mốc 2026-10-19 (xem NGUON.md)
+    $PY -m adoc kiem --noi 50 --out …  # đo 4 trang mẫu với dòng nới 50 % (mặc định mới): số + chênh so với mốc
 """
 
 from __future__ import annotations
@@ -136,8 +137,9 @@ def cmd_kiem(a) -> int:
     n_gpu = torch.cuda.device_count()
     dd, hd = a.dots_device or "cuda:0", a.htr_device or ("cuda:1" if n_gpu >= 2 else "cuda:0")
     offload = "none" if dd != hd else "unload"
-    print(f"adoc {HERE} · dots {dd} · ft3/ft4 {hd} · offload {offload}", flush=True)
-    pipe = Pipeline(dd, hd, offload=offload)
+    noi = a.noi  # kiểm bản chép: luôn nới 0 % như lần đo mốc (mặc định sản phẩm là config.LINE_PAD_PCT)
+    print(f"adoc {HERE} · dots {dd} · ft3/ft4 {hd} · offload {offload} · nới dòng {noi} %", flush=True)
+    pipe = Pipeline(dd, hd, offload=offload, line_pad_pct=noi)
     rows, khop, so_khoi, t_all = [], True, [0, 0], time.time()
     for page in pages:
         ref_js = json.loads((MAU_KQ / f"{page}_page.json").read_text(encoding="utf-8"))
@@ -158,21 +160,36 @@ def cmd_kiem(a) -> int:
         khop &= ok
         rows.append({"page": page, "type": page_type, "now": sc, "moc": moc, "ok": ok,
                      "blocks_same": giong, "blocks": max(len(a_k), len(b_k)), "seconds": round(time.time() - t, 1)})
-        print(f"{'✔' if ok else '✘'} {page} ({page_type}): " + " · ".join(f"{k} {sc[k]:.2f} (mốc {moc[k]:.2f})"
+        print(f"{('✔' if ok else '✘') if not noi else '·'} {page} ({page_type}): " + " · ".join(f"{k} {sc[k]:.2f} (mốc {moc[k]:.2f})"
                                                                           for k in DOC)
               + f" · khối giống mốc {giong}/{max(len(a_k), len(b_k))} · {time.time() - t:.0f} s", flush=True)
-    L = [f"# Kiểm bản chép adoc ({NGUON}) — 4 trang mẫu", "",
-         f"{time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())} · dots {dd} · ft3/ft4 {hd} · offload {offload} · "
-         f"{time.time() - t_all:.0f} s", "",
-         "% ký tự đúng (evaluate.py) bây giờ / mốc 2026-10-19 (mau_ket_qua/eval.json).", "",
-         "| trang | loại | chính | dots | ft3 | ft4 | khối giống mốc | khớp |", "|---|---|---:|---:|---:|---:|---:|---|"]
-    for r in rows:
-        L.append(f"| {r['page']} | {r['type']} | " + " | ".join(f"{r['now'][k]:.2f} / {r['moc'][k]:.2f}" for k in DOC)
-                 + f" | {r['blocks_same']}/{r['blocks']} | {'✔' if r['ok'] else '✘'} |")
+    hd_ = f"{time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())} · dots {dd} · ft3/ft4 {hd} · offload {offload} · " \
+          f"{time.time() - t_all:.0f} s"
+    if noi:
+        tb = {k: (sum(r["now"][k] for r in rows) / len(rows), sum(r["moc"][k] for r in rows) / len(rows)) for k in DOC}
+        L = [f"# Đo adoc với dòng Kraken nới {noi} % — 4 trang mẫu", "", hd_, "",
+             f"% ký tự đúng (evaluate.py): nới {noi} % (chênh so với mốc 2026-10-19 = nới 0 %, mau_ket_qua/eval.json). "
+             "Trang đánh máy: chữ chính = dots, không đổi; nới khung chỉ đổi ảnh dòng (ft3 / ft4 và chữ chính của "
+             "trang viết tay).", "",
+             "| trang | loại | chính | dots | ft3 | ft4 |", "|---|---|---:|---:|---:|---:|"]
+        L += [f"| {r['page']} | {r['type']} | " + " | ".join(f"{r['now'][k]:.2f} ({r['now'][k] - r['moc'][k]:+.2f})"
+                                                           for k in DOC) + " |" for r in rows]
+        L.append("| **TB 4 trang** | | " + " | ".join(f"**{tb[k][0]:.2f}** ({tb[k][0] - tb[k][1]:+.2f})" for k in DOC) + " |")
+    else:
+        L = [f"# Kiểm bản chép adoc ({NGUON}) — 4 trang mẫu", "", hd_, "",
+             "% ký tự đúng (evaluate.py) bây giờ / mốc 2026-10-19 (mau_ket_qua/eval.json).", "",
+             "| trang | loại | chính | dots | ft3 | ft4 | khối giống mốc | khớp |", "|---|---|---:|---:|---:|---:|---:|---|"]
+        for r in rows:
+            L.append(f"| {r['page']} | {r['type']} | " + " | ".join(f"{r['now'][k]:.2f} / {r['moc'][k]:.2f}" for k in DOC)
+                     + f" | {r['blocks_same']}/{r['blocks']} | {'✔' if r['ok'] else '✘'} |")
     (out / "kiem.md").write_text("\n".join(L) + "\n", encoding="utf-8")
-    (out / "kiem.json").write_text(json.dumps({"nguon": NGUON, "adoc": str(HERE), "khop": khop, "rows": rows},
-                                              ensure_ascii=False, indent=1), encoding="utf-8")
+    (out / "kiem.json").write_text(json.dumps({"nguon": NGUON, "adoc": str(HERE), "noi": noi, "khop": khop,
+                                               "rows": rows}, ensure_ascii=False, indent=1), encoding="utf-8")
     print("\n".join(L))
+    if noi:
+        print(f"✔ ĐO NỚI {noi} % XONG: chữ chính TB 4 trang {tb['main'][0]:.2f} (mốc {tb['main'][1]:.2f}, "
+              f"{tb['main'][0] - tb['main'][1]:+.2f}) · {out}/kiem.md")
+        return 0
     if khop:
         print(f"✔ ADOC KHỚP MỐC: 16/16 số bằng mốc · khối giống mốc {so_khoi[0]}/{so_khoi[1]}")
         return 0
@@ -190,6 +207,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", required=True)
     p.add_argument("--dots-device", default=None)
     p.add_argument("--htr-device", default=None)
+    p.add_argument("--noi", type=int, default=0, help="nới dòng Kraken %% độ dày (0 = kiểm bản chép so với mốc)")
     a = ap.parse_args(argv)
     return {"check": cmd_check, "download": cmd_download, "kiem": cmd_kiem}[a.cmd](a)
 

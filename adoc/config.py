@@ -34,6 +34,13 @@ DOTS_TOKENS_PER_IMAGE_TOKEN = 8   # cap = 8 × image tokens + 512 (stops endless
 DOTS_LOOP_MAX_PERIOD = 200        # stop when the output repeats a span of ≤ 200 tokens …
 DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
 
+# --- line images ---------------------------------------------------------------------------------------------------
+# Kraken line images are made taller by this % of the line thickness (half above, half below); the paper-colour mask
+# is the line polygon shifted up/down, so curved / slanted lines keep their shape. 0 = the 2026-10-19 crop (the mốc
+# that `python -m adoc kiem` checks). ocr-bench #12 (2026-10-23, ft3, Kraken lines, 66 Muharaf test pages, % chars):
+# 0 % 63.6 · 15 % 65.6 · 30 % 66.7 · 50 % 67.2; customer page 2: 72.2 → 78.0. Bag of words 50.2 → 57.7.
+LINE_PAD_PCT = 50
+
 # --- line reader (authors' settings, github.com/misraj-ai/Nakba-pipeline) --------------------------------------------
 HTR_MAX_NEW_TOKENS = 128
 HTR_MIN_PIXELS, HTR_MAX_PIXELS = 28 * 28, 1280 * 28 * 28

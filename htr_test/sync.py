@@ -17,7 +17,7 @@ from pathlib import Path
 from ocrbench.status import _git, _git_out, github_token
 
 FILES = ("*.jsonl", "tom_tat.md", "tom_tat.json", "chi_tiet.csv", "xem_ket_qua.html", "BENCHMARK_HTR.md", "BENCHMARK_HTR.json",
-         "kiem_adoc.md", "kiem_adoc.json")
+         "kiem_adoc.md", "kiem_adoc.json", "do_noi50.md", "do_noi50.json")
 
 
 class Sync:

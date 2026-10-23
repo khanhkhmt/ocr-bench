@@ -1279,6 +1279,12 @@ def cmd_bao_cao(a) -> int:
         J["no"] = {"diem": no, "tot_nhat": tot, "hon": hon_k, "hon_tui_tu": hon_t, "hon_page_2": hon_p2, "dat": dat12}
     elif any(bo_file(out, f"mtrang_kno{m:02d}").exists() for m in NO_MUC):
         L += ["## 5b. Nới khung dòng Kraken (#12)", "", "(chưa đọc xong)", ""]
+    f50 = out / "do_noi50.md"  # chay_dot1.sh: python -m adoc kiem --noi 50 (sản phẩm adoc sau khi đưa #12 vào)
+    if f50.exists():
+        bang = [x for x in f50.read_text(encoding="utf-8").splitlines() if x.startswith("|")]
+        L += ["## 5c. Sản phẩm adoc với nới dòng 50 % — 4 trang mẫu qua cả pipeline", "",
+              "% ký tự đúng (evaluate.py), trong ngoặc = chênh so với mốc 2026-10-19 (nới 0 %). Chữ chính theo luật "
+              "sản phẩm (trang đánh máy = dots, không đổi).", ""] + bang + [""]
 
     # --- kết luận ứng viên (cần B + trang)
     if u and tb is not None and lo is not None:
@@ -1369,6 +1375,24 @@ def cmd_tu_kiem(a) -> int:
     kt("nới khung 0 %: nét mực ngoài đa giác bị tô màu giấy", int(np.asarray(c0.convert("L"))[13 - 11, 20]) > 200)
     kt("nới khung 60 %: ảnh cao thêm 2×3 px, nét mực ngay trên dòng được giữ",
        c60.size == (c0.size[0], c0.size[1] + 6) and int(np.asarray(c60.convert("L"))[13 - 8, 20]) < 50)
+    # sản phẩm (adoc) nới dòng bằng crop_poly(noi=…) → phải cho đúng ảnh cat_no của #12, cả dòng cong / nghiêng
+    import inspect
+
+    from adoc import config as AC
+    from adoc.pipeline import Pipeline
+
+    im2 = Image.new("RGB", (120, 80), (245, 245, 245))
+    dr2 = ImageDraw.Draw(im2)
+    for yy in (12, 18, 35, 47, 58):
+        dr2.line([(0, yy), (119, yy - 6)], fill=(20, 20, 20), width=2)
+    poly2 = [[8, 30], [60, 20], [110, 28], [110, 52], [60, 44], [8, 50]]
+    rec2 = {"box": [8, 20, 111, 53], "poly": poly2}
+    kt("crop_poly(noi) của adoc = cat_no #12 (từng pixel, dòng nghiêng, mọi mức)", all(np.array_equal(
+        np.asarray(cat_no(im2, rec2, m)),
+        np.asarray(crop_poly(im2, {"box": (8, 20, 111, 53), "poly": [tuple(q) for q in poly2]}, noi=m))) for m in (0, *NO_MUC, 60)))
+    kt("adoc: crop_poly mặc định nới 0 % (mốc), Pipeline mặc định nới 50 % (#12 ĐẠT)",
+       inspect.signature(crop_poly).parameters["noi"].default == 0 and AC.LINE_PAD_PCT == 50
+       and inspect.signature(Pipeline.__init__).parameters["line_pad_pct"].default == 50)
     print("✔ TỰ KIỂM ĐẠT" if ok else "✘ LỖI: TỰ KIỂM KHÔNG ĐẠT", flush=True)
     return 0 if ok else 1
 

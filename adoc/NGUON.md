@@ -6,10 +6,11 @@ Chép từ `khanhkhmt/arabic-doc-ocr`, nhánh `main`, commit `03e1e8e` (2026-10-
 
 | ở đây | gốc trong arabic-doc-ocr | thay đổi |
 |---|---|---|
-| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`) |
-| `lines.py` | `arabic_doc_ocr/lines.py` | biến môi trường `OCRB_KRAKEN_BIN`, `OCRB_KRAKEN_SEG_MODEL` |
+| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`); **#12:** `LINE_PAD_PCT = 50` |
+| `lines.py` | `arabic_doc_ocr/lines.py` | biến môi trường `OCRB_KRAKEN_BIN`, `OCRB_KRAKEN_SEG_MODEL`; **#12:** `crop_poly(…, noi=0)` nới dòng theo chiều dọc |
 | `dots_model.py` | `arabic_doc_ocr/dots_model.py` | tên thư mục symlink tạm `ocr_bench_adoc_models` |
-| `pipeline.py`, `htr_model.py`, `text.py`, `_vendor/` | cùng tên | không đổi (chỉ docstring) |
+| `pipeline.py` | cùng tên | **#12:** `Pipeline(…, line_pad_pct=config.LINE_PAD_PCT)` → cắt dòng Kraken bằng `crop_poly(noi=…)`; `info["line_pad_pct"]` |
+| `htr_model.py`, `text.py`, `_vendor/` | cùng tên | không đổi (chỉ docstring) |
 | `evaluate.py` | `scripts/evaluate.py` | không đổi |
 | `requirements.txt` | `requirements.txt` | không đổi (giữ y nguyên phiên bản → cùng số) |
 | `trang_mau/page_N/` | `examples/page_N/` | không đổi |
@@ -29,6 +30,19 @@ so với `mau_ket_qua/eval.json`. ĐẠT (`✔ ADOC KHỚP MỐC`) khi CẢ 16 s
 one_gpu_cpu), nên lệch = bản chép hoặc môi trường khác, không phải ngẫu nhiên. Ghi `<out>/page_N_page.json` (cùng
 dạng với arabic-doc-ocr, dùng được cho llm_sua.py) + `<out>/kiem.json` + `<out>/kiem.md`.
 
-## Muốn đổi pipeline (ví dụ đưa #12 vào)
+`kiem` luôn đọc với nới dòng 0 % (`--noi 0`, mặc định của lệnh) — đúng cách cắt của lần đo mốc — nên vẫn kiểm được
+bản chép sau khi sản phẩm đã đổi mặc định sang 50 %.
+
+## Đã đưa vào: #12 nới khung dòng Kraken 50 % (anh duyệt 2026-10-23)
+
+Đợt 1, #12 (ft3, dòng Kraken, 66 trang Muharaf test, % ký tự): 0 % 63.6 · 15 % 65.6 · 30 % 66.7 · **50 % 67.2**;
+trang 2 của khách 72.2 → 78.0. Cách cắt = `cat_no` của htr_test/dot1.py (tự kiểm so từng pixel). Đo cả pipeline:
+
+    /kaggle/working/venvs/adoc/bin/python -m adoc kiem --noi 50 --out /kaggle/working/do_noi50   # in "✔ ĐO NỚI 50 % XONG"
+
+(chay_dot1.sh tự chạy sau bộ B → `results-htr/dot1/do_noi50.md`, mục 5c của tom_tat.md). Chưa chuyển sang
+arabic-doc-ocr: chờ số đo cả pipeline.
+
+## Muốn đổi pipeline
 
 Sửa ở đây, đo trong ocr-bench; thắng thì mới chuyển sang arabic-doc-ocr. Sửa file nào trong bảng trên thì ghi vào bảng.

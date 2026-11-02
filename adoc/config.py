@@ -33,6 +33,11 @@ DOTS_MAX_NEW_TOKENS = 24000
 DOTS_TOKENS_PER_IMAGE_TOKEN = 8   # cap = 8 × image tokens + 512 (stops endless loops on small images)
 DOTS_LOOP_MAX_PERIOD = 200        # stop when the output repeats a span of ≤ 200 tokens …
 DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
+# Broken layout JSON (bộ test 100 trang: in_015, in_049): their cleaner still pulls out the blocks that parse, but
+# their post_process_output keeps only the joined text, so the page lost every box and fell back to one block.
+# True = keep those blocks (with boxes); Kraken lines outside all of them go to one extra block read by ft3.
+# Pages whose JSON parses are not touched (the 4 mốc pages all parse → `adoc kiem` unchanged).
+DOTS_RECOVER_BROKEN_JSON = True
 
 # --- line images ---------------------------------------------------------------------------------------------------
 # Kraken line images are made taller by this % of the line thickness (half above, half below); the paper-colour mask

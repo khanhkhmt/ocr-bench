@@ -250,6 +250,7 @@ class Pipeline:
             blocks.append(blk)
         if not any(b.get("category") in config.TEXT_CATS and len(b.get("bbox") or []) == 4 for b in blocks):
             why = ("dots found no text block" + (" (hit the token limit)" if r.get("hit_max_tokens") else
+                                                 " (output looped, stopped early)" if r.get("stopped_loop") else
                                                  " (broken layout JSON)" if r.get("layout") == "filtered" else ""))
             notes.append(why + " → FALLBACK: the whole page is one block")
             blocks = [{"category": "Text", "bbox": [0, 0, img.width, img.height], "text": "", "fallback": True}]

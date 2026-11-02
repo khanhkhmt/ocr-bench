@@ -145,17 +145,24 @@ class _TokenLoopStop:
         gen = input_ids[0, self.start:]
         if self.stopped or self.calls % self.every or gen.shape[0] < self.min_span:
             return self.stopped
-        t = gen[-max(self.min_span, 2 * self.max_period):].tolist()
-        for period in range(1, self.max_period + 1):
-            reps = -(-self.min_span // period)
-            span = period * reps
-            if span > len(t):
-                break
-            seg = t[-span:]
-            if seg == seg[:period] * reps:
-                self.stopped = True
-                break
+        self.stopped = tail_loops(gen[-(self.min_span + self.max_period):].tolist(), self.max_period, self.min_span)
         return self.stopped
+
+
+def tail_loops(t: list, max_period: int, min_span: int) -> bool:
+    """`t` ends with a span of ≤ max_period tokens repeated back to back over ≥ min_span tokens.
+    Fix (2026-11-02, tay_025): the old loop looked at only max(min_span, 2 × max_period) = 600 tokens and stopped at
+    the first period whose whole repeats did not fit (period 7: 86 × 7 = 602 > 600) → only periods 1–6 were ever
+    checked; tay_025 repeated one ~40-token phrase for all 8000 tokens. Needs len(t) ≥ min_span + max_period - 1."""
+    for period in range(1, max_period + 1):
+        reps = -(-min_span // period)
+        span = period * reps
+        if span > len(t):
+            continue
+        seg = t[-span:]
+        if seg == seg[:period] * reps:
+            return True
+    return False
 
 
 _CELL = re.compile(r'"category":\s*"([^"]+)"\s*,\s*"text":\s*"((?:[^"\\\\]|\\\\.)*)"')

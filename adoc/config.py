@@ -36,8 +36,8 @@ DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
 # Broken layout JSON (bộ test 100 trang: in_015, in_049): dots copies a " printed on the page into "text" without
 # escaping it. True = escape those quotes and parse again (dots_model.repair_quotes); still broken → old fallback (the
 # whole page is one block). Only runs when the JSON does not parse → pages that parse (all 4 mốc pages) are unchanged.
-# Dots text of the repaired JSON vs label (% chars; offline on the saved dots_response): in_015 83.23, in_049 98.40;
-# pipeline now (whole-page fallback, ft3): 80.49, 97.74. Tried first and dropped (2026-11-02, 2× T4): keep only the
+# Measured 2026-11-02, 2× T4, chữ chính % chars / % words: in_015 80.49 / 47.70 → 87.75 / 63.60, in_049
+# 97.74 / 92.48 → 98.40 / 92.16 (before: whole-page fallback read by ft3). Tried first and dropped (2026-11-02, 2× T4): keep only the
 # blocks their cleaner still parses + one extra block for the other Kraken lines → 42.51, 29.23.
 DOTS_REPAIR_QUOTES = True
 

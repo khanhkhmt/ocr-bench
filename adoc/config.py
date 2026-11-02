@@ -37,6 +37,9 @@ DOTS_MAX_NEW_TOKENS = 8000
 DOTS_TOKENS_PER_IMAGE_TOKEN = 8   # cap = 8 × image tokens + 512 (stops endless loops on small images)
 DOTS_LOOP_MAX_PERIOD = 200        # stop when the output repeats a span of ≤ 200 tokens …
 DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
+# (dots_model.tail_loops; before e53921d only spans of 1–6 tokens were checked.) Measured 2026-11-02, 2× T4: tay_025
+# 927 s → 294 s, same 85.12 % chars (whole-page fallback); the 4 longest pages (in_020, in_043, tay_013, tay_014) not
+# stopped, scores identical.
 # Broken layout JSON (bộ test 100 trang: in_015, in_049): dots copies a " printed on the page into "text" without
 # escaping it. True = escape those quotes and parse again (dots_model.repair_quotes); still broken → old fallback (the
 # whole page is one block). Only runs when the JSON does not parse → pages that parse (all 4 mốc pages) are unchanged.

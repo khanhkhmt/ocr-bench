@@ -37,7 +37,9 @@ DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
 # their post_process_output keeps only the joined text, so the page lost every box and fell back to one block.
 # True = keep those blocks (with boxes); Kraken lines outside all of them go to one extra block read by ft3.
 # Pages whose JSON parses are not touched (the 4 mốc pages all parse → `adoc kiem` unchanged).
-DOTS_RECOVER_BROKEN_JSON = True
+# OFF: measured 2026-11-02 on 2× T4 (% chars, main): in_015 80.49 → 42.51, in_049 97.74 → 29.23 (3 / 8 blocks kept,
+# 16 Kraken lines each in the extra block) — worse than one whole-page block. Kept for diagnosis only.
+DOTS_RECOVER_BROKEN_JSON = False
 
 # --- line images ---------------------------------------------------------------------------------------------------
 # Kraken line images are made taller by this % of the line thickness (half above, half below); the paper-colour mask

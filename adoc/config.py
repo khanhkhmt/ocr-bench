@@ -29,7 +29,11 @@ PDF_DPI = 200
 
 # --- dots.mocr generation -------------------------------------------------------------------------------------------
 DOTS_PROMPT = "prompt_layout_all_en"
-DOTS_MAX_NEW_TOKENS = 24000
+# Cap on dots tokens per page. Most dots ever needed on a real page: 2659 (customer page 3, 2947 chars); bộ test 100
+# trang (94 pages): max 2197, median 718. 24000 let a looping page run 40–50 min on a T4 (tay_025) before the cap; a
+# looping page ends with broken JSON → whole-page fallback either way, so 8000 (3× the most seen) only cuts the wait
+# to ~10 min. Pages under 8000 tokens (all 98 measured, all 4 mốc pages) are unchanged.
+DOTS_MAX_NEW_TOKENS = 8000
 DOTS_TOKENS_PER_IMAGE_TOKEN = 8   # cap = 8 × image tokens + 512 (stops endless loops on small images)
 DOTS_LOOP_MAX_PERIOD = 200        # stop when the output repeats a span of ≤ 200 tokens …
 DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens

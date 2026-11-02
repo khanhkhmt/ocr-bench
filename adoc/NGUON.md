@@ -6,7 +6,7 @@ Chép từ `khanhkhmt/arabic-doc-ocr`, nhánh `main`, commit `03e1e8e` (2026-10-
 
 | ở đây | gốc trong arabic-doc-ocr | thay đổi |
 |---|---|---|
-| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`); **#12:** `LINE_PAD_PCT = 50`; **JSON hỏng:** `DOTS_REPAIR_QUOTES = True` |
+| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`); **#12:** `LINE_PAD_PCT = 50`; **JSON hỏng:** `DOTS_REPAIR_QUOTES = True`; **vòng lặp:** `DOTS_MAX_NEW_TOKENS` 24000 → 8000 |
 | `lines.py` | `arabic_doc_ocr/lines.py` | biến môi trường `OCRB_KRAKEN_BIN`, `OCRB_KRAKEN_SEG_MODEL`; **#12:** `crop_poly(…, noi=0)` nới dòng theo chiều dọc |
 | `dots_model.py` | `arabic_doc_ocr/dots_model.py` | tên thư mục symlink tạm `ocr_bench_adoc_models`; **JSON hỏng:** `repair_quotes` thoát dấu `"` trần trong `text` rồi đọc lại (`layout = "repaired"`), chỉ khi JSON không đọc được; `parse` trả thêm `response` (bản thô dots sinh ra) |
 | `pipeline.py` | cùng tên | **#12:** `Pipeline(…, line_pad_pct=config.LINE_PAD_PCT)` → cắt dòng Kraken bằng `crop_poly(noi=…)`; `info["line_pad_pct"]`; ghi chú khi JSON được sửa; `info["dots_response"]` |

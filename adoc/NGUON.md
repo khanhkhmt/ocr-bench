@@ -6,10 +6,10 @@ Chép từ `khanhkhmt/arabic-doc-ocr`, nhánh `main`, commit `03e1e8e` (2026-10-
 
 | ở đây | gốc trong arabic-doc-ocr | thay đổi |
 |---|---|---|
-| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`); **#12:** `LINE_PAD_PCT = 50`; **JSON hỏng:** `DOTS_RECOVER_BROKEN_JSON = False` (đo 2026-11-02: in_015 80,49 → 42,51, in_049 97,74 → 29,23 khi bật → tắt) |
+| `config.py` | `arabic_doc_ocr/config.py` | thư mục riêng `~/.cache/ocr_bench_adoc` (biến `OCRB_ADOC_HOME`, `OCRB_KRAKEN_VENV`, `OCRB_KRAKEN_SEG_MODEL`); **#12:** `LINE_PAD_PCT = 50`; **JSON hỏng:** `DOTS_REPAIR_QUOTES = True` |
 | `lines.py` | `arabic_doc_ocr/lines.py` | biến môi trường `OCRB_KRAKEN_BIN`, `OCRB_KRAKEN_SEG_MODEL`; **#12:** `crop_poly(…, noi=0)` nới dòng theo chiều dọc |
-| `dots_model.py` | `arabic_doc_ocr/dots_model.py` | tên thư mục symlink tạm `ocr_bench_adoc_models`; **JSON hỏng:** `recover_blocks` giữ các khối OutputCleaner còn đọc được (kèm toạ độ) thay vì 0 khối; `parse` trả thêm `response` (bản thô dots sinh ra) |
-| `pipeline.py` | cùng tên | **#12:** `Pipeline(…, line_pad_pct=config.LINE_PAD_PCT)` → cắt dòng Kraken bằng `crop_poly(noi=…)`; `info["line_pad_pct"]`; **JSON hỏng:** `dots_layout = "recovered"` → dòng Kraken nằm ngoài mọi khối cứu được gom thành 1 khối thêm (ft3 đọc); `info["dots_response"]` |
+| `dots_model.py` | `arabic_doc_ocr/dots_model.py` | tên thư mục symlink tạm `ocr_bench_adoc_models`; **JSON hỏng:** `repair_quotes` thoát dấu `"` trần trong `text` rồi đọc lại (`layout = "repaired"`), chỉ khi JSON không đọc được; `parse` trả thêm `response` (bản thô dots sinh ra) |
+| `pipeline.py` | cùng tên | **#12:** `Pipeline(…, line_pad_pct=config.LINE_PAD_PCT)` → cắt dòng Kraken bằng `crop_poly(noi=…)`; `info["line_pad_pct"]`; ghi chú khi JSON được sửa; `info["dots_response"]` |
 | `htr_model.py`, `text.py`, `_vendor/` | cùng tên | không đổi (chỉ docstring) |
 | `evaluate.py` | `scripts/evaluate.py` | không đổi |
 | `requirements.txt` | `requirements.txt` | không đổi (giữ y nguyên phiên bản → cùng số) |

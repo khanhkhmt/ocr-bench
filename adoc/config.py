@@ -33,13 +33,13 @@ DOTS_MAX_NEW_TOKENS = 24000
 DOTS_TOKENS_PER_IMAGE_TOKEN = 8   # cap = 8 × image tokens + 512 (stops endless loops on small images)
 DOTS_LOOP_MAX_PERIOD = 200        # stop when the output repeats a span of ≤ 200 tokens …
 DOTS_LOOP_MIN_SPAN = 600          # … over ≥ 600 tokens
-# Broken layout JSON (bộ test 100 trang: in_015, in_049): their cleaner still pulls out the blocks that parse, but
-# their post_process_output keeps only the joined text, so the page lost every box and fell back to one block.
-# True = keep those blocks (with boxes); Kraken lines outside all of them go to one extra block read by ft3.
-# Pages whose JSON parses are not touched (the 4 mốc pages all parse → `adoc kiem` unchanged).
-# OFF: measured 2026-11-02 on 2× T4 (% chars, main): in_015 80.49 → 42.51, in_049 97.74 → 29.23 (3 / 8 blocks kept,
-# 16 Kraken lines each in the extra block) — worse than one whole-page block. Kept for diagnosis only.
-DOTS_RECOVER_BROKEN_JSON = False
+# Broken layout JSON (bộ test 100 trang: in_015, in_049): dots copies a " printed on the page into "text" without
+# escaping it. True = escape those quotes and parse again (dots_model.repair_quotes); still broken → old fallback (the
+# whole page is one block). Only runs when the JSON does not parse → pages that parse (all 4 mốc pages) are unchanged.
+# Dots text of the repaired JSON vs label (% chars; offline on the saved dots_response): in_015 83.23, in_049 98.40;
+# pipeline now (whole-page fallback, ft3): 80.49, 97.74. Tried first and dropped (2026-11-02, 2× T4): keep only the
+# blocks their cleaner still parses + one extra block for the other Kraken lines → 42.51, 29.23.
+DOTS_REPAIR_QUOTES = True
 
 # --- line images ---------------------------------------------------------------------------------------------------
 # Kraken line images are made taller by this % of the line thickness (half above, half below); the paper-colour mask

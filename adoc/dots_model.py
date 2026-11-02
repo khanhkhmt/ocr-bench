@@ -192,37 +192,31 @@ class _LayoutLoopStop:
         return self.stopped
 
 
-def recover_blocks(response: str, origin: Image.Image, img: Image.Image, layout_utils) -> list[dict]:
-    """Broken layout JSON → the blocks their OutputCleaner still parses, with boxes mapped to `origin` the same way
-    post_process_output maps a good answer. Blocks without a usable box (4 numbers, x1 > x0, y1 > y0) are dropped."""
-    import contextlib
-    import io
+_TEXT_HEAD = re.compile(r'"text":\s*"')
+_TEXT_END = re.compile(r'"\}\s*(?:,\s*\{\s*"bbox"|\]\s*$)')
 
-    from dots_ocr.utils.output_cleaner import OutputCleaner
 
+def repair_quotes(response: str) -> str | None:
+    """dots copies a " printed on the page into a "text" value without escaping it → the layout JSON does not parse
+    (bộ test 100 trang: in_015, in_049). "text" is the last key of every block, so its value runs to the `"}` that is
+    followed by the next block (`, {"bbox"`) or by the closing `]`; escape the bare quotes inside it.
+    → the repaired JSON if it now parses as a list, else None (truncated output, other damage)."""
+    out, pos = [], 0
+    for m in _TEXT_HEAD.finditer(response):
+        if m.start() < pos:
+            continue
+        end = _TEXT_END.search(response, m.end())
+        if not end:
+            return None
+        val = re.sub(r'(?<!\\)"', r'\\"', response[m.end():end.start()])
+        out.append(response[pos:m.end()] + val)
+        pos = end.start()
+    out.append(response[pos:])
+    fixed = "".join(out)
     try:
-        with contextlib.redirect_stdout(io.StringIO()):  # their cleaner prints a report; post_process_output printed it
-            got = OutputCleaner().clean_model_output(response)
-    except Exception:  # noqa: BLE001
-        return []
-    if not isinstance(got, list):
-        return []
-    good = []
-    for c in got:
-        if not isinstance(c, dict) or not isinstance(c.get("category"), str):
-            continue
-        try:
-            bb = [float(v) for v in c.get("bbox")]
-        except (TypeError, ValueError):
-            continue
-        if len(bb) != 4 or bb[2] <= bb[0] or bb[3] <= bb[1]:
-            continue
-        text = c.get("text")
-        good.append({"category": c["category"], "bbox": bb, "text": text if isinstance(text, str) else ""})
-    if not good:
-        return []
-    cells = layout_utils.post_process_cells(origin, good, img.width, img.height, min_pixels=None, max_pixels=None)
-    return [{"category": c["category"], "bbox": c["bbox"], "text": c["text"], "recovered": True} for c in cells]
+        return fixed if isinstance(json.loads(fixed), list) else None
+    except ValueError:
+        return None
 
 
 # --- model ----------------------------------------------------------------------------------------------------------
@@ -307,15 +301,19 @@ class DotsLayout:
         origin = image.convert("RGB")
         img = image_utils.fetch_image(origin, min_pixels=None, max_pixels=None)
         response, info = self._generate(img, prompts.dict_promptmode_to_prompt[config.DOTS_PROMPT])
-        cells, filtered = layout_utils.post_process_output(response, config.DOTS_PROMPT, origin, img,
+        answer, repaired = response, False
+        if config.DOTS_REPAIR_QUOTES:
+            try:
+                json.loads(response)
+            except ValueError:
+                fixed = repair_quotes(response)
+                if fixed is not None:
+                    answer, repaired = fixed, True
+        cells, filtered = layout_utils.post_process_output(answer, config.DOTS_PROMPT, origin, img,
                                                            min_pixels=None, max_pixels=None)
-        info["layout"] = "filtered" if filtered else "ok"
+        info["layout"] = "filtered" if filtered else "repaired" if repaired else "ok"
         blocks = [] if filtered else [{"category": c.get("category"), "bbox": c.get("bbox"), "text": c.get("text", "")}
                                       for c in cells]
-        if filtered and config.DOTS_RECOVER_BROKEN_JSON:
-            blocks = recover_blocks(response, origin, img, layout_utils)
-            if blocks:
-                info["layout"] = "recovered"
         # "response" = exactly what dots generated (kept in ket_qua.json, to see later why a page broke or looped)
         return {"blocks": blocks, "raw": response if filtered else json.dumps(cells, ensure_ascii=False),
                 "response": response, **info}

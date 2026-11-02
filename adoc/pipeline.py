@@ -250,32 +250,19 @@ class Pipeline:
             blocks.append(blk)
         if not any(b.get("category") in config.TEXT_CATS and len(b.get("bbox") or []) == 4 for b in blocks):
             why = ("dots found no text block" + (" (hit the token limit)" if r.get("hit_max_tokens") else
-                                                 " (broken layout JSON)" if r.get("layout") in ("filtered", "recovered")
-                                                 else ""))
+                                                 " (broken layout JSON)" if r.get("layout") == "filtered" else ""))
             notes.append(why + " → FALLBACK: the whole page is one block")
             blocks = [{"category": "Text", "bbox": [0, 0, img.width, img.height], "text": "", "fallback": True}]
         elif r.get("hit_max_tokens"):
             notes.append("dots hit the token limit — the last block may be incomplete")
+        if r.get("layout") == "repaired":
+            notes.append('dots layout JSON had bare " inside text → escaped, JSON parsed')
 
         t1 = time.time()
         page_lines = kraken_page(img)
         boxes = {bi: tuple(int(round(v)) for v in b["bbox"]) for bi, b in enumerate(blocks)
                  if b.get("category") in config.TEXT_CATS and len(b.get("bbox") or []) == 4}
         by_block = assign_to_blocks(page_lines, boxes) if page_lines else {}
-        if r.get("layout") == "recovered" and not blocks[0].get("fallback"):
-            # recovered blocks may miss the part of the page where the JSON broke: Kraken lines outside every block
-            # become one extra block (ft3 reads it; no dots text there), instead of being dropped
-            used = {id(L) for v in by_block.values() for L in v}
-            rest = [L for L in page_lines if id(L) not in used]
-            note = f"dots layout JSON broken → kept {len(blocks)} blocks it could still parse"
-            if rest:
-                bb = [min(L["box"][0] for L in rest), min(L["box"][1] for L in rest),
-                      max(L["box"][2] for L in rest), max(L["box"][3] for L in rest)]
-                blocks.append({"category": "Text", "bbox": bb, "text": "", "fallback": True, "rest_of_page": True})
-                boxes[len(blocks) - 1] = tuple(int(round(v)) for v in bb)
-                by_block[len(blocks) - 1] = rest
-                note += f"; {len(rest)} Kraken lines outside them → one extra block"
-            notes.append(note)
         lines, methods = [], set()
         for bi, b in enumerate(blocks):
             bb = b.get("bbox")
